@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evochia.internal/schemas/source_registry.schema.json",
+  "title": "Chef AI Pro Business Source Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "precedence", "sources"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "precedence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}}
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "title", "path_or_external_ref", "source_class", "authority", "scope", "allowed_uses", "forbidden_uses", "freshness_type", "effective_date", "last_reviewed_at", "supersedes", "superseded_by", "confidentiality", "owner"],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_\\-]*$"},
+        "title": {"type": "string", "minLength": 1},
+        "path_or_external_ref": {"type": "string", "minLength": 1},
+        "source_class": {"enum": ["canonical_policy", "canonical_current_data", "domain_doctrine", "reference", "golden_example", "historical_evidence", "superseded"]},
+        "authority": {"enum": ["safety", "canonical", "current", "domain", "reference", "example", "historical", "superseded", "tool_implementation"]},
+        "scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "allowed_uses": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "forbidden_uses": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "freshness_type": {"enum": ["stable", "periodic_review", "snapshot", "historical", "live_or_snapshot"]},
+        "effective_date": {"type": ["string", "null"], "format": "date"},
+        "last_reviewed_at": {"type": ["string", "null"], "format": "date"},
+        "supersedes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "superseded_by": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "confidentiality": {"enum": ["public", "internal", "confidential", "client_sensitive"]},
+        "owner": {"type": "string", "minLength": 1},
+        "notes": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
