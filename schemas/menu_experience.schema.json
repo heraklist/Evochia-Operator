@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evochia.internal/schemas/menu_experience.schema.json",
+  "title": "Chef AI Pro Business Canonical Menu Experience",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "menu_id", "version", "status", "title", "occasion", "concept", "service_format", "dishes", "course_sequence", "experience", "internal_projection", "client_projection"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "menu_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "version": {"type": "string", "minLength": 1},
+    "status": {"enum": ["draft", "proposed", "needs_review", "approved", "archived"]},
+    "title": {"type": "string", "minLength": 1},
+    "occasion": {"type": "string", "minLength": 1},
+    "concept": {"type": "string", "minLength": 1},
+    "service_format": {"type": "string", "minLength": 1},
+    "dishes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/dish"}},
+    "course_sequence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/course"}},
+    "experience": {"$ref": "#/$defs/experience"},
+    "internal_projection": {"$ref": "#/$defs/internal_projection"},
+    "client_projection": {"$ref": "#/$defs/client_projection"},
+    "notes": {"type": ["string", "null"]}
+  },
+  "$defs": {
+    "allergen": {"enum": ["gluten", "crustaceans", "eggs", "fish", "peanuts", "soybeans", "milk", "nuts", "celery", "mustard", "sesame", "sulphites", "lupin", "molluscs"]},
+    "dish": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dish_id", "working_name", "client_name", "client_description", "recipe_refs", "allergens", "dietary_tags"],
+      "properties": {
+        "dish_id": {"type": "string", "minLength": 1},
+        "working_name": {"type": "string", "minLength": 1},
+        "client_name": {"type": "string", "minLength": 1},
+        "client_description": {"type": "string", "minLength": 1},
+        "recipe_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "allergens": {"type": "array", "items": {"$ref": "#/$defs/allergen"}, "uniqueItems": true},
+        "dietary_tags": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "culinary_role": {"type": ["string", "null"]}
+      }
+    },
+    "course": {"type": "object", "additionalProperties": false, "required": ["course_id", "label", "dish_ids"], "properties": {"course_id": {"type": "string", "minLength": 1}, "label": {"type": "string", "minLength": 1}, "dish_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}},
+    "experience": {"type": "object", "additionalProperties": false, "required": ["progression_notes", "service_rhythm"], "properties": {"progression_notes": {"type": "array", "items": {"type": "string", "minLength": 1}}, "service_rhythm": {"type": "string", "minLength": 1}, "temperature_arc": {"type": "array", "items": {"type": "string"}}, "texture_arc": {"type": "array", "items": {"type": "string"}}, "richness_acidity_notes": {"type": "array", "items": {"type": "string"}}}},
+    "internal_projection": {"type": "object", "additionalProperties": false, "required": ["feasibility_state", "complexity_notes", "service_dependencies", "allergen_notes", "costing_hooks", "assumptions"], "properties": {"feasibility_state": {"enum": ["draft", "feasible", "needs_review", "blocked"]}, "complexity_notes": {"type": "array", "items": {"type": "string"}}, "service_dependencies": {"type": "array", "items": {"type": "string"}}, "allergen_notes": {"type": "array", "items": {"type": "string"}}, "costing_hooks": {"type": "array", "items": {"type": "string", "minLength": 1}}, "assumptions": {"type": "array", "items": {"type": "string"}}, "operational_risks": {"type": "array", "items": {"type": "string"}}}},
+    "client_projection": {"type": "object", "additionalProperties": false, "required": ["headline", "intro", "course_ids", "dietary_note", "show_allergens"], "properties": {"headline": {"type": "string", "minLength": 1}, "intro": {"type": "string", "minLength": 1}, "course_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "dietary_note": {"type": "string", "minLength": 1}, "show_allergens": {"type": "boolean"}, "footer_note": {"type": ["string", "null"]}}}
+  }
+}

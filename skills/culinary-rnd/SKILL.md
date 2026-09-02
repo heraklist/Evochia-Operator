@@ -11,7 +11,7 @@ Protect and expand Chef AI's creative chef role: explore first, synthesize origi
 Use for ideation, trend exploration, cuisine research, novel dishes, flavor/pairing questions, substitutions, plating direction, contemporary restaurant signals, Pinterest/visual inspiration, or R&D briefs.
 
 ## Authority and Resources
-Read `references/culinary/flavor_pairing_substitution_v2_1.md` and `references/culinary/owner_style_storytelling_v2_1.md`. Current web evidence may inform trends and inspiration but does not override safety, deterministic formulas or approved company policy.
+Read `references/culinary/flavor_pairing_substitution_v2_1.md`, `references/culinary/owner_style_storytelling_v2_1.md`, and `skills/culinary-rnd/references/research_protocol.md`. Current web evidence may inform trends and inspiration but does not override safety, deterministic formulas or approved company policy.
 
 ## Responsibilities
 Generate original concepts; reason through salt, acid, fat, sweetness, umami, bitterness, heat, aroma, texture and temperature; identify ingredient function before substitutions; offer multiple directions when useful; distinguish classical knowledge from current trend evidence. For novelty/trend requests, research Greek and international culinary sources and visual sources where available, then synthesize rather than copy.

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evochia.internal/schemas/recipe.schema.json",
+  "title": "Chef AI Pro Business Canonical Production Recipe",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "recipe_id", "version", "status", "title", "description", "category", "cuisine", "yield", "ingredients", "allergens", "dietary_tags", "equipment", "mise_en_place", "method", "finishing", "holding_regeneration", "service_plating", "make_ahead_timeline", "critical_points", "failure_recovery", "scaling_notes", "provenance", "costing_hooks"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "recipe_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "version": {"type": "string", "minLength": 1},
+    "status": {"enum": ["draft", "proposed", "needs_review", "approved", "archived"]},
+    "title": {"type": "string", "minLength": 1},
+    "description": {"type": "string", "minLength": 1},
+    "category": {"type": "string", "minLength": 1},
+    "cuisine": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "yield": {"$ref": "#/$defs/yield_spec"},
+    "ingredients": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/ingredient_line"}},
+    "allergens": {"type": "array", "items": {"$ref": "#/$defs/allergen"}, "uniqueItems": true},
+    "dietary_tags": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "equipment": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "mise_en_place": {"type": "array", "items": {"$ref": "#/$defs/mise_step"}},
+    "method": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/method_step"}},
+    "finishing": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "holding_regeneration": {"$ref": "#/$defs/holding_regeneration"},
+    "service_plating": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "make_ahead_timeline": {"type": "array", "items": {"$ref": "#/$defs/timeline_step"}},
+    "critical_points": {"type": "array", "items": {"$ref": "#/$defs/critical_point"}},
+    "failure_recovery": {"type": "array", "items": {"$ref": "#/$defs/failure_recovery"}},
+    "scaling_notes": {"$ref": "#/$defs/scaling_notes"},
+    "provenance": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/provenance_item"}},
+    "costing_hooks": {"$ref": "#/$defs/costing_hooks"},
+    "notes": {"type": ["string", "null"]}
+  },
+  "$defs": {
+    "quantity": {"type": "object", "additionalProperties": false, "required": ["quantity", "unit"], "properties": {"quantity": {"type": "number", "exclusiveMinimum": 0}, "unit": {"type": "string", "minLength": 1}}},
+    "yield_spec": {"type": "object", "additionalProperties": false, "required": ["quantity", "unit", "portion_count", "service_style"], "properties": {"quantity": {"type": "number", "exclusiveMinimum": 0}, "unit": {"type": "string", "minLength": 1}, "portion_count": {"type": "number", "exclusiveMinimum": 0}, "portion_size": {"$ref": "#/$defs/quantity"}, "service_style": {"type": "string", "minLength": 1}, "yield_notes": {"type": ["string", "null"]}}},
+    "allergen": {"enum": ["gluten", "crustaceans", "eggs", "fish", "peanuts", "soybeans", "milk", "nuts", "celery", "mustard", "sesame", "sulphites", "lupin", "molluscs"]},
+    "ingredient_line": {
+      "type": "object", "additionalProperties": false,
+      "required": ["line_id", "name", "quantity", "unit", "basis", "allergen_tags"],
+      "properties": {"line_id": {"type": "string", "minLength": 1}, "name": {"type": "string", "minLength": 1}, "quantity": {"type": "number", "exclusiveMinimum": 0}, "unit": {"type": "string", "minLength": 1}, "basis": {"enum": ["AP", "EP", "direct"]}, "ap_quantity": {"type": "number", "exclusiveMinimum": 0}, "ep_quantity": {"type": "number", "exclusiveMinimum": 0}, "yield_pct": {"type": "number", "exclusiveMinimum": 0}, "component": {"type": ["string", "null"]}, "subrecipe_ref": {"type": ["string", "null"]}, "supplier_item_ref": {"type": ["string", "null"]}, "allergen_tags": {"type": "array", "items": {"$ref": "#/$defs/allergen"}, "uniqueItems": true}, "preparation": {"type": ["string", "null"]}, "notes": {"type": ["string", "null"]}},
+      "allOf": [
+        {"if": {"properties": {"basis": {"const": "AP"}}, "required": ["basis"]}, "then": {"required": ["ap_quantity"]}},
+        {"if": {"properties": {"basis": {"const": "EP"}}, "required": ["basis"]}, "then": {"required": ["ep_quantity"]}}
+      ]
+    },
+    "mise_step": {"type": "object", "additionalProperties": false, "required": ["step"], "properties": {"step": {"type": "string", "minLength": 1}, "timing": {"type": ["string", "null"]}, "station": {"type": ["string", "null"]}}},
+    "method_step": {"type": "object", "additionalProperties": false, "required": ["step_no", "instruction", "sensory_cues"], "properties": {"step_no": {"type": "integer", "minimum": 1}, "instruction": {"type": "string", "minLength": 1}, "time_minutes": {"type": "number", "minimum": 0}, "temperature_c": {"type": "number"}, "sensory_cues": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "equipment_ref": {"type": ["string", "null"]}, "critical_note": {"type": ["string", "null"]}}},
+    "holding_regeneration": {"type": "object", "additionalProperties": false, "required": ["holding", "regeneration"], "properties": {"holding": {"type": "string", "minLength": 1}, "max_hold_minutes": {"type": "number", "minimum": 0}, "holding_temperature_c": {"type": "number"}, "regeneration": {"type": "string", "minLength": 1}, "regeneration_temperature_c": {"type": "number"}}},
+    "timeline_step": {"type": "object", "additionalProperties": false, "required": ["offset", "action"], "properties": {"offset": {"type": "string", "minLength": 1}, "action": {"type": "string", "minLength": 1}}},
+    "critical_point": {"type": "object", "additionalProperties": false, "required": ["type", "point", "control"], "properties": {"type": {"enum": ["quality", "safety"]}, "point": {"type": "string", "minLength": 1}, "control": {"type": "string", "minLength": 1}}},
+    "failure_recovery": {"type": "object", "additionalProperties": false, "required": ["failure", "likely_cause", "recovery", "prevention"], "properties": {"failure": {"type": "string", "minLength": 1}, "likely_cause": {"type": "string", "minLength": 1}, "recovery": {"type": "string", "minLength": 1}, "prevention": {"type": "string", "minLength": 1}}},
+    "scaling_notes": {"type": "object", "additionalProperties": false, "required": ["linear_scaling_safe", "sensitive_items", "process_changes"], "properties": {"linear_scaling_safe": {"type": "boolean"}, "sensitive_items": {"type": "array", "items": {"type": "string", "minLength": 1}}, "process_changes": {"type": "array", "items": {"type": "string", "minLength": 1}}}},
+    "provenance_item": {"type": "object", "additionalProperties": false, "required": ["source_type", "title", "role"], "properties": {"source_type": {"enum": ["classical_reference", "current_research", "visual_inspiration", "user_source", "internal_reference", "original_synthesis"]}, "title": {"type": "string", "minLength": 1}, "url_or_ref": {"type": ["string", "null"]}, "role": {"type": "string", "minLength": 1}, "captured_at": {"type": ["string", "null"]}}},
+    "costing_hooks": {"type": "object", "additionalProperties": false, "required": ["costing_status", "ingredient_cost_basis", "supplier_snapshot_refs"], "properties": {"costing_status": {"enum": ["not_costed", "estimate", "needs_review", "approved"]}, "ingredient_cost_basis": {"enum": ["net", "gross", "mixed", "unknown"]}, "recipe_cost_ref": {"type": ["string", "null"]}, "supplier_snapshot_refs": {"type": "array", "items": {"type": "string", "minLength": 1}}, "notes": {"type": ["string", "null"]}}}
+  }
+}

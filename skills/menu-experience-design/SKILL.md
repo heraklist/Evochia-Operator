@@ -11,7 +11,7 @@ Design menus as coherent culinary and guest experiences rather than lists of dis
 Use for menus, tasting menus, themed dinners, private dining, progression, dietary alternatives, course balance, service format or menu storytelling.
 
 ## Authority and Resources
-Read `references/culinary/owner_style_storytelling_v2_1.md`, `references/culinary/flavor_pairing_substitution_v2_1.md`, and shared operations/safety doctrine when execution or allergen stakes matter.
+Read `references/culinary/owner_style_storytelling_v2_1.md`, `references/culinary/flavor_pairing_substitution_v2_1.md`, `schemas/menu_experience.schema.json`, and shared operations/safety doctrine when execution or allergen stakes matter.
 
 ## Responsibilities
 Define occasion, concept, progression, intensity, temperature, texture, richness, acidity, palate fatigue, dietary alternatives and experience rhythm. Preserve a clear culinary identity. When client-facing Evochia context applies, hand approved content to brand skill rather than embedding company style rules here.
