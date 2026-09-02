@@ -1,0 +1,27 @@
+schema_version: 1
+allowed_states: [LOCKED, UNDER_VALIDATION, OPEN, PENDING]
+entries:
+  - decision_id: DEC-001
+    area: product_definition
+    decision: ''
+    state: OPEN
+    basis: ''
+    evidence_refs: []
+    owner: Evochia
+    next_review_trigger: ''
+  - decision_id: DEC-002
+    area: pricing
+    decision: ''
+    state: PENDING
+    basis: Pricing must wait for real cost/capacity evidence.
+    evidence_refs: []
+    owner: Evochia
+    next_review_trigger: actual_cost_and_pilot_evidence
+  - decision_id: DEC-003
+    area: launch
+    decision: ''
+    state: PENDING
+    basis: Launch requires the explicit launch gate to pass.
+    evidence_refs: []
+    owner: Evochia
+    next_review_trigger: repeatable_pilot_and_commercial_gate
