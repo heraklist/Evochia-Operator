@@ -11,7 +11,7 @@ Turn culinary intent into an executable professional recipe while preserving cre
 Use for recipe creation, professional recipe specifications, scaling, reformulation, production instructions, yield/portion structure, holding/regeneration, failure recovery or troubleshooting.
 
 ## Authority and Resources
-Read `references/operations/professional_kitchen_workflows_v2_2.md`, `references/culinary/flavor_pairing_substitution_v2_1.md`, and the safety/costing references when relevant.
+Read `references/operations/professional_kitchen_workflows_v2_2.md`, `references/culinary/flavor_pairing_substitution_v2_1.md`, and the safety/costing references when relevant. Use `schemas/recipe.schema.json` for canonical structured recipes and `templates/recipes/production_recipe.yaml` as the structural sample.
 
 ## Responsibilities
 Specify yield, portions, equipment, ingredients, AP/EP basis where material, mise en place, detailed method, time/temperature/sensory cues, finishing, holding, regeneration, service/plating, make-ahead sequence, critical quality points, failure recovery, allergens and scaling notes. Keep nonlinear ingredients/processes under review when batch size changes.
