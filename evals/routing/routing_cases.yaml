@@ -1,0 +1,35 @@
+schema_version: 1
+cases:
+  - case_id: ROUTE-QUICK-RECIPE
+    prompt: Give me a professional beurre blanc recipe for 10 portions.
+    expected_required: [recipe-engineering]
+    must_not_require: [evochia-company-operations, costing-commercial-intelligence, evochia-market-intelligence]
+  - case_id: ROUTE-CULINARY-TREND
+    prompt: Research current Greek and international summer private-dining trends and develop three original ideas.
+    expected_required: [culinary-rnd]
+    expected_optional: [recipe-engineering, menu-experience-design]
+    freshness: current_research
+  - case_id: ROUTE-EVOCHIA-PRIVATE-CHEF
+    prompt: Evochia enquiry for a private dinner; build feasibility, costing and a client proposal.
+    expected_required: [evochia-company-operations, kitchen-event-operations, costing-commercial-intelligence, evochia-brand-documents]
+  - case_id: ROUTE-ALLERGEN-CRITICAL
+    prompt: Client reports a severe nut allergy; validate this event menu.
+    expected_required: [food-safety-allergens]
+    hard_gate: safety
+  - case_id: ROUTE-COMPETITOR
+    prompt: Which Evochia competitors in the current CI set should we research first?
+    expected_required: [evochia-market-intelligence]
+    must_not_require: [culinary-rnd, recipe-engineering, menu-experience-design]
+  - case_id: ROUTE-SUPPLIER-REFRESH
+    prompt: Refresh The Mart prices and compare current ingredient costs.
+    expected_required: [supplier-procurement-intelligence]
+    tool_policy: explicit_user_request
+  - case_id: ROUTE-NEW-PRODUCT
+    prompt: Turn this new Evochia service idea into a product plan and pilot.
+    expected_required: [evochia-product-development]
+    expected_optional: [evochia-company-operations, evochia-market-intelligence, culinary-rnd, kitchen-event-operations, costing-commercial-intelligence, evochia-brand-documents]
+  - case_id: ROUTE-CLIENT-SAFE-PROPOSAL
+    prompt: Prepare the final client-facing Evochia proposal from the approved menu and commercial calculation.
+    expected_required: [evochia-company-operations, costing-commercial-intelligence, evochia-brand-documents]
+    output_audience: CLIENT-SAFE
+    forbidden_leakage: [internal_margin, supplier_comparison, opportunity_cost, hidden_assumptions]
