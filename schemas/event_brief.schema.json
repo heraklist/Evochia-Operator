@@ -1,0 +1,39 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://evochia.internal/schemas/event_brief.schema.json",
+  "title":"Chef AI Pro Business Event Brief",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","event_id","status","client","occasion","date_time","location","pax","service_style","kitchen_equipment","dietary_allergen_constraints","budget_price_context","travel_accommodation","staffing","known_facts","unknowns","assumptions","decision_state"],
+  "properties":{
+    "schema_version":{"type":"integer","const":1},
+    "event_id":{"type":"string","minLength":1},
+    "status":{"enum":["draft","proposed","needs_review","approved","archived"]},
+    "client":{"$ref":"#/$defs/client"},
+    "occasion":{"type":"string","minLength":1},
+    "date_time":{"$ref":"#/$defs/date_time"},
+    "location":{"$ref":"#/$defs/location"},
+    "pax":{"$ref":"#/$defs/pax"},
+    "service_style":{"type":"string","minLength":1},
+    "kitchen_equipment":{"$ref":"#/$defs/kitchen_equipment"},
+    "dietary_allergen_constraints":{"type":"array","items":{"$ref":"#/$defs/constraint"}},
+    "budget_price_context":{"$ref":"#/$defs/budget"},
+    "travel_accommodation":{"$ref":"#/$defs/travel_accommodation"},
+    "staffing":{"$ref":"#/$defs/staffing"},
+    "known_facts":{"type":"array","items":{"type":"string"}},
+    "unknowns":{"type":"array","items":{"type":"string"}},
+    "assumptions":{"type":"array","items":{"type":"string"}},
+    "decision_state":{"enum":["draft","needs_review","approved","blocked"]}
+  },
+  "$defs":{
+    "client":{"type":"object","additionalProperties":false,"required":["name","contact_ref"],"properties":{"name":{"type":"string","minLength":1},"contact_ref":{"type":["string","null"]}}},
+    "date_time":{"type":"object","additionalProperties":false,"required":["date","service_time","timezone"],"properties":{"date":{"type":"string","format":"date"},"service_time":{"type":"string","pattern":"^([01]\\d|2[0-3]):[0-5]\\d$"},"timezone":{"type":"string","minLength":1}}},
+    "location":{"type":"object","additionalProperties":false,"required":["venue","city","country"],"properties":{"venue":{"type":"string"},"city":{"type":"string"},"country":{"type":"string"},"address":{"type":["string","null"]}}},
+    "pax":{"type":"object","additionalProperties":false,"required":["total","adults","children"],"properties":{"total":{"type":"integer","minimum":1},"adults":{"type":"integer","minimum":0},"children":{"type":"integer","minimum":0}}},
+    "kitchen_equipment":{"type":"object","additionalProperties":false,"required":["kitchen_available","known_equipment","missing_or_unknown"],"properties":{"kitchen_available":{"type":"boolean"},"known_equipment":{"type":"array","items":{"type":"string"}},"missing_or_unknown":{"type":"array","items":{"type":"string"}}}},
+    "constraint":{"type":"object","additionalProperties":false,"required":["type","value","severity_or_note"],"properties":{"type":{"enum":["allergen","dietary","preference"]},"value":{"type":"string","minLength":1},"severity_or_note":{"type":["string","null"]}}},
+    "budget":{"type":"object","additionalProperties":false,"required":["currency","price_context"],"properties":{"currency":{"type":"string","minLength":3},"budget_total":{"type":["number","null"],"minimum":0},"budget_per_person":{"type":["number","null"],"minimum":0},"price_context":{"type":"string","minLength":1}}},
+    "travel_accommodation":{"type":"object","additionalProperties":false,"required":["travel_required","accommodation_required","notes"],"properties":{"travel_required":{"type":"boolean"},"accommodation_required":{"type":"boolean"},"notes":{"type":["string","null"]}}},
+    "staffing":{"type":"object","additionalProperties":false,"required":["chef_count","assistant_count","service_count","stewarding_count","notes"],"properties":{"chef_count":{"type":"integer","minimum":0},"assistant_count":{"type":"integer","minimum":0},"service_count":{"type":"integer","minimum":0},"stewarding_count":{"type":"integer","minimum":0},"notes":{"type":["string","null"]}}}
+  }
+}

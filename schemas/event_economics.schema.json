@@ -1,0 +1,36 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://evochia.internal/schemas/event_economics.schema.json",
+  "title":"Chef AI Pro Business Event Economics",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["schema_version","scenario_id","currency","food_cost","labour","travel","accommodation_overnight","equipment_rental","consumables_packaging","overhead","cash_cost","economic_cost","opportunity_cost","vat","client_fee","contribution","gross_profit","margin_pct","minimum_viable_price","assumptions"],
+  "properties":{
+    "schema_version":{"type":"integer","const":1},
+    "scenario_id":{"type":"string","minLength":1},
+    "currency":{"type":"string","minLength":3},
+    "food_cost":{"type":"number","minimum":0},
+    "labour":{"$ref":"#/$defs/labour"},
+    "travel":{"$ref":"#/$defs/travel"},
+    "accommodation_overnight":{"type":"number","minimum":0},
+    "equipment_rental":{"type":"number","minimum":0},
+    "consumables_packaging":{"type":"number","minimum":0},
+    "overhead":{"$ref":"#/$defs/overhead"},
+    "cash_cost":{"type":"number","minimum":0},
+    "economic_cost":{"type":"number","minimum":0},
+    "opportunity_cost":{"type":"number","minimum":0},
+    "vat":{"$ref":"#/$defs/vat"},
+    "client_fee":{"type":"number","minimum":0},
+    "contribution":{"type":"number"},
+    "gross_profit":{"type":"number"},
+    "margin_pct":{"type":"number"},
+    "minimum_viable_price":{"type":"number","minimum":0},
+    "assumptions":{"type":"array","items":{"type":"string"}}
+  },
+  "$defs":{
+    "labour":{"type":"object","additionalProperties":false,"required":["chef_founder","assistants","service","stewarding","shopping_prep_time"],"properties":{"chef_founder":{"type":"number","minimum":0},"assistants":{"type":"number","minimum":0},"service":{"type":"number","minimum":0},"stewarding":{"type":"number","minimum":0},"shopping_prep_time":{"type":"number","minimum":0}}},
+    "travel":{"type":"object","additionalProperties":false,"required":["transport","tolls","ferry","parking"],"properties":{"transport":{"type":"number","minimum":0},"tolls":{"type":"number","minimum":0},"ferry":{"type":"number","minimum":0},"parking":{"type":"number","minimum":0}}},
+    "overhead":{"type":"object","additionalProperties":false,"required":["variable","fixed_allocation"],"properties":{"variable":{"type":"number","minimum":0},"fixed_allocation":{"type":"number","minimum":0}}},
+    "vat":{"type":"object","additionalProperties":false,"required":["rate_pct","basis","amount"],"properties":{"rate_pct":{"type":"number","minimum":0},"basis":{"enum":["client_fee","net_fee","custom"]},"amount":{"type":"number","minimum":0}}}
+  }
+}
