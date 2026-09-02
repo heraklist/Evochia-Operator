@@ -11,7 +11,7 @@ Turn a product opportunity into an evidence-led Evochia product plan from defini
 Use for new products, service formats, interactive experiences, corporate packages, villa offers, thematic formats, pilots, validation plans or product portfolio decisions.
 
 ## Authority and Resources
-Use the Interactive Dining Master Plan as the registered golden reasoning/output pattern, not as a hardcoded product. Use current company policy/data and external market research only within their registered authority.
+Use `schemas/product_plan.schema.json` plus `templates/product-plans/` as the canonical product-development contract. The registered golden master plan teaches the reasoning/output pattern, not a hardcoded product. Use current company policy/data and external market research only within their registered authority.
 
 ## Responsibilities
 Define product, customer/occasion, value proposition, positioning, architecture, experience, culinary system, operating model, pilot, evidence, economics/capacity, commercial packaging, risks, roadmap and decision register. Track `LOCKED`, `UNDER_VALIDATION`, `OPEN` and `PENDING` decisions.

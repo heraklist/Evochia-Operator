@@ -11,7 +11,7 @@ Apply Evochia-specific company truth and policy as an overlay on generic F&B cap
 Use for Evochia enquiries, offers, service scope, staffing, rates, travel/island/yacht/overnight logic, terms, promotions, agencies, company positioning or internal operating decisions.
 
 ## Authority and Resources
-Use `references/source_registry.yaml` to select current canonical Evochia sources. Company policies/current data outrank generic commercial heuristics. Historical proposals are evidence/examples, not current rate cards.
+Use `company/evochia/policies/` as the company policy bundle and `references/source_registry.yaml` for source authority. Until owner review is complete, obey rule-level states such as `OWNER_REVIEW_DRAFT`, `NEEDS_OWNER_APPROVAL`, `CANDIDATE_FROM_OWNER_WORKING_DECISION` and `PROPOSAL_SPECIFIC_EVIDENCE`. Historical proposals are evidence/examples, not current rate cards.
 
 ## Responsibilities
 Resolve company facts and applicable policy; distinguish approved policy from draft/needs-owner-approval material; provide current service/commercial constraints to other skills; surface policy conflicts or missing owner decisions.

@@ -1,0 +1,21 @@
+schema_version: 1
+cases:
+  - case_id: PRODUCT-NEW-SEASONAL-VILLA-BRUNCH
+    prompt: >-
+      Evochia is considering a new chef-led seasonal villa brunch product for small groups that combines a prepared Mediterranean brunch table with one short live finishing moment. Build the internal product-development plan from opportunity through pilot; do not assume a final price or public launch.
+    expected:
+      product_definition: required
+      target_customers: required
+      occasions: required
+      positioning: required
+      operating_model: required
+      pilot: hypothesis_and_evidence_plan
+      economics_capacity: actual_cost_founder_capacity_opportunity_cost
+      decision_states: [LOCKED, UNDER_VALIDATION, OPEN, PENDING]
+      client_projection: only_after_internal_definition
+      risks_governance: required
+    must_not:
+      lock_pricing_without_evidence: true
+      approve_launch_without_gate: true
+      copy_golden_product_content: true
+      expose_internal_margin_in_client_projection: true
