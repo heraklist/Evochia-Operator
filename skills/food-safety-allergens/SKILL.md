@@ -1,29 +1,31 @@
 ---
 name: food-safety-allergens
-description: Use when food safety, allergens, cross-contact, raw or undercooked foods, holding, leftovers, preservation, high-risk guests, or service-critical dietary claims materially affect the task.
+description: Use when food safety, HACCP, hygiene, allergens, cross-contact, raw or undercooked foods, holding, preservation, high-risk guests, sanitary requirements, traceability, recall, or service-critical dietary claims materially affect the task.
 ---
-# Food Safety Allergens
+# Food Safety, HACCP & Allergens
 
 ## Purpose
-Provide the mandatory safety/allergen gate. Safety authority outranks creativity, margin, convenience and presentation.
+Provide the mandatory food-safety gate for Chef AI Pro Business. Safety authority outranks creativity, margin, convenience and presentation. Combine stable validated doctrine with **on-demand** official research whenever the answer depends on current regulation, guidance, limits, jurisdiction or scientific risk evidence.
 
 ## When to Use
-Use for the EU/Greece 14 allergens, severe allergy/celiac concerns, cross-contact, raw animal foods, sous vide, fermentation/canning, hot/cold holding, leftovers, vulnerable guests or any client-facing safety claim.
+Use for HACCP/GHP/PRP/OPRP/CCP work, professional hygiene, EU/Greece allergens, severe allergy/celiac concerns, cross-contact, raw animal foods, sous vide, fermentation/canning, hot/cold holding, cooling/reheating, leftovers, vulnerable guests, current sanitary requirements, traceability/recall, microbiological criteria or any client-facing safety claim.
 
 ## Authority and Resources
-Read `references/safety/food_safety_allergens_v2_5.md` and `data/allergens/fnb_allergen_master_v1.csv`. Current official guidance should be sought when exact current regulatory/temperature guidance is material.
+Read `references/safety/food_safety_allergens_v2_5.md`, `references/safety/official_sources.yaml`, `references/safety/official_research_protocol.md`, `references/safety/haccp_operational_framework.md`, `references/safety/hygiene_prerequisite_programs.md`, and `data/allergens/fnb_allergen_master_v1.csv` as relevant. Use `schemas/safety_evidence.schema.json` for current evidence and `schemas/haccp_plan.schema.json` for structured plans.
 
 ## Responsibilities
-Propagate ingredient/sub-recipe/recipe/menu allergens; distinguish contains, may-contain, cross-contact, exempt and unknown; identify hard conflicts; specify operational controls and review status; state what remains unverified.
+Propagate allergens; distinguish contains/may-contain/cross-contact/unknown; identify hard conflicts; design GHP/PRP and HACCP-oriented operational controls; perform hazard analysis across biological, chemical, physical and allergen hazards; separate GHP/PRP, OPRP and CCP logic; define monitoring, corrective action, verification and records; surface what remains unverified.
+
+When a claim depends on what is **currently** required in Greece/EU, perform official-source research at answer time and classify the claim as `current regulatory requirement`, `official guidance`, `scientific evidence` or `operational best practice`. Never collapse those categories.
 
 ## Output Contract
-Return a risk summary, conservative recommendation, practical controls, avoid-list, verification boundary and safer alternative when useful. For service-critical cases, provide OPERATIONS allergen notes/matrix suitable for trained human review.
+Return risk summary, controls, monitoring/corrective-action needs, evidence/classification, jurisdiction and freshness boundary. For HACCP work, produce a draft suitable for trained human review, not a certification claim. For service-critical cases, provide OPERATIONS logs/matrices as needed.
 
 ## Guardrails
-Never guarantee safe, allergen-free, gluten-free, nut-free or medically suitable food. Unknown is not safe. Supplier/item changes require re-check. Severe-allergy client outputs require trained human verification.
+Never guarantee safe, allergen-free, gluten-free, nut-free or medically suitable food. Unknown is not safe. Never invent a legal temperature, microbiological criterion, critical limit or sanitary requirement from memory. Do not use **background monitoring** or silently update canonical doctrine. If live official verification fails, label the point `NEEDS_REVIEW` and give only a conservative operational recommendation.
 
 ## Handoffs
-Return hard-blocks to the orchestrator. Coordinate with `recipe-engineering`, `menu-experience-design` and `kitchen-event-operations` for redesign and operational controls.
+Return hard-blocks to the orchestrator. Coordinate with `recipe-engineering`, `menu-experience-design`, `kitchen-event-operations` and `supplier-procurement-intelligence` for redesign, execution controls, supplier evidence and traceability.
 
 ## Non-Goals
-Do not provide medical diagnosis, replace HACCP/local law/training, set commercial rates or use brand language to soften a material warning.
+Do not provide medical diagnosis, certify HACCP compliance, replace competent authorities/local law/training, set commercial rates, or use brand language to soften a material warning.

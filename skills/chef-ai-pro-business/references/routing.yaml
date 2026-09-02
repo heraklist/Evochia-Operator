@@ -42,11 +42,12 @@ routes:
     required_skills: [evochia-company-operations, kitchen-event-operations, costing-commercial-intelligence, evochia-brand-documents]
     optional_skills: [menu-experience-design, recipe-engineering, food-safety-allergens, supplier-procurement-intelligence]
   - route_id: safety_critical
-    intent: allergen_or_food_safety_material
+    intent: allergen_food_safety_haccp_hygiene_or_current_sanitary_material
     context: any
     required_skills: [food-safety-allergens]
     optional_skills: [recipe-engineering, menu-experience-design, kitchen-event-operations]
     hard_gate: safety
+    research_policy: on_demand_official_when_current_claim
   - route_id: competitor_intelligence
     intent: evochia_competitor_or_market_intelligence
     context: evochia
