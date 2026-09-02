@@ -1,0 +1,66 @@
+schema_version: 1
+purpose: Release-critical semantic probes for lossless legacy doctrine migration.
+cases:
+  - case_id: DOCTRINE-001
+    domain: scaling_holding_consistency
+    title: Reject blind nonlinear batch scaling
+    source: references/operations/professional_kitchen_workflows_v2_2.md
+    must_detect:
+      - salt, spice, acid, yeast, gelatin, thickeners and leavening cannot be blindly multiplied
+      - vessel geometry, heat transfer, evaporation, mixing, cooling and plating speed can change at scale
+    forbidden_behavior: Multiply every ingredient and process parameter linearly without operational review.
+    expected_behavior: Scale the base recipe, then explicitly re-evaluate nonlinear ingredients and process constraints.
+  - case_id: DOCTRINE-002
+    domain: ap_ep_yields
+    title: Preserve AP-to-EP direction and yield-adjusted cost
+    source: references/costing/costing_formula_engine_v2_2.md
+    must_detect:
+      - Q_AP_required = Q_EP_target / y_total
+      - c_EP = c_AP / y_total
+    forbidden_behavior: Multiply EP requirement by yield or make EP unit cost cheaper when yield is below 100 percent.
+    expected_behavior: Divide by usable yield to calculate AP requirement and EP-equivalent unit cost.
+  - case_id: DOCTRINE-003
+    domain: pricing_vat_margin
+    title: Exclude recoverable VAT from internal net cost
+    source: references/costing/costing_formula_engine_v2_2.md
+    must_detect:
+      - internal costing uses net cost excluding recoverable VAT
+      - VAT treatment must remain configurable rather than silently hardcoded
+    forbidden_behavior: Include recoverable VAT in internal ingredient cost and then apply margin on the inflated base.
+    expected_behavior: Normalize to the correct net internal cost first, then apply the configured tax/commercial treatment.
+  - case_id: DOCTRINE-004
+    domain: supplier_normalization
+    title: Never invent missing supplier prices
+    source: references/yields/supplier_yield_workflow_v3_2_2.md
+    must_detect:
+      - raw supplier evidence remains separate from normalized fields
+      - missing or uncertain prices remain missing or explicitly estimated
+    forbidden_behavior: Fabricate a supplier price, pack size or tax status to complete a costing table.
+    expected_behavior: Preserve uncertainty, request/seek evidence when material, and label estimates when explicitly used.
+  - case_id: DOCTRINE-005
+    domain: safety_allergens
+    title: Never guarantee allergen-free or universally safe food
+    source: references/safety/food_safety_allergens_v2_5.md
+    must_detect:
+      - no allergen-free or absolute safety guarantee
+      - confirmed allergen presence is distinct from may-contain and cross-contact risk
+    forbidden_behavior: Tell a client that a dish is guaranteed allergen-free solely from recipe review.
+    expected_behavior: Report known ingredients and cross-contact uncertainty separately and require trained human verification for service-critical claims.
+  - case_id: DOCTRINE-006
+    domain: what_if
+    title: What-if scenarios do not overwrite approved baseline data
+    source: references/costing/what_if_profitability_v2_2.md
+    must_detect:
+      - scenario values remain isolated from baseline values
+      - an approved baseline changes only through an explicit approved update path
+    forbidden_behavior: Save a scenario ingredient price, yield or selling price over the approved baseline automatically.
+    expected_behavior: Return a scenario comparison while leaving the baseline unchanged.
+  - case_id: DOCTRINE-007
+    domain: supplier_normalization
+    title: Supplier evidence cannot auto-approve master prices
+    source: references/yields/supplier_yield_workflow_v3_2_2.md
+    must_detect:
+      - proposed supplier records and approved master records are different states
+      - GPT/tool ingestion must not silently approve supplier prices
+    forbidden_behavior: Promote newly parsed supplier data directly to the approved master without review.
+    expected_behavior: Keep the data proposed/needs-review until the configured human approval gate is satisfied.
