@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evochia.internal/schemas/haccp_plan.schema.json",
+  "title": "Operational HACCP Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plan_id", "scope", "process_steps", "hazard_analysis", "control_plan", "source_evidence", "verification", "approval_status"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "plan_id": {"type": "string", "minLength": 1},
+    "scope": {
+      "type": "object",
+      "required": ["product_or_service", "jurisdiction", "intended_use"],
+      "properties": {
+        "product_or_service": {"type": "string"},
+        "jurisdiction": {"type": "string"},
+        "intended_use": {"type": "string"},
+        "vulnerable_consumers": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "process_steps": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "hazard_analysis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "hazard_type", "hazard", "significance", "existing_controls"],
+        "properties": {
+          "step": {"type": "string"},
+          "hazard_type": {"enum": ["biological", "chemical", "physical", "allergen"]},
+          "hazard": {"type": "string"},
+          "significance": {"enum": ["not_significant", "significant", "needs_review"]},
+          "existing_controls": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "control_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "control_class", "control_measure", "monitoring", "corrective_action", "responsible"],
+        "properties": {
+          "step": {"type": "string"},
+          "control_class": {"enum": ["GHP_PRP", "OPRP", "CCP", "other_monitored_control"]},
+          "control_measure": {"type": "string"},
+          "critical_limit_or_criterion": {"type": ["string", "null"]},
+          "monitoring": {"type": "string"},
+          "corrective_action": {"type": "string"},
+          "responsible": {"type": "string"},
+          "record": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "source_evidence": {"type": "array", "minItems": 1, "items": {"$ref": "safety_evidence.schema.json"}},
+    "verification": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "approval_status": {"enum": ["draft", "needs_review", "approved_by_trained_human"]},
+    "review_notes": {"type": ["string", "null"]}
+  }
+}
