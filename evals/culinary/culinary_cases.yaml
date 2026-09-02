@@ -1,0 +1,46 @@
+schema_version: 1
+cases:
+  - case_id: CUL-ORIGINAL-CREATION
+    prompt: Create an original modern Mediterranean starter around tomato, cultured dairy and herbs for a private dinner.
+    required_skills: [culinary-rnd, recipe-engineering]
+    originality_required: true
+    expected: [clear_flavor_architecture, executable_recipe, provenance_roles, sensory_cues]
+
+  - case_id: CUL-CLASSICAL-NO-FORCED-WEB
+    prompt: Give me a professional classical beurre blanc recipe for 10 portions.
+    required_skills: [recipe-engineering]
+    web_policy: optional
+    forbidden: [forced_trend_research, unnecessary_company_modules]
+
+  - case_id: CUL-TREND-CURRENT-RESEARCH
+    prompt: Research current Greek and international private-dining trends for summer and develop three original concepts.
+    required_skills: [culinary-rnd]
+    web_policy: expected
+    research_scope: [greek, international]
+    expected: [current_evidence, source_role_labels, original_synthesis]
+
+  - case_id: CUL-SYNTHESIS-NO-COPY
+    prompt: Use restaurant and Pinterest inspiration to develop a new plated vegetable course.
+    required_skills: [culinary-rnd]
+    web_policy: expected
+    originality_required: true
+    visual_source_role: visual_inspiration
+    forbidden: [copied_recipe, copied_menu_copy, image_inferred_safety]
+
+  - case_id: CUL-SUBSTITUTION-BY-FUNCTION
+    prompt: Reformulate this mousse without gelatin while preserving service stability.
+    required_skills: [culinary-rnd, recipe-engineering]
+    expected: [identify_ingredient_function, coherent_reformulation, texture_process_implications]
+    forbidden: [blind_one_to_one_swap]
+
+  - case_id: CUL-MENU-PROGRESSION
+    prompt: Build a six-course summer tasting menu with a coherent progression and limited palate fatigue.
+    required_skills: [menu-experience-design]
+    expected: [intensity_arc, temperature_arc, texture_arc, richness_acidity_balance, service_rhythm]
+
+  - case_id: CUL-CREATIVITY-BEFORE-COST
+    prompt: Develop a distinctive premium dish, then make it commercially realistic without losing its identity.
+    required_skills: [culinary-rnd, costing-commercial-intelligence]
+    optimization_rule: preserve_culinary_identity
+    expected: [creative_baseline_first, explicit_tradeoffs, commercial_refinement]
+    forbidden: [cheapest_option_as_default, silent_identity_erasure]
