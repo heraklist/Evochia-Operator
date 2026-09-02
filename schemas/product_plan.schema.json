@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evochia.local/schemas/product_plan.schema.json",
+  "title": "Evochia Product Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "product_id", "version", "product_definition", "target_customers", "occasions",
+    "positioning", "product_architecture", "experience_design", "culinary_system",
+    "operating_model", "pilot", "evidence", "economics_capacity", "commercial_packaging",
+    "risks_governance", "roadmap_decision_gates", "decision_register", "pricing_state",
+    "launch_state", "client_projection"
+  ],
+  "properties": {
+    "product_id": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "minLength": 1},
+    "title": {"type": "string"},
+    "product_definition": {"type": "object", "required": ["what_it_is", "what_it_is_not"], "properties": {"what_it_is": {"type": "string"}, "what_it_is_not": {"type": "array", "items": {"type": "string"}}}},
+    "target_customers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "occasions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "positioning": {"type": "object"},
+    "product_architecture": {"type": "object"},
+    "experience_design": {"type": "object"},
+    "culinary_system": {"type": "object"},
+    "operating_model": {"type": "object"},
+    "pilot": {"type": "object", "required": ["hypotheses", "success_criteria"], "properties": {"hypotheses": {"type": "array", "items": {"type": "string"}}, "success_criteria": {"type": "array", "items": {"type": "string"}}, "scope": {"type": "string"}}},
+    "evidence": {"type": "object", "properties": {"observed_behavior": {"type": "array", "items": {"type": "string"}}, "specific_intent": {"type": "array", "items": {"type": "string"}}, "comparative_preference": {"type": "array", "items": {"type": "string"}}, "general_feedback": {"type": "array", "items": {"type": "string"}}, "polite_praise": {"type": "array", "items": {"type": "string"}}}},
+    "economics_capacity": {"type": "object", "properties": {"actual_cost_required": {"type": "boolean"}, "founder_capacity": {"type": "string"}, "opportunity_cost": {"type": "string"}, "minimum_viable_price": {"type": ["number", "null"]}}},
+    "commercial_packaging": {"type": "object"},
+    "risks_governance": {"type": "object"},
+    "roadmap_decision_gates": {"type": "array", "items": {"type": "object", "required": ["gate", "state", "evidence_needed"], "properties": {"gate": {"type": "string"}, "state": {"$ref": "#/$defs/decision_state"}, "evidence_needed": {"type": "array", "items": {"type": "string"}}}}},
+    "decision_register": {"type": "array", "items": {"type": "object", "required": ["decision", "state", "basis"], "properties": {"decision": {"type": "string"}, "state": {"$ref": "#/$defs/decision_state"}, "basis": {"type": "string"}}}},
+    "pricing_state": {"$ref": "#/$defs/decision_state"},
+    "launch_state": {"$ref": "#/$defs/decision_state"},
+    "client_projection": {"type": "object", "properties": {"approved": {"type": "boolean"}, "value_proposition": {"type": "string"}, "experience_flow": {"type": "array", "items": {"type": "string"}}, "inclusions": {"type": "array", "items": {"type": "string"}}, "practical_details": {"type": "object"}}}
+  },
+  "$defs": {
+    "decision_state": {"type": "string", "enum": ["LOCKED", "UNDER_VALIDATION", "OPEN", "PENDING"]}
+  }
+}
