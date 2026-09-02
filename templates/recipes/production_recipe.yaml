@@ -1,0 +1,96 @@
+schema_version: 1
+recipe_id: rcp-sample-roasted-tomato-001
+version: 1.0.0
+status: draft
+title: Roasted Tomato, Basil and Cultured Cream
+description: Sample professional production recipe demonstrating the canonical vNext recipe contract.
+category: starter
+cuisine: [Mediterranean]
+yield:
+  quantity: 10
+  unit: portions
+  portion_count: 10
+  portion_size: {quantity: 1, unit: portion}
+  service_style: plated
+ingredients:
+  - line_id: ing-001
+    name: ripe tomato
+    quantity: 1800
+    unit: g
+    basis: AP
+    ap_quantity: 1800
+    ep_quantity: 1530
+    yield_pct: 85
+    component: tomato
+    allergen_tags: []
+    preparation: trimmed and cut
+  - line_id: ing-002
+    name: cultured cream
+    quantity: 300
+    unit: g
+    basis: EP
+    ep_quantity: 300
+    component: cream
+    allergen_tags: [milk]
+  - line_id: ing-003
+    name: basil oil
+    quantity: 120
+    unit: g
+    basis: direct
+    component: finish
+    allergen_tags: []
+allergens: [milk]
+dietary_tags: [vegetarian]
+equipment: [oven, roasting tray, blender, fine strainer, squeeze bottle]
+mise_en_place:
+  - step: Trim and portion tomatoes consistently.
+    timing: T-3h
+  - step: Prepare cultured cream and basil oil.
+    timing: T-2h
+method:
+  - step_no: 1
+    instruction: Roast the tomatoes until concentrated but still juicy.
+    time_minutes: 35
+    temperature_c: 155
+    sensory_cues: [edges lightly collapsed, sweetness concentrated, no burnt bitterness]
+  - step_no: 2
+    instruction: Chill the roasted tomatoes rapidly before final assembly.
+    time_minutes: 30
+    sensory_cues: [cold through the centre, structure still intact]
+finishing:
+  - Adjust tomato seasoning with salt and measured acidity.
+  - Finish with basil oil immediately before service.
+holding_regeneration:
+  holding: Keep roasted tomatoes refrigerated and covered until plating.
+  max_hold_minutes: 240
+  regeneration: Serve cool or allow a controlled temper before plating; do not reheat aggressively.
+service_plating:
+  - Plate cultured cream first, arrange tomato, finish with basil oil and fresh basil.
+make_ahead_timeline:
+  - {offset: T-3h, action: Roast tomatoes.}
+  - {offset: T-2h, action: Chill tomatoes and prepare garnishes.}
+  - {offset: T-15m, action: Temper tomatoes if required and set plating station.}
+critical_points:
+  - {type: quality, point: Do not dry the tomatoes into a leathery texture., control: Judge by texture and juice concentration rather than time alone.}
+  - {type: safety, point: Cool cooked tomatoes promptly before refrigerated holding., control: Use shallow trays and appropriate chilling practice.}
+failure_recovery:
+  - failure: tomatoes are too acidic
+    likely_cause: underripe fruit or over-acidification
+    recovery: rebalance with a sweeter tomato component or cultured cream; do not mask with excess sugar
+    prevention: taste fruit before seasoning and add acid incrementally
+scaling_notes:
+  linear_scaling_safe: false
+  sensitive_items: [salt, added acid, roasting time, tray loading]
+  process_changes: [use additional trays rather than overcrowding, revalidate roast time and cooling capacity]
+provenance:
+  - source_type: internal_reference
+    title: Chef AI shared culinary doctrine
+    role: technique_and_scaling_guardrails
+  - source_type: original_synthesis
+    title: Canonical Phase 5 sample
+    role: final_synthesis
+costing_hooks:
+  costing_status: not_costed
+  ingredient_cost_basis: unknown
+  supplier_snapshot_refs: []
+notes: This is a structural sample, not an approved Evochia menu or commercial recipe.
