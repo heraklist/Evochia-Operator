@@ -1,0 +1,115 @@
+schema_version: 1
+reviewed_at: '2026-09-02'
+update_mode: on_demand_only
+background_monitoring: false
+policy: >-
+  Use this registry to choose official sources during a safety task. Re-check the live official source whenever a claim depends on current law, guidance, limits, dates, applicability or jurisdiction. Do not treat the reviewed_at snapshot as a substitute for live verification.
+sources:
+  - source_id: eu_reg_852_2004
+    organization: EUR-Lex / European Union
+    jurisdiction: EU
+    authority_type: binding_law
+    scope: [food_hygiene, haccp, temperature_control, cold_chain, training, food_safety_culture, allergen_management]
+    canonical_url: https://eur-lex.europa.eu/eli/reg/2004/852
+    version_checked: '2021-03-24'
+    live_reverify: true
+    notes: Article 5 establishes permanent procedures based on HACCP principles; use the current consolidated text at answer time.
+  - source_id: eu_commission_fsms_notice_2022_c355_01
+    organization: European Commission / DG SANTE
+    jurisdiction: EU
+    authority_type: official_guidance
+    scope: [fsms, ghp, prp, oprp, haccp, flexibility, small_business]
+    canonical_url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52022XC0916(01)
+    version_checked: '2022-09-16'
+    live_reverify: true
+    notes: Implementation guidance for food safety management systems; distinguish guidance from binding legal text.
+  - source_id: eu_reg_1169_2011
+    organization: EUR-Lex / European Union
+    jurisdiction: EU
+    authority_type: binding_law
+    scope: [food_information, allergens, allergen_labelling, non_prepacked_food]
+    canonical_url: https://eur-lex.europa.eu/eli/reg/2011/1169
+    version_checked: '2025-04-01'
+    live_reverify: true
+    notes: Annex II contains the EU allergen list; Article 21 covers labelling of allergenic substances/products.
+  - source_id: eu_reg_2073_2005
+    organization: EUR-Lex / European Union
+    jurisdiction: EU
+    authority_type: binding_law
+    scope: [microbiological_criteria, food_safety_criteria, process_hygiene_criteria, sampling]
+    canonical_url: https://eur-lex.europa.eu/eli/reg/2005/2073
+    version_checked: '2026-07-01'
+    live_reverify: true
+    notes: Use the current consolidated version for any microbiological criterion, sampling plan or limit.
+  - source_id: eu_reg_178_2002
+    organization: EUR-Lex / European Union
+    jurisdiction: EU
+    authority_type: binding_law
+    scope: [general_food_law, traceability, withdrawal, recall, unsafe_food]
+    canonical_url: https://eur-lex.europa.eu/eli/reg/2002/178
+    version_checked: null
+    live_reverify: true
+    notes: Article 18 covers traceability and Article 19 operator responsibilities for withdrawal/notification; verify the current consolidated text before legal conclusions.
+  - source_id: eu_reg_2017_625
+    organization: EUR-Lex / European Union
+    jurisdiction: EU
+    authority_type: binding_law
+    scope: [official_controls, inspections, competent_authorities, risk_based_controls]
+    canonical_url: https://eur-lex.europa.eu/eli/reg/2017/625
+    version_checked: '2025-01-05'
+    live_reverify: true
+    notes: Governs official controls; do not confuse an operator HACCP plan with the competent authority's inspection powers.
+  - source_id: eu_reg_2021_382
+    organization: EUR-Lex / European Union
+    jurisdiction: EU
+    authority_type: binding_law
+    scope: [allergen_management, food_redistribution, food_safety_culture]
+    canonical_url: https://eur-lex.europa.eu/eli/reg/2021/382/oj
+    version_checked: '2021-03-24'
+    live_reverify: true
+    notes: Amends Regulation 852/2004 Annexes on allergen management, food redistribution and food safety culture.
+  - source_id: efet_haccp_guidance
+    organization: EFET
+    jurisdiction: GR
+    authority_type: official_guidance
+    scope: [haccp_inspection, haccp_flexibility, self_control, official_control_guidance]
+    canonical_url: https://www.efet.gr/index.php/el/arxes-elegxou/odigies
+    version_checked: '2026-09-02'
+    live_reverify: true
+    notes: EFET currently lists an HACCP inspection guide and guidance for flexible application of HACCP-based self-control; inspect the current linked documents when needed.
+  - source_id: greek_health_47829_2017
+    organization: Greek Ministry of Health
+    jurisdiction: GR
+    authority_type: binding_law
+    scope: [sanitary_conditions, food_and_beverage_businesses, operation_conditions, public_health]
+    canonical_url: https://www.moh.gov.gr/articles/health/dieythynsh-dhmosias-ygieinhs/tmhma-ygeionomikwn-kanonismwn-dhmosias-ygeias/c336-nomothesia/ethnikh-nomothesia/ypoyrgeio-ygeias-tmhma-ygeionomikwn-kanonismwn/1562-ygeionomikes-diatakseis
+    version_checked: '2017-06-23'
+    live_reverify: true
+    notes: Base sanitary decision Υ1γ/ΓΠ/οικ.47829, Government Gazette B 2161/23-06-2017. Verify amendments, circulars and applicability for the exact activity/location before advising.
+  - source_id: efsa_scientific_advice
+    organization: European Food Safety Authority (EFSA)
+    jurisdiction: EU
+    authority_type: scientific_authority
+    scope: [risk_assessment, biological_hazards, chemical_hazards, allergens, emerging_risks]
+    canonical_url: https://www.efsa.europa.eu/en/about/about-efsa
+    version_checked: '2026-09-02'
+    live_reverify: true
+    notes: EFSA provides scientific risk assessment/advice; it does not itself replace binding risk-management law.
+  - source_id: codex_cxc_1_1969
+    organization: Codex Alimentarius Commission (FAO/WHO)
+    jurisdiction: INTERNATIONAL
+    authority_type: international_standard
+    scope: [general_principles_food_hygiene, ghp, haccp, ccp_decision]
+    canonical_url: https://www.fao.org/fao-who-codexalimentarius/codex-texts/codes-of-practice/en/
+    version_checked: '2022'
+    live_reverify: true
+    notes: CXC 1-1969 General Principles of Food Hygiene; use as international reference and methodology, not as a substitute for applicable Greek/EU law.
+  - source_id: who_five_keys
+    organization: World Health Organization (WHO)
+    jurisdiction: INTERNATIONAL
+    authority_type: public_health_guidance
+    scope: [safe_food_handling, hygiene_education, cross_contamination, cooking, temperature, water_raw_materials]
+    canonical_url: https://www.who.int/activities/promoting-safe-food-handling/five-key-to-safer-food
+    version_checked: '2026-09-02'
+    live_reverify: true
+    notes: Practical public-health guidance; do not use its generic temperatures as a legal substitute for current applicable professional requirements.

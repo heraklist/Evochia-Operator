@@ -1,0 +1,29 @@
+schema_version: 1
+plan_id: haccp-draft
+scope:
+  product_or_service: null
+  jurisdiction: GR
+  intended_use: null
+  vulnerable_consumers: []
+process_steps: []
+hazard_analysis:
+  - step: null
+    hazard_type: biological
+    hazard: null
+    significance: needs_review
+    existing_controls: []
+control_plan:
+  - step: null
+    control_class: GHP_PRP
+    control_measure: null
+    critical_limit_or_criterion: null
+    monitoring: null
+    corrective_action: null
+    responsible: null
+    record: null
+source_evidence: []
+verification:
+  - Confirm actual flow diagram / workflow
+  - Human review of hazards, control classification and any limits
+approval_status: needs_review
+review_notes: Generated draft; human review and current official source verification required before operational adoption.

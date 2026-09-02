@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evochia.internal/schemas/safety_evidence.schema.json",
+  "title": "Food Safety Evidence Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "claim", "classification", "jurisdiction", "source_id", "authority_type", "canonical_url", "retrieved_at", "version_or_effective_date", "verification_status"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "claim": {"type": "string", "minLength": 1},
+    "classification": {"enum": ["current_regulatory_requirement", "official_guidance", "scientific_evidence", "operational_best_practice"]},
+    "jurisdiction": {"type": "string", "minLength": 1},
+    "source_id": {"type": "string", "minLength": 1},
+    "authority_type": {"enum": ["binding_law", "official_guidance", "scientific_authority", "international_standard", "public_health_guidance"]},
+    "canonical_url": {"type": "string", "pattern": "^https://"},
+    "retrieved_at": {"type": "string", "format": "date"},
+    "version_or_effective_date": {"type": ["string", "null"]},
+    "verification_status": {"enum": ["verified_official_source", "needs_review", "conflict_detected"]},
+    "notes": {"type": ["string", "null"]}
+  }
+}
