@@ -1,0 +1,59 @@
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+client_secret*.json
+service_account*.json
+
+# The Mart / Chromium authenticated local state
+.browser_profile_themart/
+**/.browser_profile_themart/
+.browser_profile*/
+**/.browser_profile*/
+chromium-profile/
+**/chromium-profile/
+chrome-profile/
+**/chrome-profile/
+
+# Chromium sensitive/session artifacts (defense in depth)
+**/Cookies
+**/Cookies-journal
+**/Login Data
+**/Login Data-journal
+**/Web Data
+**/Web Data-journal
+**/History
+**/History-journal
+**/Local State
+**/Network Persistent State
+**/Trust Tokens
+
+# Python local state
+.venv/
+**/.venv/
+venv/
+**/venv/
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+**/.pytest_cache/
+*.py[cod]
+
+# Generated local output and logs
+output/
+**/output/
+*.log
+
+# Nested repository state
+**/.git/
+
+# OS/editor state
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

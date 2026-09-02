@@ -1,0 +1,1383 @@
+schema_version: 1
+legacy_version: 3.2.2
+target_version: 4.0.0-alpha.0
+source_package: chef_ai_pro_business_v3_2_2_final_install_api_package
+capabilities:
+- capability_id: router_smallest_sufficient_mode
+  domain: routing
+  must_preserve: true
+  source_file: A_custom_gpt_install/instructions/01_core_instructions_v3_2_2_8000_safe.txt
+  source_section: '## Router'
+  current_behavior: Classify the request and expose only the smallest sufficient capability/mode; do not force commercial
+    or API sections into simple culinary work.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-ROUTER-SMALLEST-SUFFICIENT-MODE
+  eval_cases:
+  - LEGACY-01
+  - LEGACY-24
+  notes: null
+- capability_id: home_professional_commercial_depth
+  domain: routing
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/02_master_operating_map_v3_2.md
+  source_section: '## Depth Levels'
+  current_behavior: Adjust depth between home, professional and commercial work according to feasibility, service and commercial
+    stakes.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-HOME-PROFESSIONAL-COMMERCIAL-DEPTH
+  eval_cases:
+  - LEGACY-01
+  - LEGACY-03
+  - LEGACY-33
+  notes: null
+- capability_id: material_followups_only
+  domain: routing
+  must_preserve: true
+  source_file: A_custom_gpt_install/instructions/01_core_instructions_v3_2_2_8000_safe.txt
+  source_section: '## Router'
+  current_behavior: Ask follow-up questions only when missing information materially changes safety, feasibility, yield, service,
+    costing, VAT, pricing or the commercial decision; otherwise proceed with labeled assumptions.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-MATERIAL-FOLLOWUPS-ONLY
+  eval_cases:
+  - LEGACY-11
+  - LEGACY-12
+  notes: null
+- capability_id: canonical_source_priority
+  domain: source_authority
+  must_preserve: true
+  source_file: A_custom_gpt_install/instructions/01_core_instructions_v3_2_2_8000_safe.txt
+  source_section: '## Canonical Source Priority'
+  current_behavior: Resolve conflicts using explicit user data, configured approved records, measured tests, current supplier
+    evidence, approved masters, reference doctrine, benchmarks, then labeled assumptions.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-CANONICAL-SOURCE-PRIORITY
+  eval_cases:
+  - LEGACY-11
+  - LEGACY-28
+  notes: vNext source registry expands this into explicit company-policy/current-data/golden-example classes.
+- capability_id: assumptions_not_facts
+  domain: source_authority
+  must_preserve: true
+  source_file: A_custom_gpt_install/instructions/01_core_instructions_v3_2_2_8000_safe.txt
+  source_section: '## Canonical Source Priority'
+  current_behavior: Never present assumptions as facts; surface conflicts and use the highest-priority usable source.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-ASSUMPTIONS-NOT-FACTS
+  eval_cases:
+  - LEGACY-11
+  - LEGACY-12
+  - LEGACY-28
+  notes: null
+- capability_id: quick_culinary_answer
+  domain: culinary_answers_troubleshooting
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/04_output_router_and_templates_v2_1.md
+  source_section: '## Quick Culinary Answer'
+  current_behavior: Give concise culinary diagnosis/action without unrelated costing, export or API sections.
+  target_skills:
+  - culinary-rnd
+  migration_status: upgrade
+  regression_test_id: PARITY-QUICK-CULINARY-ANSWER
+  eval_cases:
+  - LEGACY-01
+  notes: null
+- capability_id: culinary_troubleshooting
+  domain: culinary_answers_troubleshooting
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/04_output_router_and_templates_v2_1.md
+  source_section: '## Troubleshooting Report'
+  current_behavior: Diagnose likely cause, correction, prevention and safety implications for culinary failures.
+  target_skills:
+  - culinary-rnd
+  - recipe-engineering
+  migration_status: upgrade
+  regression_test_id: PARITY-CULINARY-TROUBLESHOOTING
+  eval_cases:
+  - LEGACY-01
+  notes: null
+- capability_id: original_recipe_creation
+  domain: recipe_creation
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/04_output_router_and_templates_v2_1.md
+  source_section: '## Full Recipe'
+  current_behavior: Create an original metric recipe with ingredients, method, sensory cues and practical storage/safety note.
+  target_skills:
+  - culinary-rnd
+  - recipe-engineering
+  migration_status: upgrade
+  regression_test_id: PARITY-ORIGINAL-RECIPE-CREATION
+  eval_cases:
+  - LEGACY-02
+  notes: null
+- capability_id: professional_recipe_spec
+  domain: recipe_specification
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/04_output_router_and_templates_v2_1.md
+  source_section: '## Professional Recipe Spec'
+  current_behavior: Convert recipes to professional specs with yield/portion assumptions, mise en place, service/holding,
+    allergens and costing hooks.
+  target_skills:
+  - recipe-engineering
+  - kitchen-event-operations
+  - food-safety-allergens
+  migration_status: upgrade
+  regression_test_id: PARITY-PROFESSIONAL-RECIPE-SPEC
+  eval_cases:
+  - LEGACY-03
+  notes: null
+- capability_id: metric_units_default
+  domain: recipe_specification
+  must_preserve: true
+  source_file: A_custom_gpt_install/instructions/01_core_instructions_v3_2_2_8000_safe.txt
+  source_section: '## Identity'
+  current_behavior: Use metric units by default unless the task requires otherwise.
+  target_skills:
+  - recipe-engineering
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-METRIC-UNITS-DEFAULT
+  eval_cases:
+  - LEGACY-02
+  - LEGACY-03
+  notes: null
+- capability_id: culinary_flavor_architecture
+  domain: pairing_flavor_architecture
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/06_flavor_pairing_substitution_system_v2_1.md
+  source_section: '## Flavor Architecture'
+  current_behavior: Reason across salt, acid, fat, sweetness, umami, bitterness, heat/spice, aroma, texture and temperature
+    rather than relying on ingredient-name similarity alone.
+  target_skills:
+  - culinary-rnd
+  - menu-experience-design
+  migration_status: upgrade
+  regression_test_id: PARITY-CULINARY-FLAVOR-ARCHITECTURE
+  eval_cases:
+  - LEGACY-01
+  - LEGACY-04
+  notes: null
+- capability_id: menu_progression_logic
+  domain: pairing_flavor_architecture
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/06_flavor_pairing_substitution_system_v2_1.md
+  source_section: '## Menu Progression Logic'
+  current_behavior: Design progression using intensity, temperature, texture, richness, acidity and palate fatigue.
+  target_skills:
+  - menu-experience-design
+  migration_status: upgrade
+  regression_test_id: PARITY-MENU-PROGRESSION-LOGIC
+  eval_cases:
+  - LEGACY-04
+  notes: null
+- capability_id: food_beverage_pairing_logic
+  domain: pairing_flavor_architecture
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/06_flavor_pairing_substitution_system_v2_1.md
+  source_section: '## Pairing Principles'
+  current_behavior: Evaluate acidity, body, tannin, sweetness, alcohol, fat, spice, umami and intensity; provide non-alcoholic
+    options when useful.
+  target_skills:
+  - culinary-rnd
+  - menu-experience-design
+  migration_status: upgrade
+  regression_test_id: PARITY-FOOD-BEVERAGE-PAIRING-LOGIC
+  eval_cases:
+  - LEGACY-04
+  notes: null
+- capability_id: substitution_by_function
+  domain: substitution_reformulation
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/06_flavor_pairing_substitution_system_v2_1.md
+  source_section: '## Substitution Doctrine'
+  current_behavior: Identify the functional role of an ingredient before suggesting substitutions; explain expected texture/flavor/rise
+    or process changes.
+  target_skills:
+  - culinary-rnd
+  - recipe-engineering
+  migration_status: upgrade
+  regression_test_id: PARITY-SUBSTITUTION-BY-FUNCTION
+  eval_cases:
+  - LEGACY-07
+  notes: null
+- capability_id: reformulation_output
+  domain: substitution_reformulation
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/06_flavor_pairing_substitution_system_v2_1.md
+  source_section: '## Reformulation Output'
+  current_behavior: Reformulate the recipe/process coherently rather than performing a blind one-for-one ingredient swap.
+  target_skills:
+  - recipe-engineering
+  migration_status: upgrade
+  regression_test_id: PARITY-REFORMULATION-OUTPUT
+  eval_cases:
+  - LEGACY-07
+  notes: null
+- capability_id: menu_development
+  domain: menu_development
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/04_output_router_and_templates_v2_1.md
+  source_section: '## Menu Development'
+  current_behavior: Create a concept, course progression, service considerations, allergen visibility and next data needed
+    for costing.
+  target_skills:
+  - menu-experience-design
+  - kitchen-event-operations
+  migration_status: upgrade
+  regression_test_id: PARITY-MENU-DEVELOPMENT
+  eval_cases:
+  - LEGACY-04
+  notes: null
+- capability_id: private_dinner_tasting_menu
+  domain: menu_development
+  must_preserve: true
+  source_file: A_custom_gpt_install/instructions/01_core_instructions_v3_2_2_8000_safe.txt
+  source_section: '## Router'
+  current_behavior: Support tasting menus/private dinners as first-class workflows with culinary progression and professional
+    execution context.
+  target_skills:
+  - menu-experience-design
+  - kitchen-event-operations
+  migration_status: upgrade
+  regression_test_id: PARITY-PRIVATE-DINNER-TASTING-MENU
+  eval_cases:
+  - LEGACY-04
+  notes: null
+- capability_id: menu_storytelling
+  domain: storytelling_owner_style
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/07_menu_storytelling_owner_style_v2_1.md
+  source_section: '## Menu Narrative Arcs'
+  current_behavior: Create refined, concrete, sensory menu narratives grounded in the actual food, season, place, technique
+    and guest experience.
+  target_skills:
+  - menu-experience-design
+  - evochia-brand-documents
+  migration_status: upgrade
+  regression_test_id: PARITY-MENU-STORYTELLING
+  eval_cases:
+  - LEGACY-05
+  - LEGACY-35
+  notes: null
+- capability_id: owner_culinary_style
+  domain: storytelling_owner_style
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/07_menu_storytelling_owner_style_v2_1.md
+  source_section: '## Creative Direction'
+  current_behavior: Preserve the owner preference for refined, premium, modern, emotionally engaging and culinary-credible
+    work without fake luxury.
+  target_skills:
+  - culinary-rnd
+  - menu-experience-design
+  - evochia-brand-documents
+  migration_status: upgrade
+  regression_test_id: PARITY-OWNER-CULINARY-STYLE
+  eval_cases:
+  - LEGACY-05
+  - LEGACY-35
+  notes: null
+- capability_id: no_fake_provenance_claims
+  domain: storytelling_owner_style
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/07_menu_storytelling_owner_style_v2_1.md
+  source_section: '## Story Integrity Rules'
+  current_behavior: Do not invent provenance, suppliers, awards, family traditions, history, Michelin recognition or protected-origin
+    claims.
+  target_skills:
+  - culinary-rnd
+  - evochia-brand-documents
+  migration_status: preserve
+  regression_test_id: PARITY-NO-FAKE-PROVENANCE-CLAIMS
+  eval_cases:
+  - LEGACY-06
+  notes: null
+- capability_id: natural_polished_greek
+  domain: storytelling_owner_style
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/07_menu_storytelling_owner_style_v2_1.md
+  source_section: '## Greek Language Style'
+  current_behavior: Use natural polished Greek that remains clear and avoids cliché luxury language.
+  target_skills:
+  - evochia-brand-documents
+  - menu-experience-design
+  migration_status: upgrade
+  regression_test_id: PARITY-NATURAL-POLISHED-GREEK
+  eval_cases:
+  - LEGACY-35
+  notes: null
+- capability_id: professional_intake_and_mise_en_place
+  domain: professional_kitchen_workflow
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/08_professional_kitchen_workflows_v2_2.md
+  source_section: '## Professional Intake Checklist / ## Mise en Place Planning'
+  current_behavior: For restaurant/catering/event/production work, capture execution constraints and produce practical mise-en-place
+    structure.
+  target_skills:
+  - kitchen-event-operations
+  - recipe-engineering
+  migration_status: upgrade
+  regression_test_id: PARITY-PROFESSIONAL-INTAKE-AND-MISE-EN-PLACE
+  eval_cases:
+  - LEGACY-03
+  notes: null
+- capability_id: prep_timeline
+  domain: professional_kitchen_workflow
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/08_professional_kitchen_workflows_v2_2.md
+  source_section: '## Prep Timeline'
+  current_behavior: Plan T-3/T-2, T-1, service-day, pre-service, during-service and post-service work when appropriate.
+  target_skills:
+  - kitchen-event-operations
+  migration_status: upgrade
+  regression_test_id: PARITY-PREP-TIMELINE
+  eval_cases:
+  - LEGACY-03
+  notes: null
+- capability_id: service_flow_and_staff_brief
+  domain: professional_kitchen_workflow
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/08_professional_kitchen_workflows_v2_2.md
+  source_section: '## Service Flow Planning / ## Staff Briefing Notes'
+  current_behavior: Plan service order and provide staff-facing notes, allergens, plating order and allowed modifications.
+  target_skills:
+  - kitchen-event-operations
+  - food-safety-allergens
+  migration_status: upgrade
+  regression_test_id: PARITY-SERVICE-FLOW-AND-STAFF-BRIEF
+  eval_cases:
+  - LEGACY-03
+  - LEGACY-31
+  notes: null
+- capability_id: event_catering_risk_check
+  domain: professional_kitchen_workflow
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/08_professional_kitchen_workflows_v2_2.md
+  source_section: '## Event / Catering Risk Checklist'
+  current_behavior: Consider transport, holding, electricity, refrigeration, plating space, water, waste, serviceware, backup
+    equipment, delay, weather, allergens and staffing.
+  target_skills:
+  - kitchen-event-operations
+  - food-safety-allergens
+  migration_status: upgrade
+  regression_test_id: PARITY-EVENT-CATERING-RISK-CHECK
+  eval_cases:
+  - LEGACY-31
+  notes: null
+- capability_id: nonlinear_batch_scaling
+  domain: scaling_holding_consistency
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/08_professional_kitchen_workflows_v2_2.md
+  source_section: '## Batch Scaling'
+  current_behavior: Do not scale salt, spice, acid, yeast, gelatin, thickeners or leavening blindly; account for vessel geometry,
+    heat transfer, evaporation, mixing, cooling and plating speed.
+  target_skills:
+  - recipe-engineering
+  - kitchen-event-operations
+  migration_status: preserve
+  regression_test_id: PARITY-NONLINEAR-BATCH-SCALING
+  eval_cases:
+  - LEGACY-03
+  notes: null
+- capability_id: holding_quality_planning
+  domain: scaling_holding_consistency
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/08_professional_kitchen_workflows_v2_2.md
+  source_section: '## Holding Quality'
+  current_behavior: Design menus and production around actual hot/cold holding quality and service timing.
+  target_skills:
+  - recipe-engineering
+  - kitchen-event-operations
+  - food-safety-allergens
+  migration_status: upgrade
+  regression_test_id: PARITY-HOLDING-QUALITY-PLANNING
+  eval_cases:
+  - LEGACY-31
+  notes: null
+- capability_id: consistency_controls
+  domain: scaling_holding_consistency
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/08_professional_kitchen_workflows_v2_2.md
+  source_section: '## Consistency Controls'
+  current_behavior: Define target portion/sauce/garnish, doneness, time range, sensory target, acceptable variation and reject
+    criteria for repeatable service.
+  target_skills:
+  - recipe-engineering
+  - kitchen-event-operations
+  migration_status: upgrade
+  regression_test_id: PARITY-CONSISTENCY-CONTROLS
+  eval_cases:
+  - LEGACY-03
+  notes: null
+- capability_id: professional_execution_documents
+  domain: professional_kitchen_workflow
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_optional_upload/08_professional_kitchen_workflows_v2_2.md
+  source_section: '## Professional Output Rule'
+  current_behavior: Professional work must produce practical execution documents covering prep, timing, holding, failure points,
+    staff briefing, consistency and required verification.
+  target_skills:
+  - kitchen-event-operations
+  - recipe-engineering
+  migration_status: upgrade
+  regression_test_id: PARITY-PROFESSIONAL-EXECUTION-DOCUMENTS
+  eval_cases:
+  - LEGACY-03
+  - LEGACY-31
+  notes: null
+- capability_id: safety_priority_gate
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/05_safety_allergen_rules_v2_5.md
+  source_section: '## Core Principle'
+  current_behavior: Food safety and allergen safety override creativity, speed, flavor and margin.
+  target_skills:
+  - food-safety-allergens
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-SAFETY-PRIORITY-GATE
+  eval_cases:
+  - LEGACY-08
+  - LEGACY-09
+  - LEGACY-31
+  - LEGACY-32
+  notes: null
+- capability_id: eu_greece_14_allergens
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/05_safety_allergen_rules_v2_5.md
+  source_section: '## EU/Greece Allergen Groups'
+  current_behavior: Track the EU/Greece 14 allergen groups when relevant.
+  target_skills:
+  - food-safety-allergens
+  migration_status: preserve
+  regression_test_id: PARITY-EU-GREECE-14-ALLERGENS
+  eval_cases:
+  - LEGACY-08
+  - LEGACY-29
+  notes: null
+- capability_id: allergen_propagation
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/05_safety_allergen_rules_v2_5.md
+  source_section: '## Allergen Propagation'
+  current_behavior: Propagate allergens ingredient → sub-recipe → recipe → menu/event.
+  target_skills:
+  - food-safety-allergens
+  - recipe-engineering
+  migration_status: preserve
+  regression_test_id: PARITY-ALLERGEN-PROPAGATION
+  eval_cases:
+  - LEGACY-29
+  notes: null
+- capability_id: unknown_allergen_not_safe
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/05_safety_allergen_rules_v2_5.md
+  source_section: '## Allergy Protocol'
+  current_behavior: Unknown allergen status is not safe; require label/supplier verification and keep may-contain/cross-contact
+    separate from confirmed presence.
+  target_skills:
+  - food-safety-allergens
+  migration_status: preserve
+  regression_test_id: PARITY-UNKNOWN-ALLERGEN-NOT-SAFE
+  eval_cases:
+  - LEGACY-30
+  notes: null
+- capability_id: no_allergen_free_guarantee
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/05_safety_allergen_rules_v2_5.md
+  source_section: '## Never Guarantee'
+  current_behavior: Never guarantee allergen-free/gluten-free/safe status; client-facing allergen output remains draft pending
+    trained human review.
+  target_skills:
+  - food-safety-allergens
+  - evochia-brand-documents
+  migration_status: preserve
+  regression_test_id: PARITY-NO-ALLERGEN-FREE-GUARANTEE
+  eval_cases:
+  - LEGACY-08
+  - LEGACY-30
+  notes: null
+- capability_id: cross_contact_controls
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/05_safety_allergen_rules_v2_5.md
+  source_section: '## Cross-Contact Controls'
+  current_behavior: Handle cross-contact as a separate operational risk with equipment, surfaces, labels, storage and service
+    controls.
+  target_skills:
+  - food-safety-allergens
+  - kitchen-event-operations
+  migration_status: preserve
+  regression_test_id: PARITY-CROSS-CONTACT-CONTROLS
+  eval_cases:
+  - LEGACY-08
+  notes: null
+- capability_id: high_risk_raw_food_caution
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/05_safety_allergen_rules_v2_5.md
+  source_section: '## Raw and Undercooked Animal Products'
+  current_behavior: Use conservative guidance for raw/undercooked animal products and high-risk guests; propose safer cooked
+    alternatives.
+  target_skills:
+  - food-safety-allergens
+  - culinary-rnd
+  migration_status: preserve
+  regression_test_id: PARITY-HIGH-RISK-RAW-FOOD-CAUTION
+  eval_cases:
+  - LEGACY-09
+  notes: null
+- capability_id: meal_prep_storage_caution
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/05_safety_allergen_rules_v2_5.md
+  source_section: '## Leftovers and Meal Prep'
+  current_behavior: Use conservative storage/reheating planning for leftovers and multi-day meal prep; do not guarantee safety.
+  target_skills:
+  - food-safety-allergens
+  - kitchen-event-operations
+  migration_status: upgrade
+  regression_test_id: PARITY-MEAL-PREP-STORAGE-CAUTION
+  eval_cases:
+  - LEGACY-32
+  notes: null
+- capability_id: holding_safety_caution
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/05_safety_allergen_rules_v2_5.md
+  source_section: '## Hot and Cold Holding'
+  current_behavior: Flag hot/cold holding risk and distinguish quality constraints from local/legal safety verification.
+  target_skills:
+  - food-safety-allergens
+  - kitchen-event-operations
+  migration_status: preserve
+  regression_test_id: PARITY-HOLDING-SAFETY-CAUTION
+  eval_cases:
+  - LEGACY-31
+  notes: null
+- capability_id: nutrition_estimate_boundaries
+  domain: safety_allergens
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/04_output_router_and_templates_v2_1.md
+  source_section: '## Nutrition Estimate'
+  current_behavior: Nutrition outputs are estimates and must not diagnose, treat or promise medical outcomes.
+  target_skills:
+  - food-safety-allergens
+  migration_status: preserve
+  regression_test_id: PARITY-NUTRITION-ESTIMATE-BOUNDARIES
+  eval_cases:
+  - LEGACY-32
+  notes: null
+- capability_id: formula_first_costing
+  domain: pricing_vat_margin
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## Core Logic'
+  current_behavior: Costing follows Definitions → Variables → Formulas → Assumptions → Calculation → Output → Commercial Verdict.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-FORMULA-FIRST-COSTING
+  eval_cases:
+  - LEGACY-10
+  - LEGACY-15
+  notes: null
+- capability_id: net_cost_ex_recoverable_vat
+  domain: pricing_vat_margin
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## Net Cost Basis'
+  current_behavior: Internal costing uses net cost excluding recoverable input VAT; output VAT is added for customer-facing
+    gross display only when relevant.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-NET-COST-EX-RECOVERABLE-VAT
+  eval_cases:
+  - LEGACY-15
+  notes: null
+- capability_id: configurable_vat
+  domain: pricing_vat_margin
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## VAT Formulas'
+  current_behavior: VAT rates are configurable and not hardcoded as universal truth.
+  target_skills:
+  - costing-commercial-intelligence
+  - evochia-company-operations
+  migration_status: upgrade
+  regression_test_id: PARITY-CONFIGURABLE-VAT
+  eval_cases:
+  - LEGACY-15
+  notes: null
+- capability_id: canonical_costing_units
+  domain: ap_ep_yields
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## Canonical Units'
+  current_behavior: Normalize costing quantities to g, mL, pc, min and EUR; require density or piece-weight evidence for cross-dimension
+    conversions.
+  target_skills:
+  - costing-commercial-intelligence
+  - supplier-procurement-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-CANONICAL-COSTING-UNITS
+  eval_cases:
+  - LEGACY-10
+  - LEGACY-16
+  notes: null
+- capability_id: ap_ep_separation
+  domain: ap_ep_yields
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## AP / EP Yield Engine'
+  current_behavior: Distinguish As Purchased from Edible/Effective Portion and cost recipes on the correct basis.
+  target_skills:
+  - costing-commercial-intelligence
+  - supplier-procurement-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-AP-EP-SEPARATION
+  eval_cases:
+  - LEGACY-12
+  - LEGACY-17
+  notes: null
+- capability_id: multiplicative_multi_stage_yield
+  domain: ap_ep_yields
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## AP / EP Yield Engine'
+  current_behavior: Multiply trim × cook × service yields; do not add loss percentages.
+  target_skills:
+  - costing-commercial-intelligence
+  - supplier-procurement-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-MULTIPLICATIVE-MULTI-STAGE-YIELD
+  eval_cases:
+  - LEGACY-13
+  notes: null
+- capability_id: hydration_yield_over_100
+  domain: ap_ep_yields
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## AP / EP Yield Engine'
+  current_behavior: Allow dry-to-cooked/hydration yield above 100% without treating it as negative waste.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-HYDRATION-YIELD-OVER-100
+  eval_cases:
+  - LEGACY-14
+  notes: null
+- capability_id: missing_high_impact_yield_flag
+  domain: ap_ep_yields
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## Reliability Status'
+  current_behavior: Do not silently assume 100% yield; flag missing high-impact yields and label any fallback assumption.
+  target_skills:
+  - costing-commercial-intelligence
+  - supplier-procurement-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-MISSING-HIGH-IMPACT-YIELD-FLAG
+  eval_cases:
+  - LEGACY-12
+  notes: null
+- capability_id: recipe_batch_portion_subrecipe_cost
+  domain: pricing_vat_margin
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## Recipe Line Cost / ## Batch Cost / ## Portion Cost / ## Sub-Recipe Cost'
+  current_behavior: Calculate recipe lines, batches, portions and sub-recipes consistently from normalized cost bases.
+  target_skills:
+  - costing-commercial-intelligence
+  - recipe-engineering
+  migration_status: preserve
+  regression_test_id: PARITY-RECIPE-BATCH-PORTION-SUBRECIPE-COST
+  eval_cases:
+  - LEGACY-10
+  notes: null
+- capability_id: labor_packaging_overhead_cost_hooks
+  domain: pricing_vat_margin
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## Packaging, Labor, Overhead'
+  current_behavior: Support packaging, variable labor and overhead allocation in the cost basis when the task requires them.
+  target_skills:
+  - costing-commercial-intelligence
+  - kitchen-event-operations
+  migration_status: upgrade
+  regression_test_id: PARITY-LABOR-PACKAGING-OVERHEAD-COST-HOOKS
+  eval_cases:
+  - LEGACY-22
+  - LEGACY-33
+  notes: null
+- capability_id: pricing_math_fc_gm_markup
+  domain: pricing_vat_margin
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## Pricing Formulas'
+  current_behavior: Calculate food cost %, gross margin %, markup %, target-FC price, target-GM price and markup price correctly.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-PRICING-MATH-FC-GM-MARKUP
+  eval_cases:
+  - LEGACY-10
+  - LEGACY-34
+  notes: null
+- capability_id: legacy_default_fc_tiers
+  domain: pricing_vat_margin
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## Default Pricing Tiers'
+  current_behavior: Retain Budget 35%, Balanced 30%, Premium 25% as generic fallback tiers only when no user/company target
+    applies.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: upgrade
+  regression_test_id: PARITY-LEGACY-DEFAULT-FC-TIERS
+  eval_cases:
+  - LEGACY-10
+  notes: In Evochia context, approved company commercial policy will override generic fallback tiers.
+- capability_id: commercial_verdicts
+  domain: pricing_vat_margin
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/09_costing_formula_engine_v2_2.md
+  source_section: '## Commercial Verdict'
+  current_behavior: Return an actionable commercial verdict and concrete corrective actions when margins/data quality are
+    weak.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: upgrade
+  regression_test_id: PARITY-COMMERCIAL-VERDICTS
+  eval_cases:
+  - LEGACY-22
+  - LEGACY-33
+  - LEGACY-34
+  notes: null
+- capability_id: supplier_source_format_intake
+  domain: supplier_normalization
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/10_supplier_yield_workflow_v3_2_2.md
+  source_section: '## Accepted Source Formats'
+  current_behavior: Accept supplier evidence from spreadsheets, PDFs, screenshots/photos, text/CSV, catalogues/invoices and
+    preserve source context.
+  target_skills:
+  - supplier-procurement-intelligence
+  migration_status: upgrade
+  regression_test_id: PARITY-SUPPLIER-SOURCE-FORMAT-INTAKE
+  eval_cases:
+  - LEGACY-18
+  notes: null
+- capability_id: raw_evidence_separate_from_normalized
+  domain: supplier_normalization
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/10_supplier_yield_workflow_v3_2_2.md
+  source_section: '## Core Doctrine'
+  current_behavior: Preserve raw supplier evidence separately from normalized values.
+  target_skills:
+  - supplier-procurement-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-RAW-EVIDENCE-SEPARATE-FROM-NORMALIZED
+  eval_cases:
+  - LEGACY-18
+  notes: null
+- capability_id: supplier_metadata_detection
+  domain: supplier_normalization
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/10_supplier_yield_workflow_v3_2_2.md
+  source_section: '## File Inventory Fields / ## Supplier Detection Priority'
+  current_behavior: Detect supplier, date, VAT status, currency, pack/unit, raw item and confidence before commercial comparison.
+  target_skills:
+  - supplier-procurement-intelligence
+  migration_status: upgrade
+  regression_test_id: PARITY-SUPPLIER-METADATA-DETECTION
+  eval_cases:
+  - LEGACY-18
+  notes: null
+- capability_id: normalize_before_supplier_compare
+  domain: supplier_normalization
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/10_supplier_yield_workflow_v3_2_2.md
+  source_section: '## Normalization Formulas'
+  current_behavior: Normalize VAT, pack size, unit and AP unit cost before comparing suppliers.
+  target_skills:
+  - supplier-procurement-intelligence
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-NORMALIZE-BEFORE-SUPPLIER-COMPARE
+  eval_cases:
+  - LEGACY-16
+  notes: null
+- capability_id: yield_adjusted_supplier_compare
+  domain: supplier_normalization
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/10_supplier_yield_workflow_v3_2_2.md
+  source_section: '## Supplier Comparison Output / ## Yield Profile Selection'
+  current_behavior: Use EP cost/yield adjustment when product forms differ, such as bone-in versus boneless.
+  target_skills:
+  - supplier-procurement-intelligence
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-YIELD-ADJUSTED-SUPPLIER-COMPARE
+  eval_cases:
+  - LEGACY-17
+  notes: null
+- capability_id: supplier_match_confidence_needs_review
+  domain: supplier_normalization
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/10_supplier_yield_workflow_v3_2_2.md
+  source_section: '## Ingredient Matching / ## Confidence Scoring'
+  current_behavior: Use match levels/confidence and mark ambiguous VAT, pack, unit, OCR/handwriting or uncertain item matches
+    as needs_review.
+  target_skills:
+  - supplier-procurement-intelligence
+  migration_status: upgrade
+  regression_test_id: PARITY-SUPPLIER-MATCH-CONFIDENCE-NEEDS-REVIEW
+  eval_cases:
+  - LEGACY-18
+  notes: null
+- capability_id: no_auto_merge_or_approve_supplier_rows
+  domain: supplier_normalization
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/10_supplier_yield_workflow_v3_2_2.md
+  source_section: '## Do Not Merge Automatically / ## High-Confidence Proposed Candidate Rule'
+  current_behavior: High confidence may produce proposed candidates but never auto-approve or silently merge ambiguous supplier
+    records.
+  target_skills:
+  - supplier-procurement-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-NO-AUTO-MERGE-OR-APPROVE-SUPPLIER-ROWS
+  eval_cases:
+  - LEGACY-18
+  - LEGACY-26
+  notes: null
+- capability_id: yield_source_hierarchy_and_kitchen_test
+  domain: ap_ep_yields
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/10_supplier_yield_workflow_v3_2_2.md
+  source_section: '## Yield Source Hierarchy / ## Internal Kitchen Test Protocol'
+  current_behavior: Prefer measured/approved yield evidence and support internal AP→EP→cooked→served kitchen-test capture.
+  target_skills:
+  - supplier-procurement-intelligence
+  - recipe-engineering
+  migration_status: upgrade
+  regression_test_id: PARITY-YIELD-SOURCE-HIERARCHY-AND-KITCHEN-TEST
+  eval_cases:
+  - LEGACY-12
+  - LEGACY-17
+  notes: null
+- capability_id: never_invent_supplier_prices
+  domain: supplier_normalization
+  must_preserve: true
+  source_file: A_custom_gpt_install/instructions/01_core_instructions_v3_2_2_8000_safe.txt
+  source_section: '## Costing Doctrine / ## API / Integration Doctrine'
+  current_behavior: Never invent missing supplier/master prices; mark costing incomplete/unreliable or request a usable source.
+  target_skills:
+  - supplier-procurement-intelligence
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-NEVER-INVENT-SUPPLIER-PRICES
+  eval_cases:
+  - LEGACY-11
+  - LEGACY-28
+  notes: null
+- capability_id: scenario_does_not_mutate_baseline
+  domain: what_if
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/11_what_if_pricing_profitability_v2_2.md
+  source_section: '## Core Scenario Doctrine'
+  current_behavior: Calculate scenario = baseline + explicit overrides without overwriting approved baseline data.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-SCENARIO-DOES-NOT-MUTATE-BASELINE
+  eval_cases:
+  - LEGACY-19
+  notes: null
+- capability_id: ingredient_inflation_sensitivity
+  domain: what_if
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/11_what_if_pricing_profitability_v2_2.md
+  source_section: '## Ingredient Inflation'
+  current_behavior: Model ingredient-price changes and expose cost/margin impact.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: upgrade
+  regression_test_id: PARITY-INGREDIENT-INFLATION-SENSITIVITY
+  eval_cases:
+  - LEGACY-19
+  notes: null
+- capability_id: yield_and_portion_sensitivity
+  domain: what_if
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/11_what_if_pricing_profitability_v2_2.md
+  source_section: '## Yield Sensitivity / ## Portion Simulation'
+  current_behavior: Model yield and portion changes as explicit scenarios and explain commercial/operational effects.
+  target_skills:
+  - costing-commercial-intelligence
+  - recipe-engineering
+  migration_status: upgrade
+  regression_test_id: PARITY-YIELD-AND-PORTION-SENSITIVITY
+  eval_cases:
+  - LEGACY-19
+  notes: null
+- capability_id: event_profitability
+  domain: what_if
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/11_what_if_pricing_profitability_v2_2.md
+  source_section: '## Event Profitability'
+  current_behavior: Calculate revenue, variable cost, contribution margin, fixed cost and event profit with a practical verdict.
+  target_skills:
+  - costing-commercial-intelligence
+  - kitchen-event-operations
+  migration_status: upgrade
+  regression_test_id: PARITY-EVENT-PROFITABILITY
+  eval_cases:
+  - LEGACY-22
+  notes: null
+- capability_id: break_even_guard
+  domain: what_if
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/11_what_if_pricing_profitability_v2_2.md
+  source_section: '## Break-Even'
+  current_behavior: Identify impossible volume-only break-even when selling price is at or below variable cost.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-BREAK-EVEN-GUARD
+  eval_cases:
+  - LEGACY-21
+  notes: null
+- capability_id: quote_drift_reapproval
+  domain: quote_drift
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/11_what_if_pricing_profitability_v2_2.md
+  source_section: '## Quote Drift'
+  current_behavior: Compare current versus baseline quote cost, quantify drift, flag high risk and require repricing/reapproval
+    when appropriate.
+  target_skills:
+  - costing-commercial-intelligence
+  - evochia-company-operations
+  migration_status: upgrade
+  regression_test_id: PARITY-QUOTE-DRIFT-REAPPROVAL
+  eval_cases:
+  - LEGACY-20
+  notes: null
+- capability_id: menu_mix_profitability
+  domain: what_if
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/11_what_if_pricing_profitability_v2_2.md
+  source_section: '## Menu Mix'
+  current_behavior: Support menu-mix profitability reasoning when item-level sales/mix data are available.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: upgrade
+  regression_test_id: PARITY-MENU-MIX-PROFITABILITY
+  eval_cases:
+  - LEGACY-34
+  notes: null
+- capability_id: excel_workbook_structure
+  domain: exports
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/12_excel_sheets_export_spec_v2_4.md
+  source_section: '## Workbook Principles / ## Recommended Sheets'
+  current_behavior: Design structured recipe-costing workbooks with explicit tables, validations and formula-driven calculations.
+  target_skills:
+  - costing-commercial-intelligence
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-EXCEL-WORKBOOK-STRUCTURE
+  eval_cases:
+  - LEGACY-23
+  notes: null
+- capability_id: excel_formula_patterns
+  domain: exports
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/12_excel_sheets_export_spec_v2_4.md
+  source_section: '## Core Formula Patterns'
+  current_behavior: Preserve deterministic UOM, VAT, AP/EP, recipe, price and margin formula patterns in spreadsheet outputs.
+  target_skills:
+  - costing-commercial-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-EXCEL-FORMULA-PATTERNS
+  eval_cases:
+  - LEGACY-23
+  notes: null
+- capability_id: google_sheets_sync_is_explicit
+  domain: exports
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/12_excel_sheets_export_spec_v2_4.md
+  source_section: '## Google Sheets Sync Notes'
+  current_behavior: Treat Google Sheets sync/export as an explicit configured integration, not an assumed capability.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-GOOGLE-SHEETS-SYNC-IS-EXPLICIT
+  eval_cases:
+  - LEGACY-23
+  - LEGACY-27
+  notes: null
+- capability_id: api_only_on_explicit_trigger
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: A_custom_gpt_install/admin_not_for_knowledge/14_api_invocation_and_confirmation_policy_v3_2_2.md
+  source_section: '## No API Required / ## API Allowed'
+  current_behavior: Do not call APIs for ordinary culinary reasoning; invoke configured external processes only when the user
+    explicitly requests the relevant data/action.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-API-ONLY-ON-EXPLICIT-TRIGGER
+  eval_cases:
+  - LEGACY-24
+  - LEGACY-25
+  notes: null
+- capability_id: api_capability_honesty
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: A_custom_gpt_install/instructions/01_core_instructions_v3_2_2_8000_safe.txt
+  source_section: '## API / Integration Doctrine'
+  current_behavior: Do not claim access to APIs, databases, Drive/Sheets, POS, inventory, accounting or supplier folders unless
+    configured and actually invoked.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-API-CAPABILITY-HONESTY
+  eval_cases:
+  - LEGACY-28
+  notes: null
+- capability_id: read_only_first
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: A_custom_gpt_install/admin_not_for_knowledge/13_api_action_catalog_v3_2_2.md
+  source_section: '## Version Strategy / ## API Trigger Doctrine'
+  current_behavior: Prefer read-only business-data actions before write/integration actions.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-READ-ONLY-FIRST
+  eval_cases:
+  - LEGACY-25
+  notes: null
+- capability_id: confirmation_before_consequential_action
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: A_custom_gpt_install/admin_not_for_knowledge/14_api_invocation_and_confirmation_policy_v3_2_2.md
+  source_section: '## Confirmation Required'
+  current_behavior: Before create/update/export/sync/send/publish or consequential action, summarize scope/affected records/status
+    and obtain explicit confirmation.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-CONFIRMATION-BEFORE-CONSEQUENTIAL-ACTION
+  eval_cases:
+  - LEGACY-26
+  - LEGACY-27
+  notes: null
+- capability_id: writes_default_to_draft_proposed
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: A_custom_gpt_install/admin_not_for_knowledge/14_api_invocation_and_confirmation_policy_v3_2_2.md
+  source_section: '## Draft/Proposed Write Rule'
+  current_behavior: Configured writes create draft/proposed/needs_review records rather than silently approving master data.
+  target_skills:
+  - chef-ai-pro-business
+  - supplier-procurement-intelligence
+  migration_status: preserve
+  regression_test_id: PARITY-WRITES-DEFAULT-TO-DRAFT-PROPOSED
+  eval_cases:
+  - LEGACY-26
+  notes: null
+- capability_id: human_review_for_final_commercial_and_master_data
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: A_custom_gpt_install/admin_not_for_knowledge/14_api_invocation_and_confirmation_policy_v3_2_2.md
+  source_section: '## Human Review Required'
+  current_behavior: Require human/backend approval for supplier prices, recipe revisions, allergen outputs, client-facing
+    quotes, accounting records and final commercial master data.
+  target_skills:
+  - chef-ai-pro-business
+  - evochia-company-operations
+  - food-safety-allergens
+  migration_status: preserve
+  regression_test_id: PARITY-HUMAN-REVIEW-FOR-FINAL-COMMERCIAL-AND-MASTER-DATA
+  eval_cases:
+  - LEGACY-26
+  - LEGACY-27
+  notes: null
+- capability_id: safe_api_failure_no_fabrication
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: A_custom_gpt_install/admin_not_for_knowledge/14_api_invocation_and_confirmation_policy_v3_2_2.md
+  source_section: '## Failure Behavior'
+  current_behavior: If an integration is unavailable/fails, state the failure and offer a safe manual/upload path; never fabricate
+    records, links or success.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-SAFE-API-FAILURE-NO-FABRICATION
+  eval_cases:
+  - LEGACY-27
+  - LEGACY-28
+  notes: null
+- capability_id: idempotent_auditable_action_contract
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: A_custom_gpt_install/admin_not_for_knowledge/15_data_model_v3_2_2.md
+  source_section: '## Audit Event / ## Status Transition Rule'
+  current_behavior: Preserve auditable status transitions and execution metadata for controlled integrations; do not bypass
+    approval state.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-IDEMPOTENT-AUDITABLE-ACTION-CONTRACT
+  eval_cases:
+  - LEGACY-26
+  - LEGACY-27
+  notes: null
+- capability_id: workspace_and_permission_scope
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: A_custom_gpt_install/admin_not_for_knowledge/15_data_model_v3_2_2.md
+  source_section: '## Workspace / Tenant / ## Permission Scope'
+  current_behavior: Respect workspace/tenant and permission scope in integration requests rather than treating all records
+    as globally accessible.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-WORKSPACE-AND-PERMISSION-SCOPE
+  eval_cases:
+  - LEGACY-25
+  - LEGACY-26
+  notes: null
+- capability_id: api_key_secret_storage
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/authentication_model.md
+  source_section: '## Required header'
+  current_behavior: Legacy API baseline requires authentication secrets to remain in deployment secret storage and never in
+    Knowledge, instructions, screenshots or client-facing output.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-API-KEY-SECRET-STORAGE
+  eval_cases:
+  - LEGACY-25
+  - LEGACY-28
+  notes: Backend implementation remains in the separate chef-ai-pro-business-api repository; the skill must never embed the
+    secret.
+- capability_id: backend_rbac_enforcement
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/authorization_rbac_model.md
+  source_section: '## Rule'
+  current_behavior: Authentication and authorization are separate; backend role/workspace checks must enforce permissions
+    rather than relying only on model instructions.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-BACKEND-RBAC-ENFORCEMENT
+  eval_cases:
+  - LEGACY-25
+  - LEGACY-26
+  notes: null
+- capability_id: mutating_action_idempotency
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/idempotency_policy.md
+  source_section: '# Idempotency Policy'
+  current_behavior: Mutating API operations require an idempotency key so retries cannot duplicate drafts, exports or supplier
+    imports.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-MUTATING-ACTION-IDEMPOTENCY
+  eval_cases:
+  - LEGACY-26
+  - LEGACY-27
+  notes: null
+- capability_id: integration_audit_logging
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/audit_logging_policy.md
+  source_section: '# Audit Logging Policy'
+  current_behavior: Controlled integrations require request/workspace/actor/operation/outcome/confirmation/idempotency audit
+    metadata while excluding secrets and unnecessary sensitive data.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-INTEGRATION-AUDIT-LOGGING
+  eval_cases:
+  - LEGACY-25
+  - LEGACY-26
+  - LEGACY-27
+  notes: null
+- capability_id: integration_data_minimization
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/data_minimization_policy.md
+  source_section: '# Data Minimization Policy'
+  current_behavior: Send only operation-required data and keep internal costing/margin fields separate from client-facing
+    menu/quote output.
+  target_skills:
+  - chef-ai-pro-business
+  - evochia-brand-documents
+  migration_status: upgrade
+  regression_test_id: PARITY-INTEGRATION-DATA-MINIMIZATION
+  eval_cases:
+  - LEGACY-27
+  notes: null
+- capability_id: file_reference_over_binary_action_upload
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/file_upload_policy.md
+  source_section: '# File Upload Policy'
+  current_behavior: Prefer ChatGPT-local analysis or scoped provider file/folder references over unnecessary binary Action
+    uploads; OCR/handwriting remains needs_review.
+  target_skills:
+  - chef-ai-pro-business
+  - supplier-procurement-intelligence
+  migration_status: upgrade
+  regression_test_id: PARITY-FILE-REFERENCE-OVER-BINARY-ACTION-UPLOAD
+  eval_cases:
+  - LEGACY-18
+  - LEGACY-27
+  notes: null
+- capability_id: integration_rate_limit_contract
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/rate_limit_policy.md
+  source_section: '# Rate Limit Policy'
+  current_behavior: Configured backend integrations must have rate-limit behavior; scaffold in-memory limits are not treated
+    as production-grade persistence.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-INTEGRATION-RATE-LIMIT-CONTRACT
+  eval_cases:
+  - LEGACY-25
+  - LEGACY-26
+  notes: The exact production limiter belongs to the separate backend, not the skill repository.
+- capability_id: safe_nonleaky_api_errors
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/safe_error_response_contract.md
+  source_section: '# Safe Error Response Contract'
+  current_behavior: Integration failures use safe structured errors with request id/retry guidance and never expose stack
+    traces, secrets, provider tokens, database URLs or private records.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-SAFE-NONLEAKY-API-ERRORS
+  eval_cases:
+  - LEGACY-27
+  - LEGACY-28
+  notes: null
+- capability_id: no_generic_execute_endpoint
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/api_security_checklist.md
+  source_section: '# API Security Checklist'
+  current_behavior: Do not expose generic execute/run/do-anything actions; integration tools must remain narrowly scoped and
+    auditable.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: preserve
+  regression_test_id: PARITY-NO-GENERIC-EXECUTE-ENDPOINT
+  eval_cases:
+  - LEGACY-25
+  - LEGACY-26
+  notes: null
+- capability_id: client_internal_commercial_boundary
+  domain: api_invocation_approval
+  must_preserve: true
+  source_file: B_api_actions/policies/safety_business_rules_v3_2_2.md
+  source_section: '## Client-facing exports'
+  current_behavior: Do not expose hidden formulas, supplier prices, internal margins or cost basis in client-facing outputs
+    unless explicitly intended; final quotes require human review.
+  target_skills:
+  - chef-ai-pro-business
+  - evochia-brand-documents
+  - costing-commercial-intelligence
+  migration_status: upgrade
+  regression_test_id: PARITY-CLIENT-INTERNAL-COMMERCIAL-BOUNDARY
+  eval_cases:
+  - LEGACY-27
+  - LEGACY-33
+  notes: null
+- capability_id: important_output_quality_check
+  domain: quality
+  must_preserve: true
+  source_file: A_custom_gpt_install/instructions/01_core_instructions_v3_2_2_8000_safe.txt
+  source_section: '## Quality Check'
+  current_behavior: Before important outputs, verify mode, visible assumptions, safety/allergens, AP/EP/VAT, missing data,
+    no invented facts/prices/yields and a clear next step.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-IMPORTANT-OUTPUT-QUALITY-CHECK
+  eval_cases:
+  - LEGACY-03
+  - LEGACY-33
+  notes: null
+- capability_id: legacy_evaluation_production_gate
+  domain: quality
+  must_preserve: true
+  source_file: A_custom_gpt_install/knowledge_runtime_upload/16_evaluation_suite_v2_5.md
+  source_section: '## Production Gate'
+  current_behavior: Release candidates must pass critical safety, allergen, costing, API trigger/confirmation, VAT, missing-data
+    and commercial-verdict tests.
+  target_skills:
+  - chef-ai-pro-business
+  migration_status: upgrade
+  regression_test_id: PARITY-LEGACY-EVALUATION-PRODUCTION-GATE
+  eval_cases:
+  - LEGACY-01
+  - LEGACY-02
+  - LEGACY-03
+  - LEGACY-04
+  - LEGACY-05
+  - LEGACY-06
+  - LEGACY-07
+  - LEGACY-08
+  - LEGACY-09
+  - LEGACY-10
+  - LEGACY-11
+  - LEGACY-12
+  - LEGACY-13
+  - LEGACY-14
+  - LEGACY-15
+  - LEGACY-16
+  - LEGACY-17
+  - LEGACY-18
+  - LEGACY-19
+  - LEGACY-20
+  - LEGACY-21
+  - LEGACY-22
+  - LEGACY-23
+  - LEGACY-24
+  - LEGACY-25
+  - LEGACY-26
+  - LEGACY-27
+  - LEGACY-28
+  - LEGACY-29
+  - LEGACY-30
+  - LEGACY-31
+  - LEGACY-32
+  - LEGACY-33
+  - LEGACY-34
+  - LEGACY-35
+  notes: null
