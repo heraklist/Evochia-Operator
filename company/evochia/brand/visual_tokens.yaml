@@ -1,0 +1,45 @@
+schema_version: 1
+status: OWNER_REVIEW_DRAFT
+color:
+  official_identity:
+    primary_green: '#024631'
+    warm_off_white: '#FBF8EF'
+    gold: '#C8B273'
+    secondary_beige: '#DBCEA8'
+    deep_green: '#013122'
+  digital_site:
+    green_deepest: '#0A1F15'
+    green_dark: '#0F2E1F'
+    green_main: '#143A28'
+    gold: '#C4A265'
+    gold_light: '#D4B87A'
+    gold_pale: '#E0CB97'
+    cream: '#F0E8D8'
+    cream_dim: '#C4B9A8'
+    white: '#FAF6EF'
+typography:
+  logo_family_reference: Weiss Font
+  logo_rule: use_official_vector_artwork_do_not_retype
+  digital_site:
+    brand_heading: Alexander
+    body: Bainsley
+    accent: Miama
+    page_hero_fallback: Georgia
+  portable_documents:
+    display: Cormorant Garamond
+    body: EB Garamond
+    fallback_display: Georgia
+    fallback_body: Georgia
+  font_binaries_in_skill_repo: forbidden
+artifact_defaults:
+  website: digital_site
+  proposal: portable_documents
+  client_menu: portable_documents
+  flyer: portable_documents
+  product_plan: portable_documents
+  production_recipebook: operations_first_portable
+layout:
+  tone: quiet_editorial
+  gold_usage: restrained_rules_labels_highlights
+  dark_green_usage: mastheads_section_headers_key_anchors
+  warm_neutral_usage: paper_cards_tables
