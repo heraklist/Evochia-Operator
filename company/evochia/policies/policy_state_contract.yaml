@@ -13,38 +13,39 @@ release_readiness_mapping:
   APPROVED: APPROVED
 policies:
   company_profile.md:
-    status: OWNER_REVIEW_DRAFT
+    status: PARTIALLY_APPROVED
     source_class_when_approved: canonical_current_data
-    approved_by: null
-    effective_date: null
-    approval_reference: null
+    approved_by: Evochia Owner
+    effective_date: '2026-09-03'
+    approval_reference: owner-approval-2026-09-03-phase13.2
   commercial_policy.md:
-    status: OWNER_REVIEW_DRAFT
+    status: PARTIALLY_APPROVED
     source_class_when_approved: canonical_policy
-    approved_by: null
-    effective_date: null
-    approval_reference: null
+    approved_by: Evochia Owner
+    effective_date: '2026-09-03'
+    approval_reference: owner-approval-2026-09-03-phase13.2
   current_rates.md:
-    status: OWNER_REVIEW_DRAFT
+    status: PARTIALLY_APPROVED
     source_class_when_approved: canonical_current_data
-    approved_by: null
-    effective_date: null
-    approval_reference: null
+    approved_by: Evochia Owner
+    effective_date: '2026-09-03'
+    approval_reference: owner-approval-2026-09-03-phase13.2
   staffing_policy.md:
-    status: OWNER_REVIEW_DRAFT
+    status: PARTIALLY_APPROVED
     source_class_when_approved: canonical_policy
-    approved_by: null
-    effective_date: null
-    approval_reference: null
+    approved_by: Evochia Owner
+    effective_date: '2026-09-03'
+    approval_reference: owner-approval-2026-09-03-phase13.2
   terms_policy.md:
-    status: OWNER_REVIEW_DRAFT
+    status: PARTIALLY_APPROVED
     source_class_when_approved: canonical_policy
-    approved_by: null
-    effective_date: null
-    approval_reference: null
+    approved_by: Evochia Owner
+    effective_date: '2026-09-03'
+    approval_reference: owner-approval-2026-09-03-phase13.2
 rules:
-  - approved status requires all approval metadata fields
+  - PARTIALLY_APPROVED or APPROVED status requires all approval metadata fields
   - document Policy status must match this contract
+  - file-level partial approval never promotes rows explicitly marked OPEN or NEEDS_OWNER_APPROVAL
   - historical proposal evidence never gains current authority through approval of a different policy file
   - current rates approval does not convert historical proposal rows into approved rates
-  - mixed policy states map commercial readiness to PARTIALLY_APPROVED until all required commercial policies are approved
+  - mixed or partially approved policy states map commercial readiness to PARTIALLY_APPROVED until all required commercial policies are fully approved
