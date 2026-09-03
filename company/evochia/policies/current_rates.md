@@ -1,13 +1,15 @@
 # Evochia Current Rates — Owner Review Draft
 
 **Policy status:** `OWNER_REVIEW_DRAFT`
-**Important:** values below are candidates/evidence for reconciliation. They do **not become** approved current rates merely because they appeared in a historical or client-specific proposal.
+**Important:** this file is prepared for owner review only. No value below becomes canonical merely because it appears here or in historical/client-specific evidence.
 
-## A. Private Chef service-fee candidates
+## A. Private Chef — prepared INTERNAL BASE RATE CARD
 
-**State:** `CANDIDATE_FROM_OWNER_WORKING_DECISION` — requires final owner confirmation.
+**State:** `CANDIDATE_FROM_OWNER_WORKING_DECISION` — prepared for explicit owner approval.
 
-| Service | Party size | Candidate service fee |
+If approved, these values operate as an **INTERNAL BASE RATE CARD**: authoritative starting points for commercial reasoning, not a public immutable tariff. Final quotation may change with staffing, menu/service complexity, location, logistics, equipment and scope.
+
+| Service | Party size | Prepared base service fee |
 | --- | ---: | ---: |
 | Breakfast Only | up to 4 | €140 |
 | Breakfast Only | 5–8 | €180 |
@@ -22,44 +24,67 @@
 | One-Off Private Dinner | 3–6 | €280–380 |
 | One-Off Private Dinner | 7–12 | €380–540 |
 
-Working interpretation: service fee covers the defined chef/service work; food cost is normally separate. Exact inclusions and travel/staffing treatment must be confirmed by approved policy and quote.
+Prepared interpretation: the service fee covers the defined chef/service work. Food/supplier cost treatment follows the quotation format and `commercial_policy.md`; it is not silently folded into these base fees.
 
-## B. Surcharge / location candidates
+## B. Service uplift / location candidates
 
-**State:** `NEEDS_OWNER_APPROVAL`.
+**State:** `CANDIDATE_FROM_OWNER_WORKING_DECISION` — still non-canonical until explicit approval.
 
-- Yachting uplift candidate: +20%.
-- Islands / overnight / materially remote service uplift candidate: +40%.
-- Remote Attica: candidate approach = base service fee + transport/logistics rather than automatic island uplift.
-- Children pricing/portion rule: candidate 50% treatment under 12 where commercially and operationally appropriate; requires explicit scope definition.
+- Yachting service uplift candidate: `+20%`.
+- Island / overnight / materially remote service uplift candidate: `+40%`.
+- The `+40%` is compensation for disruption, lost productive time/availability and operational complexity — **not** transport, tickets, tolls, accommodation or other actual travel costs.
+- If yacht and island/remote conditions overlap, prepared rule = apply the **single highest applicable disruption uplift**, not both cumulatively.
+- Remote Attica: base service fee + actual/quoted logistics; do not apply the island uplift automatically.
 
-## C. Meal-prep candidates — unresolved
+## C. Children pricing candidate
 
-**State:** `NEEDS_RECONCILIATION` + `NEEDS_OWNER_APPROVAL`.
+**State:** `CANDIDATE_FROM_OWNER_WORKING_DECISION`.
 
-Two working models exist and must not both be treated as current:
+Prepared rule: `50%` treatment for **children under 12** applies only when the CLIENT pricing model is all-in or per-person menu pricing and the child portion/menu justifies the reduced price.
 
-1. Weekly service model: €120/week service + €10/week delivery; additional production day €70/day.
-2. Scaled production-day model: up to 2 persons €60/day; up to 4 persons €85/day; each extra person +€20/day; different meals +€20/day.
+It does **not** apply:
 
-The owner review must choose scope, frequency, inclusions and whether either model remains active.
+- to the chef/service fee;
+- as an additional discount to actual-cost/pass-through groceries or supplier purchases;
+- automatically where the quoted child menu/portion is not materially reduced.
 
-## D. Household-chef proposal evidence
+## D. Meal Prep — reconciled prepared model
 
-**State:** `PROPOSAL_SPECIFIC_EVIDENCE` — **must not be promoted to global policy without approval**.
+**State:** `CANDIDATE_FROM_OWNER_WORKING_DECISION` — prepared for explicit owner approval.
 
-A May 2026 household-chef proposal used €6,500/month for five service days/week, €350 additional day, €40 additional hour, guest-event supplements and travel day fees. It is strong evidence for that collaboration model but not an automatic company-wide rate card.
+Prepared canonical model after approval:
 
-## E. Historical event evidence
+| Scope | Prepared service fee |
+| --- | ---: |
+| Up to 2 persons | €60 / production day |
+| Up to 4 persons | €85 / production day |
+| Each additional person | +€20 / production day |
+| Different meals / additional meal split | +€20 / production day |
+| Delivery | €10 / week, independent of number of production days |
 
-Event-specific fees from villa/catering proposals, including the Porto Germeno multi-dinner booking, remain historical/client-specific evidence only. They may support estimating and proposal structure but are not an `APPROVED` global current rate.
+Legacy weekly arithmetic may still be derived from this model (for example 2 production days × €60 = €120 for up to 2 persons), but it is not a separate competing rate card.
 
-## Approval checklist
+**Legacy €70 additional production day rule: `RETIRED_ON_OWNER_APPROVAL`.** It remains historical evidence only until owner approval activates the reconciled production-day model.
 
-- [ ] Confirm Private Chef base tiers.
-- [ ] Confirm food-cost treatment and inclusions.
-- [ ] Confirm surcharge logic.
-- [ ] Reconcile meal-prep models.
-- [ ] Decide whether household-chef pricing becomes a service-specific rate card.
-- [ ] Confirm children policy.
-- [ ] Confirm minimum charges / peak-date logic.
+## E. Staffing rates
+
+Support-staff compensation, geography, plated calculation and transport rules are defined in `staffing_policy.md`. These are intentionally not inferred from the Private Chef service-fee table.
+
+## F. Household-chef proposal evidence
+
+**State:** `PROPOSAL_SPECIFIC_EVIDENCE` — not promoted by this prepared rate card.
+
+A May 2026 household-chef proposal used €6,500/month for five service days/week, €350 additional day, €40 additional hour, guest-event supplements and travel-day fees. It remains evidence for that collaboration only.
+
+The **household-chef global rate card remains OPEN**.
+
+## G. Historical event evidence
+
+Event-specific fees from villa/catering proposals, including Porto Germeno examples, remain historical/client-specific evidence. They may support estimating and proposal structure but are not current global rates.
+
+## H. Items intentionally still OPEN
+
+- peak-date pricing/surcharge policy;
+- household-chef global rate card;
+- any service family/rate not explicitly defined above;
+- any future public-facing price-list policy.
