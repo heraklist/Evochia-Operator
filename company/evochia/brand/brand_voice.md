@@ -1,7 +1,9 @@
 # Evochia Brand Voice
 
-**Status:** `OWNER_REVIEW_DRAFT` consolidation of established brand evidence.
-**Canonical effect:** none until explicit owner approval redirects the existing `evochia_brand_voice` authority to this consolidated file.
+**Status:** `APPROVED`
+**Approved by:** `Evochia Owner`
+**Effective date:** `2026-09-03`
+**Approval reference:** `owner-approval-2026-09-03-phase13.2`
 
 ## Positioning
 
@@ -40,14 +42,12 @@ Be transparent about scope, ingredients/supplier costs, staff, travel, equipment
 
 Never let premium language obscure a material exclusion, unresolved term, transport verification state, allergen concern or policy condition.
 
-## Canonical tagline text candidate
+## Canonical tagline text
 
 **Sophisticated taste & tailored events**
 
-The original logo guideline artwork contains an old spelling error in the tagline. Preserve official vector artwork as source evidence, but generated/live text uses the spelling above unless the owner explicitly revises the identity.
+The original logo guideline artwork contains an old spelling error in the tagline. Preserve official vector artwork as source evidence, but generated/live text uses the canonical spelling above unless the owner explicitly revises the identity.
 
-## Approval / authority transition
+## Authority and traceability
 
-The Source Registry currently contains the historical/consolidated `evochia_brand_voice` authority pointing to the archived Brand Voice source. This prepared file must **not** replace that authority merely by being edited.
-
-On explicit owner approval, update the existing `evochia_brand_voice` registry entry to point to this consolidated file and retain the archived source as traceability/evidence. Do not create a second competing canonical Brand Voice source.
+This consolidated file is the canonical `evochia_brand_voice` authority from the effective date above. The previously archived `Evochia_Brand_Voice.md` source remains traceability/evidence and must not be treated as a second competing canonical authority.
