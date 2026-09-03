@@ -1,6 +1,9 @@
 # Evochia Visual Identity
 
-**Status:** `OWNER_REVIEW_DRAFT`
+**Status:** `APPROVED`
+**Approved by:** Evochia Owner
+**Effective date:** 2026-09-03
+**Approval reference:** `owner-approval-2026-09-03-phase13.1`
 **Authority model:** official logo guideline → logo/palette; current site → digital typography/current web tokens; approved documents → portable print/document system.
 
 ## Official identity palette

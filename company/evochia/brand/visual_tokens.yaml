@@ -1,5 +1,9 @@
 schema_version: 1
-status: OWNER_REVIEW_DRAFT
+status: APPROVED
+approval:
+  approved_by: Evochia Owner
+  effective_date: '2026-09-03'
+  approval_reference: owner-approval-2026-09-03-phase13.1
 color:
   official_identity:
     primary_green: '#024631'

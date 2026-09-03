@@ -1,6 +1,9 @@
 # Evochia Document Style Guide
 
-**Status:** `OWNER_REVIEW_DRAFT`
+**Status:** `APPROVED`
+**Approved by:** Evochia Owner
+**Effective date:** 2026-09-03
+**Approval reference:** `owner-approval-2026-09-03-phase13.1`
 
 ## Typography authority
 
