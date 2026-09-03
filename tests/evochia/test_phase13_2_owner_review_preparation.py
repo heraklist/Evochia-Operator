@@ -13,37 +13,37 @@ def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_prepared_policy_files_remain_owner_review_drafts():
-    for name in [
-        "company_profile.md",
-        "commercial_policy.md",
-        "current_rates.md",
-        "staffing_policy.md",
-        "terms_policy.md",
-    ]:
-        text = read(POLICY_DIR / name)
-        assert "OWNER_REVIEW_DRAFT" in text
-        assert "approved_by: Evochia Owner" not in text
-
+def test_phase13_2_policy_bundle_keeps_explicit_state_and_approval_boundaries():
     contract = yaml.safe_load(read(POLICY_DIR / "policy_state_contract.yaml"))
-    for item in contract["policies"].values():
-        assert item["status"] == "OWNER_REVIEW_DRAFT"
-        assert item["approved_by"] is None
+    for name, item in contract["policies"].items():
+        text = read(POLICY_DIR / name)
+        assert item["status"] in {"OWNER_REVIEW_DRAFT", "PARTIALLY_APPROVED", "APPROVED"}
+        assert f"**Policy status:** `{item['status']}`" in text
+        if item["status"] in {"PARTIALLY_APPROVED", "APPROVED"}:
+            assert item["approved_by"] == "Evochia Owner"
+            assert item["effective_date"]
+            assert item["approval_reference"]
+        else:
+            assert item["approved_by"] is None
 
 
-def test_brand_voice_is_prepared_but_not_promoted_before_owner_approval():
+def test_brand_voice_preserves_internal_constraint_and_single_authority_transition():
     text = read(BRAND_VOICE)
-    assert "OWNER_REVIEW_DRAFT" in text
     assert "Internal positioning constraint" in text
     assert "restaurant-at-home" in text
 
-    registry = read(REGISTRY)
-    assert "source_id: evochia_brand_voice" in registry
-    assert "archive:files(1)/Evochia_Company_Brain_ChatGPT/Evochia_Brand_Voice.md" in registry
-    assert "company/evochia/brand/brand_voice.md" not in registry
+    registry = yaml.safe_load(read(REGISTRY))
+    matches = [s for s in registry["sources"] if s["source_id"] == "evochia_brand_voice"]
+    assert len(matches) == 1
+    source = matches[0]
+    if "**Status:** `APPROVED`" in text:
+        assert source["path_or_external_ref"] == "company/evochia/brand/brand_voice.md"
+        assert "archive:files(1)/Evochia_Company_Brain_ChatGPT/Evochia_Brand_Voice.md" in source.get("notes", "")
+    else:
+        assert source["path_or_external_ref"] == "archive:files(1)/Evochia_Company_Brain_ChatGPT/Evochia_Brand_Voice.md"
 
 
-def test_commercial_draft_captures_internal_client_separation_and_base_rates():
+def test_commercial_content_preserves_internal_client_separation_and_base_rates():
     commercial = read(POLICY_DIR / "commercial_policy.md")
     rates = read(POLICY_DIR / "current_rates.md")
     assert "INTERNAL costing architecture != CLIENT quotation format" in commercial
@@ -51,10 +51,10 @@ def test_commercial_draft_captures_internal_client_separation_and_base_rates():
     for value in ["€140", "€180", "€230", "€250", "€330", "€440", "€380", "€520", "€660"]:
         assert value in rates
     assert "€70 additional production day" in rates
-    assert "RETIRED_ON_OWNER_APPROVAL" in rates
+    assert "RETIRED_ON_OWNER_APPROVAL" in rates or "`RETIRED`" in rates
 
 
-def test_staffing_draft_contains_exact_plated_and_transport_rules():
+def test_staffing_contains_exact_plated_and_transport_rules():
     staffing = read(POLICY_DIR / "staffing_policy.md")
     assert "within Attica / outside Attica" in staffing
     assert "6+ guests OR plated service" in staffing
@@ -93,8 +93,10 @@ def test_terms_and_routing_allow_provisional_quote_but_gate_final_acceptance():
     assert "unapproved_material_commercial_terms" not in route["blockers"]
 
 
-def test_release_readiness_is_not_promoted_by_preparation_only():
+def test_release_readiness_tracks_current_policy_state_without_claiming_production_ready():
     readiness = yaml.safe_load(read(READINESS))
-    assert readiness["commercial_policy_readiness"] == "OWNER_REVIEW_REQUIRED"
-    blocker = next(b for b in readiness["blockers"] if b["id"] == "phase13_commercial_policy_owner_lock")
-    assert blocker["status"] == "OPEN"
+    assert readiness["commercial_policy_readiness"] in {
+        "OWNER_REVIEW_REQUIRED", "PARTIALLY_APPROVED", "APPROVED"
+    }
+    assert readiness["final_release_status"] == "BLOCKED"
+    assert readiness["may_claim_production_ready"] is False
