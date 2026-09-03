@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chef-ai-pro-business.local/schemas/market_intelligence_brief.schema.json",
+  "title": "Market Intelligence Brief",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["brief_id", "context", "audience", "analysis_dimensions", "claims", "open_questions"],
+  "properties": {
+    "brief_id": {"type": "string", "minLength": 1},
+    "context": {"const": "EVOCHIA_MARKET_INTELLIGENCE"},
+    "audience": {"enum": ["INTERNAL", "OPERATIONS", "CLIENT-SAFE"]},
+    "canonical_snapshot_source_id": {"type": "string", "default": "evochia_ci_v33"},
+    "analysis_dimensions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["Research Priority", "Competitive Threat", "Partner / Opportunity"]}
+    },
+    "claims": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/claim"}
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "recommended_actions": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "residual_risk": {"type": ["string", "null"]}
+  },
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim", "claim_class", "evidence_state", "freshness_state", "source_refs", "research_date", "confidence"],
+      "properties": {
+        "claim": {"type": "string", "minLength": 1},
+        "claim_class": {"enum": ["FACT", "EXTERNAL_EVIDENCE", "ESTIMATE", "ASSUMPTION", "INFERENCE"]},
+        "evidence_state": {"enum": ["CANONICAL_SNAPSHOT", "VERIFIED_CURRENT", "UNVERIFIED", "INFERENCE"]},
+        "freshness_state": {"enum": ["CURRENT", "SNAPSHOT", "HISTORICAL", "UNKNOWN", "NEEDS_REFRESH"]},
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "research_date": {
+          "anyOf": [
+            {"type": "string", "format": "date"},
+            {"type": "null"}
+          ]
+        },
+        "confidence": {"enum": ["HIGH", "MEDIUM", "LOW", "NEEDS_REVIEW"]},
+        "analysis_dimension": {"enum": ["Research Priority", "Competitive Threat", "Partner / Opportunity", "NONE"]},
+        "notes": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

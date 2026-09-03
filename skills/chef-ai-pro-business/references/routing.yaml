@@ -53,6 +53,13 @@ routes:
     context: evochia
     required_skills: [evochia-market-intelligence]
     optional_skills: [evochia-company-operations, evochia-product-development]
+  - route_id: evochia_market_intelligence
+    intent: evochia_competitor_seo_growth_market_intelligence
+    context: evochia
+    freshness: snapshot_plus_current_evidence_when_claim_is_mutable
+    required_skills: [evochia-market-intelligence]
+    optional_skills: [evochia-company-operations, evochia-product-development, evochia-brand-documents]
+    source_policy: source_registry_current_dataset_plus_ci_methodology
   - route_id: supplier_refresh
     intent: refresh_or_compare_supplier_prices
     context: any
