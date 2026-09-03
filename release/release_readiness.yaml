@@ -40,7 +40,14 @@ blockers:
     required_before_final_release: true
     closed_at: '2026-09-03'
     approval_reference: owner-approval-2026-09-03-phase13.2
-    reason: Phase 13.2 owner lock completed for approved commercial, rates, staffing, terms and Brand Voice scope; explicitly OPEN commercial defaults remain governed per quote and keep commercial readiness PARTIALLY_APPROVED
+    reason: Phase 13.2 owner lock completed the first approved commercial, rates, staffing, terms and Brand Voice scope; this historical closure is preserved and was subsequently extended by Phase 13.3.
+
+  - id: phase13_3_commercial_terms_completion
+    status: CLOSED
+    required_before_final_release: true
+    closed_at: '2026-09-03'
+    approval_reference: owner-approval-2026-09-03-phase13.3
+    reason: Phase 13.3 closes the canonical balance, cancellation, quote-validity, payment-default cure, postponement, scope-reduction, impediment economics, peak-date, household-framework and legal-identity commercial residue; unrelated partial-policy rows remain explicit.
 
 non_blocking_for_repository_candidate:
   - production_backend_persistence_upgrade
@@ -50,5 +57,7 @@ notes:
   - Repository candidate readiness means code/contracts/evals are coherent enough to proceed to final blockers; it is not a production-ready claim.
   - FnB Central remains the persistent system of record.
   - Historical proposal prices never become current policy automatically.
-  - Phase 13.2 owner approval does not close balance timing, cancellation/refundability, standard quote validity, peak-date policy or household-chef global rate card.
+  - Phase 13.3 closes the previously open balance timing, cancellation/refundability, standard quote validity, peak-date policy boundary, household-chef global-rate-card boundary and legal-identity commercial rows. Narrow legal drafting, undefined service-family rates, future public price-list policy and unrelated service-taxonomy rows remain explicit in their owning policy files.
+  - Commercial bundle readiness remains PARTIALLY_APPROVED because required policy files still contain unrelated explicit partial rows; approval of commercial_policy.md does not promote those rows.
+  - Final release remains BLOCKED by the required Phase 8B exact The Mart source migration and OpenAI surface install/scan gates.
   - Phase 8B is planned for Codex execution using exact audited source bytes; assignment does not change blocker status until verified migration is merged.
