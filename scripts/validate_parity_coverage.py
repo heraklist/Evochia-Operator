@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the v3.2.2 → vNext legacy parity contract."""
+"""Validate the v3.2.2 → vNext legacy parity contract and required runtime reachability."""
 
 from __future__ import annotations
 
@@ -47,8 +47,84 @@ REQUIRED_DOMAINS = {
     "api_invocation_approval",
 }
 
+DEFAULT_REACHABILITY = "evals/legacy/resource_reachability.yaml"
 
-def validate_matrix(matrix: dict[str, Any]) -> list[str]:
+
+def _validate_reachability(
+    matrix: dict[str, Any],
+    reachability: dict[str, Any] | None,
+    repo_root: Path,
+) -> list[str]:
+    if not reachability:
+        return []
+
+    issues: list[str] = []
+    capabilities = {
+        item.get("capability_id"): item
+        for item in matrix.get("capabilities", [])
+        if isinstance(item, dict) and item.get("capability_id")
+    }
+
+    seen: set[str] = set()
+    for index, requirement in enumerate(reachability.get("requirements", [])):
+        if not isinstance(requirement, dict):
+            issues.append(f"reachability[{index}] must be a mapping")
+            continue
+
+        cid = requirement.get("capability_id")
+        label = cid or f"reachability[{index}]"
+        if not cid:
+            issues.append(f"{label}: missing capability_id")
+            continue
+        if cid in seen:
+            issues.append(f"{label}: duplicate reachability declaration")
+        seen.add(cid)
+
+        capability = capabilities.get(cid)
+        if capability is None:
+            issues.append(f"{label}: reachability capability not present in parity matrix")
+            continue
+
+        resources = requirement.get("required_resources")
+        skills = requirement.get("reachable_via_skills")
+        if not isinstance(resources, list) or not resources:
+            issues.append(f"{label}: required_resources must be a non-empty list")
+            continue
+        if not isinstance(skills, list) or not skills:
+            issues.append(f"{label}: reachable_via_skills must be a non-empty list")
+            continue
+
+        target_skills = set(capability.get("target_skills") or [])
+        undeclared = sorted(set(skills) - target_skills)
+        if undeclared:
+            issues.append(f"{label}: reachability skills not declared as target_skills {undeclared}")
+
+        skill_texts: dict[str, str] = {}
+        for skill in skills:
+            skill_file = repo_root / "skills" / skill / "SKILL.md"
+            if not skill_file.exists():
+                issues.append(f"{label}: target skill file missing {skill_file.relative_to(repo_root)}")
+                continue
+            skill_texts[skill] = skill_file.read_text(encoding="utf-8")
+
+        for resource in resources:
+            resource_path = repo_root / resource
+            if not resource_path.exists():
+                issues.append(f"{label}: required resource missing {resource}")
+                continue
+            if not any(resource in text for text in skill_texts.values()):
+                issues.append(
+                    f"{label}: required resource {resource} is not reachable from declared target skills"
+                )
+
+    return issues
+
+
+def validate_matrix(
+    matrix: dict[str, Any],
+    repo_root: Path | None = None,
+    reachability: dict[str, Any] | None = None,
+) -> list[str]:
     issues: list[str] = []
     capabilities = matrix.get("capabilities")
     if not isinstance(capabilities, list) or not capabilities:
@@ -102,6 +178,9 @@ def validate_matrix(matrix: dict[str, Any]) -> list[str]:
     if missing_domains:
         issues.append(f"missing required domains: {missing_domains}")
 
+    if repo_root is not None:
+        issues.extend(_validate_reachability(matrix, reachability, Path(repo_root)))
+
     return issues
 
 
@@ -113,10 +192,33 @@ def main(argv: list[str] | None = None) -> int:
         default="evals/legacy/parity_matrix.yaml",
         help="parity matrix YAML path",
     )
+    parser.add_argument(
+        "--repo-root",
+        default=".",
+        help="repository root used for runtime reachability checks",
+    )
+    parser.add_argument(
+        "--reachability",
+        default=DEFAULT_REACHABILITY,
+        help="capability-to-resource reachability YAML path",
+    )
     args = parser.parse_args(argv)
-    path = Path(args.matrix)
-    matrix = yaml.safe_load(path.read_text(encoding="utf-8"))
-    issues = validate_matrix(matrix)
+
+    repo_root = Path(args.repo_root).resolve()
+    matrix_path = Path(args.matrix)
+    if not matrix_path.is_absolute():
+        matrix_path = repo_root / matrix_path
+    reachability_path = Path(args.reachability)
+    if not reachability_path.is_absolute():
+        reachability_path = repo_root / reachability_path
+
+    matrix = yaml.safe_load(matrix_path.read_text(encoding="utf-8"))
+    reachability = (
+        yaml.safe_load(reachability_path.read_text(encoding="utf-8"))
+        if reachability_path.exists()
+        else None
+    )
+    issues = validate_matrix(matrix, repo_root=repo_root, reachability=reachability)
     if issues:
         print("Legacy parity coverage: FAIL", file=sys.stderr)
         for issue in issues:
