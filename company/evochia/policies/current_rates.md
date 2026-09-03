@@ -1,7 +1,7 @@
 # Evochia Current Rates — Owner Review Draft
 
 **Policy status:** `OWNER_REVIEW_DRAFT`
-**Important:** this file is prepared for owner review only. No value below becomes canonical merely because it appears here or in historical/client-specific evidence.
+**Important:** this file is prepared for owner review only. No value below becomes canonical merely because it appears here or in historical/client-specific evidence. **Historical or proposal-specific evidence must not become current rate authority without explicit owner approval.**
 
 ## A. Private Chef — prepared INTERNAL BASE RATE CARD
 
