@@ -1,14 +1,16 @@
 # Evochia Commercial Policy
 
-**Policy status:** `OWNER_REVIEW_DRAFT`
-**Canonical effect:** none until explicit owner approval.
-**Prepared scope:** owner-review-ready commercial model; unresolved items remain `NEEDS_OWNER_APPROVAL` or `OPEN` as stated.
+**Policy status:** `PARTIALLY_APPROVED`
+**Approved by:** `Evochia Owner`
+**Effective date:** `2026-09-03`
+**Approval reference:** `owner-approval-2026-09-03-phase13.2`
+**Canonical scope:** the approved rules below are current Evochia commercial policy; explicitly OPEN / `NEEDS_OWNER_APPROVAL` items remain unresolved.
 
 ## 1. Core commercial model
 
-**Prepared rule — `CANDIDATE_FROM_OWNER_WORKING_DECISION`:** Evochia sells professional hospitality/service. Food/ingredient cost is not the mechanism used to hide chef labour, operating cost or commercial value.
+**Approved rule — `APPROVED_OWNER_DECISION`:** Evochia sells professional hospitality/service. Food/ingredient cost is not the mechanism used to hide chef labour, operating cost or commercial value.
 
-Where the service model uses pass-through purchasing, groceries, ingredients and third-party supplier purchases are evidenced at actual cost/receipt. Other quotation formats remain possible when explicitly chosen for the client/service.
+Where the service model uses pass-through purchasing, groceries, ingredients and third-party supplier purchases are evidenced at actual cost/receipt. Other quotation formats remain valid when explicitly chosen for the client/service.
 
 ### INTERNAL costing architecture != CLIENT quotation format
 
@@ -37,27 +39,25 @@ A client-facing package never erases the underlying INTERNAL cost/economic model
 
 ## 3. Service uplifts and actual logistics
 
-Prepared candidate logic:
+**Approved rules — `APPROVED_OWNER_DECISION`:**
 
 - Yachting service uplift: `+20%`.
 - Island / overnight / materially remote service uplift: `+40%`.
 - These uplifts compensate disruption, lost productive time/availability and operational complexity. They do **not** replace actual transport, tickets, tolls, accommodation or other third-party travel costs.
-- When more than one disruption uplift applies to the same service context (for example yacht + island), the prepared rule is to apply the **single highest applicable uplift**, not stack overlapping disruption uplifts.
+- When more than one disruption uplift applies to the same service context (for example yacht + island), apply the **single highest applicable uplift**; do not stack overlapping disruption uplifts.
 - Remote Attica is handled as base service fee plus actual/quoted logistics rather than automatically receiving the island uplift.
-
-All rules in this section remain non-canonical until owner approval.
 
 ## 4. VAT / tax presentation
 
-Prepared rule: do **not** hardcode a universal VAT rate from historical proposals. Apply the **current applicable** tax treatment for the actual service, date, entity and jurisdiction. Client outputs must state whether relevant prices are net/gross and VAT included/excluded where material.
+**Approved rule — `APPROVED_OWNER_DECISION`:** do **not** hardcode a universal VAT rate from historical proposals. Apply the **current applicable** tax treatment for the actual service, date, entity and jurisdiction. Client outputs must state whether relevant prices are net/gross and VAT included/excluded where material.
 
 Tax-sensitive claims require current verification when material.
 
 ## 5. Service-specific pricing
 
-Prepared Private Chef and Meal Prep pricing lives in `current_rates.md`. That file separates candidate base rates from historical/proposal-specific evidence and unresolved service families.
+Approved Private Chef and Meal Prep pricing lives in `current_rates.md`.
 
-The Private Chef table is intended, if approved, to operate as an **INTERNAL BASE RATE CARD**: an authoritative starting point for reasoning, not a public immutable tariff. Staffing, complexity, location, logistics and scope may change the final quote.
+The Private Chef table operates as an **INTERNAL BASE RATE CARD**: an authoritative starting point for reasoning, not a public immutable tariff. Staffing, complexity, location, logistics and scope may change the final quote.
 
 ## 6. Quote governance
 
@@ -88,7 +88,7 @@ A missing or ambiguous material term may still block a final client proposal eve
 
 ## 7. Current unresolved commercial items
 
-The following remain `OPEN` / `NEEDS_OWNER_APPROVAL` in this prepared draft:
+The following remain `OPEN` / `NEEDS_OWNER_APPROVAL` after the Phase 13.2 owner lock:
 
 - balance-payment timing;
 - cancellation/refundability windows;
