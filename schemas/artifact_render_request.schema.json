@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evochia.internal/schemas/artifact_render_request.schema.json",
+  "title": "Artifact Render Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifact_type", "audience", "output_format", "canonical_content_ref", "render_status", "confidentiality"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "enum": ["production_recipebook", "proposal", "client_menu", "flyer", "product_sheet", "product_plan"]
+    },
+    "audience": {"type": "string", "enum": ["INTERNAL", "OPERATIONS", "CLIENT_SAFE"]},
+    "output_format": {"type": "string", "enum": ["PDF", "DOCX", "XLSX", "HTML"]},
+    "canonical_content_ref": {"type": "string", "minLength": 1},
+    "brand_profile": {"type": ["string", "null"]},
+    "confidentiality": {"type": "string", "enum": ["PUBLIC", "CLIENT_CONFIDENTIAL", "COMPANY_CONFIDENTIAL"]},
+    "render_status": {"type": "string", "enum": ["DRAFT", "DRAFT_UNVERIFIED_BRAND_RENDER", "FINAL_VERIFIED"]},
+    "brand_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "logo_verified": {"type": "boolean"},
+        "fonts_verified": {"type": "boolean"},
+        "pdf_fonts_embedded": {"type": ["boolean", "null"]},
+        "font_environment_verified": {"type": ["boolean", "null"]}
+      }
+    },
+    "projection_source_audience": {"type": ["string", "null"], "enum": ["INTERNAL", "OPERATIONS", "CLIENT_SAFE", null]},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"render_status": {"const": "FINAL_VERIFIED"}}},
+      "then": {
+        "required": ["brand_verification"],
+        "properties": {
+          "brand_verification": {
+            "required": ["logo_verified", "fonts_verified"],
+            "properties": {
+              "logo_verified": {"const": true},
+              "fonts_verified": {"const": true}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "output_format": {"const": "PDF"},
+          "render_status": {"const": "FINAL_VERIFIED"}
+        },
+        "required": ["output_format", "render_status"]
+      },
+      "then": {
+        "properties": {
+          "brand_verification": {
+            "required": ["pdf_fonts_embedded"],
+            "properties": {"pdf_fonts_embedded": {"const": true}}
+          }
+        }
+      }
+    }
+  ]
+}

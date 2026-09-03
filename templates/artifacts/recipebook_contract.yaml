@@ -1,0 +1,45 @@
+schema_version: 1
+artifact_type: production_recipebook
+audience: OPERATIONS
+design_priority: operations_first
+canonical_inputs:
+  - recipe
+  - shopping_list
+  - production_timeline
+page:
+  size: A4
+  orientation: landscape
+  fit_to_width: true
+layout:
+  compact_print: true
+  readable_at_print_scale: true
+  consistent_header_footer: true
+  avoid_recipe_block_splits_where_practical: true
+required_recipe_blocks:
+  - identity_version
+  - yield
+  - service_style
+  - allergens_dietary
+  - equipment
+  - ingredients
+  - mise_en_place
+  - method
+  - finishing
+  - holding_service
+  - ccp
+  - make_ahead_timeline
+  - quality_failure_recovery
+shopping_list:
+  aggregate_from_canonical_recipe_lines: true
+  never_invent_pack_sizes_or_supplier_prices: true
+production_timeline:
+  derived_from_canonical_method_and_event_context: true
+brand:
+  profile: evochia_operations
+  priority: readability_over_decoration
+  render_integrity_contract: company/evochia/brand/assets/render_integrity.yaml
+  final_pdf_requires_verified_brand_preflight: true
+forbidden:
+  - hidden_business_logic_in_template
+  - client_sales_language
+  - unverified_allergen_free_claims
