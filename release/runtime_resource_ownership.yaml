@@ -1,0 +1,58 @@
+schema_version: 1
+purpose: >-
+  Ensure shipped runtime templates, schemas and rendering contracts have an explicit owning Skill and are reachable from that Skill's entrypoint.
+resource_roots:
+  - path: templates/operations/
+    owner_skill: kitchen-event-operations
+    reference_token: templates/operations/
+  - path: templates/safety/
+    owner_skill: food-safety-allergens
+    reference_token: templates/safety/
+  - path: templates/product-plans/
+    owner_skill: evochia-product-development
+    reference_token: templates/product-plans/
+  - path: templates/recipes/
+    owner_skill: recipe-engineering
+    reference_token: templates/recipes/
+exact_resources:
+  - path: templates/artifacts/client_artifact_contracts.yaml
+    owner_skill: evochia-brand-documents
+    reference_token: templates/artifacts/client_artifact_contracts.yaml
+  - path: templates/artifacts/recipebook_contract.yaml
+    owner_skill: recipe-engineering
+    reference_token: templates/artifacts/recipebook_contract.yaml
+  - path: schemas/artifact_render_request.schema.json
+    owner_skill: evochia-brand-documents
+    reference_token: schemas/artifact_render_request.schema.json
+  - path: references/artifacts/rendering_policy.md
+    owner_skill: evochia-brand-documents
+    reference_token: references/artifacts/rendering_policy.md
+  - path: schemas/event_brief.schema.json
+    owner_skill: kitchen-event-operations
+    reference_token: schemas/event_brief.schema.json
+  - path: schemas/event_economics.schema.json
+    owner_skill: kitchen-event-operations
+    reference_token: schemas/event_economics.schema.json
+  - path: schemas/haccp_plan.schema.json
+    owner_skill: food-safety-allergens
+    reference_token: schemas/haccp_plan.schema.json
+  - path: schemas/safety_evidence.schema.json
+    owner_skill: food-safety-allergens
+    reference_token: schemas/safety_evidence.schema.json
+  - path: schemas/product_plan.schema.json
+    owner_skill: evochia-product-development
+    reference_token: schemas/product_plan.schema.json
+  - path: schemas/recipe.schema.json
+    owner_skill: recipe-engineering
+    reference_token: schemas/recipe.schema.json
+  - path: schemas/menu_experience.schema.json
+    owner_skill: menu-experience-design
+    reference_token: schemas/menu_experience.schema.json
+  - path: schemas/supplier_price_snapshot.schema.json
+    owner_skill: supplier-procurement-intelligence
+    reference_token: schemas/supplier_price_snapshot.schema.json
+  - path: schemas/market_intelligence_brief.schema.json
+    owner_skill: evochia-market-intelligence
+    reference_token: schemas/market_intelligence_brief.schema.json
+non_runtime_tooling:
+  - schemas/source_registry.schema.json
