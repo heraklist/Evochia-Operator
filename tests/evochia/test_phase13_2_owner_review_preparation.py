@@ -70,9 +70,13 @@ def test_staffing_draft_contains_exact_plated_and_transport_rules():
     assert "Commute model" in staffing
 
 
-def test_outside_attica_half_board_uses_existing_minimum_staff_rate():
+def test_outside_attica_half_board_uses_existing_minimum_staff_rate_and_day_floor():
     staffing = read(POLICY_DIR / "staffing_policy.md")
     assert "Outside Attica — Half Board | €180/person/day | €180 minimum" in staffing
+    assert "day-floor" in staffing.lower()
+    assert "not priced per meal" in staffing.lower()
+    assert "Dinner-only and Half Board" in staffing
+    assert "Full Board starts at €200" in staffing
     assert "Outside Attica Half Board support-day rate" not in staffing
 
 
