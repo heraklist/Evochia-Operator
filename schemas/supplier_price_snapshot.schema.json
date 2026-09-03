@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evochia.internal/schemas/supplier_price_snapshot.schema.json",
+  "title": "Supplier Price Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "provider",
+    "captured_at",
+    "product_name",
+    "unit",
+    "source_reference",
+    "evidence_state",
+    "confidence",
+    "freshness_state",
+    "parsing_warnings"
+  ],
+  "properties": {
+    "provider": {"type": "string", "minLength": 1},
+    "captured_at": {"type": "string", "format": "date-time"},
+    "root_category": {"type": ["string", "null"]},
+    "category_name": {"type": ["string", "null"]},
+    "page_num": {"type": ["integer", "null"], "minimum": 1},
+    "sku": {"type": ["string", "null"]},
+    "product_code": {"type": ["string", "null"]},
+    "product_name": {"type": "string", "minLength": 1},
+    "pack": {"type": ["string", "null"]},
+    "unit": {"type": "string", "minLength": 1},
+    "price_net": {"type": ["number", "null"], "minimum": 0},
+    "price_gross": {"type": ["number", "null"], "minimum": 0},
+    "vat_rate": {"type": ["number", "null"], "minimum": 0},
+    "vat_status": {
+      "type": "string",
+      "enum": ["KNOWN", "INFERRED", "UNKNOWN"]
+    },
+    "unit_price": {"type": ["number", "null"], "minimum": 0},
+    "unit_price_basis": {
+      "type": "string",
+      "enum": ["NET", "GROSS", "UNKNOWN"]
+    },
+    "source_reference": {"type": "string", "minLength": 1},
+    "product_url": {"type": ["string", "null"]},
+    "category_url": {"type": ["string", "null"]},
+    "evidence_state": {
+      "type": "string",
+      "enum": ["RAW_CAPTURE", "EXTRACTED", "NORMALIZED", "NEEDS_REVIEW", "REJECTED"]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["HIGH", "MEDIUM", "LOW", "UNKNOWN"]
+    },
+    "freshness_state": {
+      "type": "string",
+      "enum": ["CURRENT_SNAPSHOT", "STALE", "UNKNOWN"]
+    },
+    "parsing_warnings": {
+      "type": "array",
+      "items": {"type": "string"},
+      "default": []
+    },
+    "raw_capture_reference": {
+      "type": ["string", "null"],
+      "description": "Local-only opaque reference or sanitized filename. Never embed credentials, cookies, browser-profile paths or raw sensitive HTML."
+    }
+  },
+  "allOf": [
+    {
+      "anyOf": [
+        {"required": ["price_net"]},
+        {"required": ["price_gross"]},
+        {"required": ["unit_price"]}
+      ]
+    }
+  ]
+}

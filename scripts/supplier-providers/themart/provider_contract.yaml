@@ -1,0 +1,35 @@
+schema_version: 1
+provider: themart
+role: supplier_price_evidence_provider
+execution_mode: explicit_user_request_only
+background_monitoring: false
+network_scope: provider_site_only_when_explicitly_executed
+browser_profile:
+  environment_variable: THEMART_BROWSER_PROFILE_DIR
+  repository_storage: forbidden
+  source: local_user_environment
+  required_for_authenticated_capture: true
+credentials:
+  collection_by_provider: false
+  repository_storage: forbidden
+  login_method: manual_user_login
+outputs:
+  canonical_schema: schemas/supplier_price_snapshot.schema.json
+  raw_html_storage: local_only
+  raw_html_default_export: excluded
+  spreadsheet_formula_injection_protection: required
+  local_path_redaction: required
+freshness:
+  captured_at_required: true
+  current_snapshot_label: CURRENT_SNAPSHOT
+  stale_label: STALE
+  unknown_label: UNKNOWN
+  never_treat_old_snapshot_as_live: true
+authority:
+  supplier_prices_are_evidence_not_business_policy: true
+  extracted_rows_are_not_auto_approved_master_data: true
+  missing_values_must_not_be_invented: true
+fallback:
+  live_refresh_unavailable: use_latest_validated_snapshot_if_available
+  required_label: freshness_state
+  no_validated_snapshot: NEEDS_REVIEW
