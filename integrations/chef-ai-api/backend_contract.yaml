@@ -1,0 +1,32 @@
+schema_version: 1
+repository: heraklist/chef-ai-pro-business-api
+pinned_commit: 74aaa31a7f5f725ad661aa3fe19f8100a36b17b7
+backend_source_lives_here: false
+runtime_state: FUNCTIONAL_MOCK_ADAPTER
+production_persistence: false
+production_provider_adapters: false
+role: EXECUTION_AND_INTEGRATION_LAYER
+system_of_record: false
+route_catalog:
+  path: src/router/routeCatalog.ts
+  git_blob_sha: 8bd2faf7cc384a90866660a79cf564d20b76c90a
+router:
+  production_entrypoint: /api/router
+  namespaces: [/api/v3_0, /api/v3_1, /api/v3_2]
+security_capabilities:
+  - api_key_authentication
+  - workspace_and_actor_context
+  - rbac
+  - rate_limiting
+  - idempotency_for_writes
+  - confirmation_gate
+  - safe_error_responses
+  - audit_logging
+  - request_secret_validation
+limitations:
+  - mock_in_memory_domain_adapters
+  - no_durable_production_database
+  - no_real_provider_adapters
+  - no_production_user_workspace_provisioning
+  - not_approved_for_production_financial_or_client_persistence
+upgrade_rule: re_audit_and_repin_commit_when_backend_contract_changes
