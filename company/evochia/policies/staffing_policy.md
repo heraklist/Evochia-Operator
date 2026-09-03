@@ -5,7 +5,7 @@
 
 ## 1. Principle
 
-Staffing is a feasibility, safety and service-quality decision. Guest count is a hard trigger in defined cases, but menu complexity, plated synchronization, meal frequency, dietary splits, kitchen/equipment constraints, setup/pack-down, stewarding, travel and venue conditions can require more support than the minimum rule.
+Staffing is a feasibility, safety and service-quality decision. Guest count is a hard trigger in defined cases, but **service format**, menu complexity, plated synchronization, meal frequency, dietary splits, kitchen/equipment constraints, setup/pack-down, stewarding, travel and venue conditions can require more support than the minimum rule.
 
 The current prepared rate card uses one support-staff category (kitchen assistant / service support) **per person per day**. Future separation into distinct kitchen/service/stewarding roles and rate cards remains open unless explicitly approved later.
 
