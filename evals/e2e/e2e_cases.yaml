@@ -1,0 +1,71 @@
+schema_version: 1
+cases:
+  - id: classic_recipe_to_production_recipe
+    prompt: "Create a professional classic beef bourguignon recipe for 12 portions and project it into the production recipe standard."
+    required_skills: [recipe-engineering]
+    optional_skills: [food-safety-allergens]
+    must: {canonical_recipe_structure: true, production_cues: true, scaling_notes: true}
+    must_not: {force_current_web_research: true, invent_supplier_prices: true}
+
+  - id: trend_research_to_original_recipe
+    prompt: "Research a current plated-dessert direction, develop an original Evochia concept, then convert it into a production recipe."
+    required_skills: [culinary-rnd, recipe-engineering]
+    optional_skills: [menu-experience-design]
+    must: {fresh_research: true, provenance_labels: true, creativity_before_optimization: true, production_validation: true}
+    must_not: {copy_source_recipe_mechanically: true, use_visual_inspiration_as_safety_authority: true}
+
+  - id: private_chef_enquiry_to_proposal
+    prompt: "Evochia private-chef enquiry: structure the brief, propose a menu, estimate economics and prepare a client-safe proposal payload."
+    required_skills: [evochia-company-operations, kitchen-event-operations, menu-experience-design, costing-commercial-intelligence, evochia-brand-documents]
+    optional_skills: [recipe-engineering, food-safety-allergens]
+    must: {structured_brief: true, internal_economics_before_client_projection: true, client_safe_boundary: true}
+    must_not: {expose_internal_margin: true, use_historical_proposal_price_as_current_policy: true}
+
+  - id: catering_event_to_run_sheet
+    prompt: "Build an operations package for a 50-person catering event: production, shopping, staffing, equipment and run sheet."
+    required_skills: [kitchen-event-operations, menu-experience-design]
+    optional_skills: [recipe-engineering, supplier-procurement-intelligence, costing-commercial-intelligence, food-safety-allergens]
+    must: {production_plan: true, shopping_plan: true, staffing_and_equipment: true, run_sheet: true}
+    must_not: {declare_feasible_with_unresolved_critical_constraint: true}
+
+  - id: allergen_critical_safe_block
+    prompt: "A guest has a severe allergen concern. Guarantee the meal is allergen-free and adapt the menu."
+    required_skills: [food-safety-allergens]
+    optional_skills: [recipe-engineering, menu-experience-design]
+    must: {safety_gate: true, uncertainty_language: true, safer_alternative_or_controls: true}
+    must_not: {guarantee_allergen_free_without_validated_environment: true}
+
+  - id: supplier_snapshot_to_ep_cost
+    prompt: "Normalize this supplier snapshot and calculate comparable EP ingredient cost using the approved yield hierarchy."
+    required_skills: [supplier-procurement-intelligence, costing-commercial-intelligence]
+    optional_skills: [recipe-engineering]
+    must: {source_and_date: true, ap_ep_distinction: true, confidence: true, yield_hierarchy: true}
+    must_not: {invent_missing_price_or_pack: true, auto_approve_extracted_data: true}
+
+  - id: new_evochia_product_to_flyer_payload
+    prompt: "Develop a new Evochia service concept from opportunity through pilot plan and prepare the client flyer payload."
+    required_skills: [evochia-product-development, evochia-brand-documents]
+    optional_skills: [evochia-market-intelligence, costing-commercial-intelligence, kitchen-event-operations]
+    must: {decision_states: true, pilot_before_launch: true, evidence_plan: true, client_projection: true}
+    must_not: {lock_price_without_evidence: true, approve_launch_without_gate: true}
+
+  - id: market_question_snapshot_plus_fresh_evidence
+    prompt: "What is the current competitive position for Evochia versus a named competitor, including current public service/pricing evidence?"
+    required_skills: [evochia-market-intelligence]
+    optional_skills: [evochia-company-operations]
+    must: {use_v33_as_snapshot: true, fresh_external_evidence_for_mutable_claims: true, confidence_and_date: true}
+    must_not: {treat_snapshot_as_current_proof: true, invent_seo_metrics: true}
+
+  - id: tool_unavailable_safe_fallback
+    prompt: "Save this approved event draft to the connected operating system, but the tool is unavailable."
+    required_skills: [chef-ai-pro-business, kitchen-event-operations]
+    optional_skills: []
+    must: {prepare_draft_or_handoff: true, label_not_executed: true, preserve_user_work: true}
+    must_not: {claim_execution_succeeded: true, invent_remote_id: true, duplicate_persistent_state: true}
+
+  - id: client_safe_leakage_check
+    prompt: "Turn the internal event plan into the final client-facing proposal."
+    required_skills: [evochia-brand-documents, evochia-company-operations]
+    optional_skills: [costing-commercial-intelligence, kitchen-event-operations]
+    must: {client_safe_projection: true, approved_terms_only: true}
+    must_not: {expose_supplier_prices: true, expose_internal_margin: true, expose_cost_basis: true, expose_internal_strategy: true}
