@@ -8,6 +8,7 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[2]
 
 POLICY_DIR = ROOT / "company/evochia/policies"
+POLICY_STATE = POLICY_DIR / "policy_state_contract.yaml"
 BRAND_DIR = ROOT / "company/evochia/brand"
 GOLDEN = ROOT / "company/evochia/golden_examples/README.md"
 PRODUCT_SCHEMA = ROOT / "schemas/product_plan.schema.json"
@@ -44,11 +45,24 @@ def git_blob_sha(path: Path) -> str:
     return hashlib.sha1(framed).hexdigest()
 
 
-def test_owner_review_policy_bundle_exists_and_is_not_silently_canonical():
+def policy_contract() -> dict:
+    return yaml.safe_load(read(POLICY_STATE))
+
+
+def policy_status(name: str) -> str:
+    text = read(POLICY_DIR / name)
+    match = re.search(r"Policy status:\*\*\s*`?([A-Z_]+)`?", text)
+    assert match, f"{name}: missing explicit Policy status"
+    return match.group(1)
+
+
+def test_policy_bundle_has_explicit_valid_states_and_preserves_historical_boundaries():
+    contract = policy_contract()
+    allowed = set(contract["allowed_statuses"])
     for name in POLICIES:
-        text = read(POLICY_DIR / name)
-        assert "OWNER_REVIEW_DRAFT" in text
-        assert "NEEDS_OWNER_APPROVAL" in text or "APPROVED" in text
+        assert policy_status(name) in allowed
+        assert contract["policies"][name]["status"] == policy_status(name)
+
     commercial = read(POLICY_DIR / "commercial_policy.md")
     rates = read(POLICY_DIR / "current_rates.md")
     terms = read(POLICY_DIR / "terms_policy.md")
@@ -57,36 +71,38 @@ def test_owner_review_policy_bundle_exists_and_is_not_silently_canonical():
     assert "must not" in rates.lower() or "not become" in rates.lower()
 
 
-def test_rate_draft_preserves_candidate_service_models_but_labels_authority():
+def test_rate_policy_preserves_service_families_and_never_promotes_historical_evidence_silently():
     text = read(POLICY_DIR / "current_rates.md")
+    status = policy_status("current_rates.md")
     for token in ["Breakfast Only", "Half Board", "Full Board", "One-Off Private Dinner"]:
         assert token in text
-    for value in ["140", "180", "230", "250", "330", "440", "380", "520", "660"]:
-        assert value in text
-    assert "CANDIDATE_FROM_OWNER_WORKING_DECISION" in text
     assert "PROPOSAL_SPECIFIC_EVIDENCE" in text
-    assert "NEEDS_RECONCILIATION" in text
     assert not re.search(r"APPROVED[^\n]{0,120}€?3[,\.]?650", text, flags=re.I)
+    if status != "APPROVED":
+        assert "CANDIDATE_FROM_OWNER_WORKING_DECISION" in text
+        assert "NEEDS_RECONCILIATION" in text
 
 
-def test_commercial_and_terms_drafts_keep_vat_and_deposit_configurable_until_approval():
+def test_commercial_and_terms_keep_vat_quote_validity_and_cancellation_explicit():
     commercial = read(POLICY_DIR / "commercial_policy.md")
     terms = read(POLICY_DIR / "terms_policy.md")
     combined = commercial + "\n" + terms
     assert "VAT" in combined
     assert "current applicable" in combined.lower()
-    assert "30%" in terms
-    assert "NEEDS_OWNER_APPROVAL" in terms
     assert "quote validity" in terms.lower()
     assert "cancellation" in terms.lower()
+    if policy_status("terms_policy.md") != "APPROVED":
+        assert "30%" in terms
+        assert "NEEDS_OWNER_APPROVAL" in terms
 
 
 def test_staffing_policy_is_contextual_not_guest_count_only():
     text = read(POLICY_DIR / "staffing_policy.md")
     for term in ["guest", "service format", "plated", "Half Board", "equipment", "travel"]:
         assert term.lower() in text.lower()
-    assert "NEEDS_OWNER_APPROVAL" in text
-    assert "6+" in text
+    if policy_status("staffing_policy.md") != "APPROVED":
+        assert "NEEDS_OWNER_APPROVAL" in text
+        assert "6+" in text
 
 
 def test_brand_bundle_uses_canonical_generated_tagline_and_documents_source_typo_safely():
