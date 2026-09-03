@@ -13,6 +13,8 @@ blockers:
   - id: phase8b_exact_themart_source_migration
     status: OPEN
     required_before_final_release: true
+    planned_executor: CODEX
+    execution_mode: EXACT_SOURCE_MIGRATION
     reason: exact allowlisted provider source/test bytes have not yet been migrated from the supplied archive
     prohibition: do_not_reconstruct_collector_or_extractor_from_memory
     expected_artifacts:
@@ -46,3 +48,4 @@ notes:
   - Repository candidate readiness means code/contracts/evals are coherent enough to proceed to final blockers; it is not a production-ready claim.
   - FnB Central remains the persistent system of record.
   - Historical proposal prices never become current policy automatically.
+  - Phase 8B is planned for Codex execution using exact audited source bytes; assignment does not change blocker status until verified migration is merged.
