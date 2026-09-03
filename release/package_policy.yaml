@@ -1,0 +1,51 @@
+schema_version: 1
+package_name: chef-ai-pro-business-vnext-private
+candidate_version_source: VERSION
+required_skills:
+  - chef-ai-pro-business
+  - culinary-rnd
+  - recipe-engineering
+  - menu-experience-design
+  - kitchen-event-operations
+  - food-safety-allergens
+  - costing-commercial-intelligence
+  - supplier-procurement-intelligence
+  - evochia-company-operations
+  - evochia-brand-documents
+  - evochia-product-development
+  - evochia-market-intelligence
+required_skill_file: SKILL.md
+required_frontmatter_fields: [name, description]
+forbidden_patterns:
+  - .browser_profile_themart
+  - .env
+  - Cookies
+  - Login Data
+  - Web Data
+  - History
+  - Local State
+  - Network Persistent State
+  - '*.key'
+  - '*.pem'
+  - '*.p12'
+  - '*.pfx'
+  - __pycache__
+  - .pytest_cache
+  - .venv
+  - venv
+  - output
+allowed_exception_files:
+  - .env.example
+font_binaries_in_package: false
+backend_source_in_package: false
+external_backend_repository: heraklist/chef-ai-pro-business-api
+private_package: true
+confidential_assets_require_intentional_inclusion: true
+max_repository_candidate_bytes: 26214400
+validation:
+  - all_required_skills_present
+  - skill_frontmatter_valid
+  - referenced_repo_paths_exist
+  - forbidden_runtime_files_absent
+  - source_registry_valid
+  - package_size_within_limit

@@ -1,0 +1,27 @@
+schema_version: 1
+runner: evals/run_evals.py
+categories:
+  - category: legacy
+    sources: [evals/legacy/parity_matrix.yaml, evals/legacy/doctrine_cases.yaml]
+  - category: routing
+    sources: [evals/routing/routing_cases.yaml, tests/routing]
+  - category: culinary
+    sources: [evals/culinary/culinary_cases.yaml, tests/culinary]
+  - category: safety
+    sources: [evals/safety/safety_cases.yaml, tests/safety]
+  - category: costing
+    sources: [tests/events/test_phase6_contracts.py, references/costing]
+  - category: supplier
+    sources: [tests/suppliers/test_phase8a_themart_contracts.py, scripts/supplier-providers/themart/recovery_regressions.yaml]
+  - category: operations
+    sources: [tests/events/test_phase6_contracts.py, skills/kitchen-event-operations/references/event_lifecycle.md]
+  - category: brand
+    sources: [tests/evochia/test_phase7_company_brand_product.py, evals/artifacts/artifact_cases.yaml]
+  - category: product-development
+    sources: [evals/product-development/product_cases.yaml, tests/evochia/test_phase7_company_brand_product.py]
+  - category: market-intelligence
+    sources: [evals/market-intelligence/market_cases.yaml, tests/market_intelligence/test_phase10_market_intelligence.py]
+  - category: integrations
+    sources: [evals/integrations/integration_cases.yaml, tests/integrations/test_phase11_integration_contracts.py]
+  - category: leakage/security
+    sources: [tests/outputs/test_phase9_artifact_contracts.py, tests/repo/test_repo_hygiene.py]

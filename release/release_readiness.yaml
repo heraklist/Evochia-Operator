@@ -1,0 +1,48 @@
+schema_version: 1
+candidate_version: 4.0.0-alpha.0
+repository_candidate_status: READY_FOR_FINAL_BLOCKERS
+final_release_status: BLOCKED
+may_claim_production_ready: false
+backend_readiness: MOCK_ADAPTER_NOT_PRODUCTION_PERSISTENCE
+commercial_policy_readiness: OWNER_REVIEW_REQUIRED
+brand_render_contract_readiness: VERIFIED_CONTRACTS_RENDERER_IMPLEMENTATION_SEPARATE
+source_registry_readiness: VALIDATED
+legacy_parity_readiness: VALIDATED_92_CAPABILITIES
+release_principle: unresolved_required_gates_block_final_release
+blockers:
+  - id: phase8b_exact_themart_source_migration
+    status: OPEN
+    required_before_final_release: true
+    reason: exact allowlisted provider source/test bytes have not yet been migrated from the supplied archive
+    prohibition: do_not_reconstruct_collector_or_extractor_from_memory
+    expected_artifacts:
+      - themart_capture.py
+      - themart_extract_existing_html.py
+      - categories.json
+      - normalized_original_provider_tests
+
+  - id: openai_surface_install_scan
+    status: NOT_RUN
+    required_before_final_release: true
+    reason: eligible target workspace install/upload scan and smoke validation must be performed on the actual OpenAI surface
+    expected_evidence:
+      - install_or_upload_result
+      - scan_result
+      - selected_parity_smoke_tests
+      - cross_skill_routing_smoke_test
+      - tool_unavailable_smoke_test
+      - installed_candidate_version
+
+  - id: phase13_commercial_policy_owner_lock
+    status: OPEN
+    required_before_final_release: true
+    reason: Evochia current rates/terms/staffing/commercial policy remain owner-review drafts until explicitly approved
+
+non_blocking_for_repository_candidate:
+  - production_backend_persistence_upgrade
+  - live_provider_adapters
+  - search_console_integration
+notes:
+  - Repository candidate readiness means code/contracts/evals are coherent enough to proceed to final blockers; it is not a production-ready claim.
+  - FnB Central remains the persistent system of record.
+  - Historical proposal prices never become current policy automatically.
