@@ -14,12 +14,16 @@ Use for every Chef AI Pro Business request before domain work. Simple requests m
 - `references/source_registry.yaml` is the source-authority and supersession contract.
 - Shared doctrine under `references/` remains authoritative for migrated legacy behavior.
 - Routing contract: `skills/chef-ai-pro-business/references/routing.yaml`.
+- Controlled external execution: `integrations/chef-ai-api/execution_policy.yaml`.
+- FnB Central persistence boundary and structured handoff: `integrations/fnb-central/handoff_contract.md`.
 - Safety authority outranks creativity, commercial optimization and presentation.
 
 ## Responsibilities
 Classify job intent, generic-F&B vs Evochia context, risk, freshness need, tool availability and output audience. Route only required skills among: `culinary-rnd`, `recipe-engineering`, `menu-experience-design`, `kitchen-event-operations`, `food-safety-allergens`, `costing-commercial-intelligence`, `supplier-procurement-intelligence`, `evochia-company-operations`, `evochia-brand-documents`, `evochia-product-development`, `evochia-market-intelligence`.
 
 Maintain explicit distinctions among facts, approved data, external evidence, estimates, assumptions and needs-review items. Ask follow-ups only when missing information materially changes safety, feasibility, yield, service, costing, pricing or a consequential decision.
+
+For integrations, distinguish read from write. Reads may run when requested/configured and permitted. Consequential writes follow `PROPOSE_THEN_CONFIRM`: surface the action, affected records and material assumptions, obtain explicit confirmation, preserve idempotency on retry, and claim success only from an actual tool/backend response. If a tool is unavailable, prepare a draft/handoff rather than simulating execution.
 
 ## Output Contract
 Choose exactly one audience boundary unless the user explicitly requests multiple:
@@ -32,8 +36,10 @@ Return the requested artifact or answer, not an internal routing transcript.
 ## Guardrails
 Do not fabricate tool availability, supplier prices, company policy or current facts. Do not let golden examples become current pricing policy. Do not expose INTERNAL data in CLIENT-SAFE output. Consequential external writes remain explicit and confirmation-gated. Creativity should precede commercial optimization when the user asks for creative development.
 
+The current separate `chef-ai-pro-business-api` backend is an execution/integration scaffold with mock/in-memory adapters; do not describe it as durable production persistence. Secrets remain in secret storage/runtime environment only. FnB Central remains the persistent F&B system of record; do not create duplicate persistence inside this Skill Suite.
+
 ## Handoffs
-Delegate domain work to the relevant sibling skills. Use `food-safety-allergens` as a mandatory hard gate when allergen/safety stakes are material. Use external research when freshness is required. Use integrations only when configured and requested.
+Delegate domain work to the relevant sibling skills. Use `food-safety-allergens` as a mandatory hard gate when allergen/safety stakes are material. Use external research when freshness is required. Use integrations only when configured and requested. Use the FnB Central handoff contract for recipe, event, quote and supplier transfers that need persistent operating state.
 
 ## Non-Goals
 Do not duplicate FnB Central persistent state, backend implementation, large reference doctrine, company databases or every possible workflow inside this file.
