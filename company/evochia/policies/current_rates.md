@@ -1,15 +1,18 @@
-# Evochia Current Rates — Owner Review Draft
+# Evochia Current Rates
 
-**Policy status:** `OWNER_REVIEW_DRAFT`
-**Important:** this file is prepared for owner review only. No value below becomes canonical merely because it appears here or in historical/client-specific evidence. **Historical or proposal-specific evidence must not become current rate authority without explicit owner approval.**
+**Policy status:** `PARTIALLY_APPROVED`
+**Approved by:** `Evochia Owner`
+**Effective date:** `2026-09-03`
+**Approval reference:** `owner-approval-2026-09-03-phase13.2`
+**Important:** approved values below are current authority within their stated scope. Historical or proposal-specific evidence must not become current rate authority without explicit owner approval.
 
-## A. Private Chef — prepared INTERNAL BASE RATE CARD
+## A. Private Chef — INTERNAL BASE RATE CARD
 
-**State:** `CANDIDATE_FROM_OWNER_WORKING_DECISION` — prepared for explicit owner approval.
+**State:** `APPROVED_OWNER_DECISION`.
 
-If approved, these values operate as an **INTERNAL BASE RATE CARD**: authoritative starting points for commercial reasoning, not a public immutable tariff. Final quotation may change with staffing, menu/service complexity, location, logistics, equipment and scope.
+These values operate as an **INTERNAL BASE RATE CARD**: authoritative starting points for commercial reasoning, not a public immutable tariff. Final quotation may change with staffing, menu/service complexity, location, logistics, equipment and scope.
 
-| Service | Party size | Prepared base service fee |
+| Service | Party size | Base service fee |
 | --- | ---: | ---: |
 | Breakfast Only | up to 4 | €140 |
 | Breakfast Only | 5–8 | €180 |
@@ -24,23 +27,23 @@ If approved, these values operate as an **INTERNAL BASE RATE CARD**: authoritati
 | One-Off Private Dinner | 3–6 | €280–380 |
 | One-Off Private Dinner | 7–12 | €380–540 |
 
-Prepared interpretation: the service fee covers the defined chef/service work. Food/supplier cost treatment follows the quotation format and `commercial_policy.md`; it is not silently folded into these base fees.
+The service fee covers the defined chef/service work. Food/supplier cost treatment follows the quotation format and `commercial_policy.md`; it is not silently folded into these base fees.
 
-## B. Service uplift / location candidates
+## B. Service uplift / location rules
 
-**State:** `CANDIDATE_FROM_OWNER_WORKING_DECISION` — still non-canonical until explicit approval.
+**State:** `APPROVED_OWNER_DECISION`.
 
-- Yachting service uplift candidate: `+20%`.
-- Island / overnight / materially remote service uplift candidate: `+40%`.
-- The `+40%` is compensation for disruption, lost productive time/availability and operational complexity — **not** transport, tickets, tolls, accommodation or other actual travel costs.
-- If yacht and island/remote conditions overlap, prepared rule = apply the **single highest applicable disruption uplift**, not both cumulatively.
+- Yachting service uplift: `+20%`.
+- Island / overnight / materially remote service uplift: `+40%`.
+- The `+40%` compensates disruption, lost productive time/availability and operational complexity — **not** transport, tickets, tolls, accommodation or other actual travel costs.
+- If yacht and island/remote conditions overlap, apply the **single highest applicable disruption uplift**, not both cumulatively.
 - Remote Attica: base service fee + actual/quoted logistics; do not apply the island uplift automatically.
 
-## C. Children pricing candidate
+## C. Children pricing rule
 
-**State:** `CANDIDATE_FROM_OWNER_WORKING_DECISION`.
+**State:** `APPROVED_OWNER_DECISION`.
 
-Prepared rule: `50%` treatment for **children under 12** applies only when the CLIENT pricing model is all-in or per-person menu pricing and the child portion/menu justifies the reduced price.
+`50%` treatment for **children under 12** applies only when the CLIENT pricing model is all-in or per-person menu pricing and the child portion/menu justifies the reduced price.
 
 It does **not** apply:
 
@@ -48,13 +51,11 @@ It does **not** apply:
 - as an additional discount to actual-cost/pass-through groceries or supplier purchases;
 - automatically where the quoted child menu/portion is not materially reduced.
 
-## D. Meal Prep — reconciled prepared model
+## D. Meal Prep — production-day model
 
-**State:** `CANDIDATE_FROM_OWNER_WORKING_DECISION` — prepared for explicit owner approval.
+**State:** `APPROVED_OWNER_DECISION`.
 
-Prepared canonical model after approval:
-
-| Scope | Prepared service fee |
+| Scope | Service fee |
 | --- | ---: |
 | Up to 2 persons | €60 / production day |
 | Up to 4 persons | €85 / production day |
@@ -64,7 +65,7 @@ Prepared canonical model after approval:
 
 Legacy weekly arithmetic may still be derived from this model (for example 2 production days × €60 = €120 for up to 2 persons), but it is not a separate competing rate card.
 
-**Legacy €70 additional production day rule: `RETIRED_ON_OWNER_APPROVAL`.** It remains historical evidence only until owner approval activates the reconciled production-day model.
+**Legacy €70 additional production day rule: `RETIRED`.** It remains historical evidence only and is no longer an active rate rule.
 
 ## E. Staffing rates
 
@@ -72,7 +73,7 @@ Support-staff compensation, geography, plated calculation and transport rules ar
 
 ## F. Household-chef proposal evidence
 
-**State:** `PROPOSAL_SPECIFIC_EVIDENCE` — not promoted by this prepared rate card.
+**State:** `PROPOSAL_SPECIFIC_EVIDENCE` — not promoted by this rate card.
 
 A May 2026 household-chef proposal used €6,500/month for five service days/week, €350 additional day, €40 additional hour, guest-event supplements and travel-day fees. It remains evidence for that collaboration only.
 
