@@ -31,16 +31,20 @@ def test_policy_state_contract_has_transition_safe_vocabulary_and_authority_clas
     assert classes == EXPECTED_CLASSES
 
 
-def test_policy_manifest_status_matches_each_policy_document_and_approved_requires_metadata():
+def test_policy_manifest_status_matches_each_policy_document_and_locked_states_require_metadata():
     data = yaml.safe_load(CONTRACT.read_text(encoding="utf-8"))
     for name, item in data["policies"].items():
         status = item["status"]
         assert status in ALLOWED
         text = (POLICY_DIR / name).read_text(encoding="utf-8")
         assert extract_status(text) == status
-        if status == "APPROVED":
+        if status in {"PARTIALLY_APPROVED", "APPROVED"}:
             for field in data["approval_metadata_required"]:
-                assert item.get(field), f"{name}: approved policy missing {field}"
+                assert item.get(field), f"{name}: locked policy missing {field}"
+        else:
+            assert item.get("approved_by") is None
+            assert item.get("effective_date") is None
+            assert item.get("approval_reference") is None
 
 
 def test_release_readiness_vocabulary_can_represent_fully_approved_commercial_policy():

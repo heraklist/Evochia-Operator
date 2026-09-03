@@ -78,9 +78,13 @@ def test_rate_policy_preserves_service_families_and_never_promotes_historical_ev
         assert token in text
     assert "PROPOSAL_SPECIFIC_EVIDENCE" in text
     assert not re.search(r"APPROVED[^\n]{0,120}€?3[,\.]?650", text, flags=re.I)
-    if status != "APPROVED":
+    if status == "OWNER_REVIEW_DRAFT":
         assert "CANDIDATE_FROM_OWNER_WORKING_DECISION" in text
-        assert "NEEDS_RECONCILIATION" in text
+        assert "NEEDS_RECONCILIATION" in text or "RETIRED_ON_OWNER_APPROVAL" in text
+    elif status == "PARTIALLY_APPROVED":
+        assert "APPROVED_OWNER_DECISION" in text
+        assert "`RETIRED`" in text
+        assert "OPEN" in text
 
 
 def test_commercial_and_terms_keep_vat_quote_validity_and_cancellation_explicit():
@@ -98,10 +102,15 @@ def test_commercial_and_terms_keep_vat_quote_validity_and_cancellation_explicit(
 
 def test_staffing_policy_is_contextual_not_guest_count_only():
     text = read(POLICY_DIR / "staffing_policy.md")
+    status = policy_status("staffing_policy.md")
     for term in ["guest", "service format", "plated", "Half Board", "equipment", "travel"]:
         assert term.lower() in text.lower()
-    if policy_status("staffing_policy.md") != "APPROVED":
-        assert "NEEDS_OWNER_APPROVAL" in text
+    if status == "OWNER_REVIEW_DRAFT":
+        assert "CANDIDATE_FROM_OWNER_WORKING_DECISION" in text
+    elif status == "PARTIALLY_APPROVED":
+        assert "APPROVED_OWNER_DECISION" in text
+    if status != "APPROVED":
+        assert "Items intentionally still open" in text
         assert "6+" in text
 
 
