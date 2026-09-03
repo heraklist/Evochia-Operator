@@ -28,9 +28,8 @@ All values are labour compensation only. Accommodation, tickets and special trav
 | --- | ---: | --- |
 | Within Attica | €90/person/day | €90–120; default = minimum |
 | Outside Attica — dinner only | €180/person/day | €180 minimum; higher amount quote-specific where justified |
+| Outside Attica — Half Board | €180/person/day | €180 minimum; higher amount quote-specific where justified |
 | Outside Attica — Full Board | €200/person/day | €200–220; default = minimum |
-
-**Outside Attica — Half Board support-day rate is not separately defined by the available owner decisions and remains `NEEDS_OWNER_APPROVAL` / quote-specific in this prepared draft. Do not silently map it to dinner-only or Full Board.**
 
 ### Geography vocabulary
 
@@ -137,7 +136,6 @@ Yacht/island/remote service uplifts belong to commercial service pricing and com
 
 ## 9. Items intentionally still open
 
-- Outside Attica Half Board support-day rate;
 - distinct kitchen vs service vs stewarding role rates if/when the unified support category is split;
 - universal service/stewarding ratios;
 - agency-provided staff treatment where materially different;
