@@ -1,4 +1,5 @@
 from pathlib import Path
+import hashlib
 import json
 import re
 import yaml
@@ -35,6 +36,12 @@ BRAND_FILES = [
 def read(path: Path) -> str:
     assert path.exists(), f"missing {path.relative_to(ROOT)}"
     return path.read_text(encoding="utf-8")
+
+
+def git_blob_sha(path: Path) -> str:
+    payload = path.read_bytes()
+    framed = f"blob {len(payload)}\0".encode("ascii") + payload
+    return hashlib.sha1(framed).hexdigest()
 
 
 def test_owner_review_policy_bundle_exists_and_is_not_silently_canonical():
@@ -82,13 +89,17 @@ def test_staffing_policy_is_contextual_not_guest_count_only():
     assert "6+" in text
 
 
-def test_brand_bundle_exists_and_uses_correct_tagline():
+def test_brand_bundle_uses_canonical_generated_tagline_and_documents_source_typo_safely():
     for name in BRAND_FILES:
         read(BRAND_DIR / name)
     voice = read(BRAND_DIR / "brand_voice.md")
     identity = read(BRAND_DIR / "visual_identity.md")
     assert "Sophisticated taste & tailored events" in voice + identity
-    assert "Sofisticated taste & tailored events" not in voice + identity
+    assert "Sofisticated taste & tailored events" not in voice
+    if "Sofisticated taste & tailored events" in identity:
+        low = identity.lower()
+        assert "source evidence" in low
+        assert "not the default" in low
 
 
 def test_visual_tokens_capture_official_palette_and_artifact_specific_typography():
@@ -116,14 +127,29 @@ def test_document_style_guide_explains_typography_authority_and_no_font_binaries
     assert not any(p.suffix.lower() in forbidden for p in assets.rglob("*") if p.is_file())
 
 
-def test_brand_asset_manifest_selects_official_vector_master_without_font_binaries():
+def test_brand_assets_are_materialized_or_pinned_and_fail_closed():
     assets = BRAND_DIR / "assets"
     names = {p.name for p in assets.iterdir() if p.is_file()}
-    assert names == {"README.md"}
+    assert {"README.md", "render_integrity.yaml", "logo-mark-42.png"}.issubset(names)
+
+    mark = assets / "logo-mark-42.png"
+    assert mark.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
+    assert git_blob_sha(mark) == "11676370669ef00c1ed6815300db240c5ce376f8"
+
+    contract = yaml.safe_load(read(assets / "render_integrity.yaml"))
+    assert contract["resolution_policy"] == "fail_closed"
+    assert contract["final_artifact_requires_verified_assets"] is True
+    assert contract["logo"]["active_default"]["source_commit"] == "8168999e22ef5ca000dfe5c4be53e6e084c9db6f"
+    assert contract["logo"]["active_default"]["assets"]["ui_raster_mark_1x"]["git_blob_sha"] == "11676370669ef00c1ed6815300db240c5ce376f8"
+    gate = contract["render_gate"]
+    assert gate["missing_logo"] == "fail"
+    assert gate["missing_required_font"] == "fail"
+    assert gate["silent_font_substitution"] == "forbidden"
+    assert gate["pdf_font_embedding_required"] is True
+
     manifest = read(assets / "README.md")
     assert "ORIGINAL TRANSPARENT.svg" in manifest
-    assert "official" in manifest.lower() or "approved" in manifest.lower()
-    assert "do not commit font binaries" in manifest.lower()
+    assert "do not use that lockup as the default" in manifest.lower()
 
 
 def test_golden_registry_maps_six_output_families_and_denies_pricing_authority():
