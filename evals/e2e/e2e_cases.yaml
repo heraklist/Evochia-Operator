@@ -69,3 +69,45 @@ cases:
     optional_skills: [costing-commercial-intelligence, kitchen-event-operations]
     must: {client_safe_projection: true, approved_terms_only: true}
     must_not: {expose_supplier_prices: true, expose_internal_margin: true, expose_cost_basis: true, expose_internal_strategy: true}
+
+  - id: phase13_3_payment_default_cure
+    prompt: "Evochia balance missed at T-5 with a bank transfer pending over a weekend. Determine the operational state and next action."
+    required_skills: [evochia-company-operations]
+    optional_skills: [costing-commercial-intelligence]
+    must: {payment_default_state: true, banking_clearing_floor: true, cure_capped_at_service_start: true, no_forced_new_exposure: true, client_notification: true}
+    must_not: {classify_payment_default_as_client_side_impediment: true}
+
+  - id: phase13_3_external_impediment_reconciliation
+    prompt: "An objectively verified external event prevents the remaining service after partial performance. Reconcile the booking."
+    required_skills: [evochia-company-operations, costing-commercial-intelligence]
+    optional_skills: []
+    must: {external_regime: true, partial_performance_modifier: true, actual_exposure_reconciliation: true, recovery_offsets: true}
+    must_not: {generic_force_majeure_fee: true, markup_recoverable_costs: true, recover_margin_or_opportunity_cost: true}
+
+  - id: phase13_3_evochia_inability_refund
+    prompt: "Evochia becomes unable to perform the remaining confirmed service. Resolve the financial outcome and replacement option."
+    required_skills: [evochia-company-operations]
+    optional_skills: []
+    must: {full_unperformed_scope_refund_or_credit: true, prompt_notification: true, replacement_requires_client_acceptance: true}
+    must_not: {apply_client_cancellation_tiers_to_unperformed_scope: true, pass_evochia_sunk_costs_to_client: true}
+
+  - id: phase13_3_client_side_impediment
+    prompt: "A client-side event prevents the remaining booking. Determine the applicable financial path."
+    required_skills: [evochia-company-operations]
+    optional_skills: [costing-commercial-intelligence]
+    must: {client_side_regime: true, ordinary_window_rules: true, partial_performance_after_classification: true}
+    must_not: {create_second_penalty_regime: true}
+
+  - id: phase13_3_peak_date_overlap_guard
+    prompt: "Quote a peak-date island booking and determine whether both a date adjustment and island uplift may apply."
+    required_skills: [evochia-company-operations, costing-commercial-intelligence]
+    optional_skills: []
+    must: {date_specific_basis: true, costs_already_covered_elsewhere: true, double_count_check: true, distinct_cause_required: true}
+    must_not: {automatic_peak_surcharge: true, double_charge_same_cause: true}
+
+  - id: phase13_3_household_recurring_terms
+    prompt: "Prepare terms for a 12-month private household chef engagement."
+    required_skills: [evochia-company-operations, costing-commercial-intelligence]
+    optional_skills: []
+    must: {household_required_fields: true, recurring_billing_termination: true, rate_review_and_escalation: true}
+    must_not: {inherit_event_t5_by_default: true, inherit_event_cancellation_tiers_by_default: true, use_global_household_rate_card: true}
