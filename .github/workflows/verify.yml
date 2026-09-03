@@ -26,6 +26,10 @@ jobs:
           PYTHONDONTWRITEBYTECODE: '1'
           PYTEST_ADDOPTS: '-p no:cacheprovider'
         run: python -m pytest -q
+      - name: Run static eval harness
+        run: python evals/run_evals.py
+      - name: Validate skill package candidate
+        run: python scripts/validate_skill_package.py
       - name: Validate repository hygiene
         run: python scripts/validate_repo_hygiene.py .
       - name: Validate legacy parity
