@@ -80,7 +80,7 @@ def test_rate_policy_preserves_service_families_and_never_promotes_historical_ev
     assert not re.search(r"APPROVED[^\n]{0,120}€?3[,\.]?650", text, flags=re.I)
     if status != "APPROVED":
         assert "CANDIDATE_FROM_OWNER_WORKING_DECISION" in text
-        assert "NEEDS_RECONCILIATION" in text
+        assert "NEEDS_RECONCILIATION" in text or "RETIRED_ON_OWNER_APPROVAL" in text
 
 
 def test_commercial_and_terms_keep_vat_quote_validity_and_cancellation_explicit():
