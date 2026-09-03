@@ -72,15 +72,25 @@ routes:
     output_audience: CLIENT-SAFE
     required_skills: [evochia-company-operations, costing-commercial-intelligence, evochia-brand-documents]
     optional_skills: [kitchen-event-operations, menu-experience-design]
-    commercial_terms_policy: per_quote_explicit_material_terms
+    commercial_terms_policy: canonical_evochia_terms_with_explicit_overrides
+    commercial_terms_authority:
+      terms: company/evochia/policies/terms_policy.md
+      commercial: company/evochia/policies/commercial_policy.md
+      rates: company/evochia/policies/current_rates.md
+      legal_identity: company/evochia/policies/company_profile.md
     commercial_terms_requirements:
-      - do_not_present_unresolved_company_default_as_canonical
-      - quote_validity_explicit_when_no_company_default
-      - payment_and_balance_terms_explicit_when_material
-      - cancellation_refundability_explicit_when_material
-      - transport_verification_state_explicit_when_material
+      - canonical_quote_validity_or_explicit_late_override
+      - confirmation_payment_based_on_service_start_distance
+      - t5_balance_only_on_30_percent_confirmation_path
+      - canonical_cancellation_scope_postponement_terms
+      - transport_verified_before_booking_confirmation
+      - binding_documents_require_runtime_resolved_legal_particulars
+      - household_uses_recurring_framework_not_event_defaults
+      - client_safe_projection_excludes_internal_only_fields
       - material_repricing_triggers_explicit
       - vat_net_gross_presentation_explicit_when_material
     blockers:
-      - missing_or_ambiguous_per_quote_material_terms
       - unresolved_safety_conflict
+      - unresolved_material_transport_at_confirmation
+      - missing_required_binding_legal_particulars
+      - ambiguous_service_model_or_material_override
