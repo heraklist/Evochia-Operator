@@ -1,0 +1,48 @@
+schema_version: 1
+provider: themart
+source_archive: themart_capture.zip
+source_archive_observed_size_bytes: 479430903
+exact_source_migration_state: BLOCKED_PENDING_BYTE_ACCESS
+reconstruction_from_memory_forbidden: true
+safe_source_allowlist:
+  - themart_capture.py
+  - themart_extract_existing_html.py
+  - categories.json
+  - requirements.txt
+  - run_windows.bat
+  - README_GR.md
+  - README_HOTFIX_GR.md
+  - tests/test_navigation.py
+  - test_recovery_extractor.py
+deny_patterns:
+  - .browser_profile_themart/
+  - '**/.browser_profile_themart/**'
+  - Cookies
+  - cookies
+  - Login Data
+  - Local State
+  - .venv/
+  - '**/.venv/**'
+  - __pycache__/
+  - '**/__pycache__/**'
+  - output/
+  - '**/output/**'
+  - .git/
+  - '**/.git/**'
+  - '*.log'
+  - '*.pem'
+  - '*.key'
+  - .env
+migration_policy:
+  copy_only_exact_source_bytes: true
+  review_before_commit: true
+  normalize_tests_only_after_exact_copy: true
+  preserve_existing_recovery_behavior: true
+  browser_profile_local_only: true
+  credentials_never_committed: true
+blocked_reason: >-
+  The conversation ZIP is known and audited at archive level, but the current
+  Files parser does not expose its internal source bytes and the container
+  extraction path is unavailable. The collector/extractor must therefore not
+  be reconstructed or approximated. Phase 8B resumes when exact bytes are
+  directly readable.
