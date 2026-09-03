@@ -1,0 +1,46 @@
+schema_version: 1
+shared:
+  brand_profile: evochia_client
+  render_integrity_contract: company/evochia/brand/assets/render_integrity.yaml
+  canonical_projection_required: true
+  final_pdf_requires_verified_brand_preflight: true
+  generated_tagline: Sophisticated taste & tailored events
+artifacts:
+  proposal:
+    audience: CLIENT_SAFE
+    source: approved_event_or_service_projection
+    required_sections:
+      - overview
+      - service_scope
+      - dietary_notes
+      - inclusions_exclusions
+      - commercial_terms
+      - final_fee
+    commercial_terms_authority: approved_evochia_policy_only
+    historical_proposal_prices_as_current_policy: false
+    forbidden_internal_fields: [internal_margin, opportunity_cost, supplier_comparison, hidden_cost_basis, internal_assumptions]
+  client_menu:
+    audience: CLIENT_SAFE
+    source: approved_menu_projection
+    required_sections: [menu_identity, courses, dietary_allergen_wording]
+    commercial_terms_authority: none_unless_explicitly_requested
+    historical_proposal_prices_as_current_policy: false
+    forbidden_internal_fields: [internal_margin, opportunity_cost, supplier_comparison, recipe_cost, production_notes]
+  flyer:
+    audience: CLIENT_SAFE
+    source: approved_product_or_service_definition
+    required_sections: [value_proposition, experience_flow, practical_scope, call_to_action]
+    commercial_terms_authority: approved_evochia_policy_only_if_shown
+    historical_proposal_prices_as_current_policy: false
+    forbidden_internal_fields: [internal_margin, opportunity_cost, supplier_comparison, pilot_evidence, decision_register]
+  product_sheet:
+    audience: CLIENT_SAFE
+    source: approved_product_definition
+    required_sections: [product_definition, target_occasion, experience, inclusions, practical_information]
+    commercial_terms_authority: approved_evochia_policy_only_if_shown
+    historical_proposal_prices_as_current_policy: false
+    forbidden_internal_fields: [internal_margin, opportunity_cost, supplier_comparison, pilot_evidence, internal_risks]
+confidentiality:
+  remove_internal_appendices: true
+  remove_supplier_evidence: true
+  remove_hidden_economics: true
