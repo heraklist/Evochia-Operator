@@ -1,0 +1,47 @@
+schema_version: 1
+cases:
+  - id: production_recipebook_from_canonical_recipe
+    input: canonical professional recipe + shopping list + production timeline
+    expected:
+      artifact_type: production_recipebook
+      audience: OPERATIONS
+      page: A4_landscape
+      content_source: canonical_only
+      final_brand_gate: required_for_final_pdf
+  - id: private_chef_proposal_client_projection
+    input: approved Evochia event/service projection with approved commercial terms
+    expected:
+      artifact_type: proposal
+      audience: CLIENT_SAFE
+      current_policy_only: true
+      internal_economics_removed: true
+  - id: client_menu_no_internal_cost_leakage
+    input: internal menu with costing and approved client projection
+    expected:
+      artifact_type: client_menu
+      audience: CLIENT_SAFE
+      internal_cost_fields_present: false
+  - id: product_flyer_from_approved_definition
+    input: approved product definition after internal decision gate
+    expected:
+      artifact_type: flyer
+      audience: CLIENT_SAFE
+      pilot_evidence_exposed: false
+      internal_decision_register_exposed: false
+  - id: pdf_brand_preflight_failure
+    input: Evochia PDF request where required font or logo identity cannot be verified
+    expected:
+      final_status: DRAFT_UNVERIFIED_BRAND_RENDER
+      render_gate: fail_closed
+    must_not:
+      silent_font_substitution: true
+      synthetic_logo_reconstruction: true
+      claim_final_verified: true
+  - id: docx_unverified_font_environment
+    input: Evochia DOCX created with correct font names but unknown consumer font environment
+    expected:
+      editable_source: true
+      pixel_stable_claim: false
+      canonical_visual_reference: verified_pdf_if_available
+    must_not:
+      claim_final_pixel_identity: true
