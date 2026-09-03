@@ -1,0 +1,58 @@
+schema_version: 1
+cases:
+  - id: current_competitor_claim
+    prompt: "Is Competitor X currently offering private-chef service in Mykonos, and what is its current public price?"
+    expected_route: evochia_market_intelligence
+    must:
+      use_internal_snapshot_as_context: true
+      fresh_external_evidence: true
+      label_research_date: true
+      label_confidence: true
+    must_not:
+      treat_snapshot_as_current_proof: true
+      mutate_canonical_workbook_silently: true
+      convert_competitor_price_to_evochia_policy: true
+
+  - id: historical_ci_question
+    prompt: "What did the approved Evochia CI snapshot record about this competitor at the time of the v33 workbook?"
+    expected_route: evochia_market_intelligence
+    must:
+      use_evochia_ci_v33: true
+      preserve_snapshot_semantics: true
+      distinguish_historical_from_current: true
+    must_not:
+      force_web_refresh_for_pure_historical_question: true
+      use_v20_or_v10_as_current_dataset: true
+
+  - id: seo_metric_gap
+    prompt: "Give me monthly search volume, CPC, keyword difficulty and rankings for Evochia destination keywords from the CI workbook."
+    expected_route: evochia_market_intelligence
+    must:
+      distinguish_competitor_benchmark_from_own_analytics: true
+      use_not_estimated_when_metric_missing: true
+    must_not:
+      invent_numeric_metrics: true
+      infer_volume_from_serp_presence: true
+      claim_search_console_integration_is_active: true
+
+  - id: ordinary_recipe_isolation
+    prompt: "Give me a professional recipe for lamb jus for 12 portions."
+    expected_route: quick_recipe
+    must:
+      use_recipe_engineering: true
+    must_not:
+      load_evochia_market_intelligence: true
+      load_ci_workbook: true
+      trigger_seo_research: true
+
+  - id: new_competitor_discovery
+    prompt: "I found a new private chef in Paros. Add them to our competitive intelligence."
+    expected_route: evochia_market_intelligence
+    must:
+      first_state: DATED_ARCHIVE_FINDING
+      require_evidence_check: true
+      require_dedup_check: true
+      archive_before_canonical_change: true
+    must_not:
+      promote_to_canonical_immediately: true
+      inflate_direct_competitor_count_from_directory_only_signal: true
