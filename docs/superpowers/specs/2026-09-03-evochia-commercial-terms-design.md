@@ -59,19 +59,13 @@ This is the base for confirmation-payment and cancellation-tier calculations unl
 
 ## 3.3 `CONFIRMATION_DATE`
 
-The date on which all booking-confirmation prerequisites are satisfied and Evochia can validly confirm the booking.
+The calendar date on which booking confirmation is completed after all non-payment material confirmation gates are resolved and the required confirmation payment for that timing path is satisfied.
 
 A still-unresolved material confirmation gate, including `TRANSPORT_UNVERIFIED`, prevents confirmation even if the quote remains otherwise valid.
 
 ## 3.4 `CONFIRMATION_PAYMENT`
 
-If:
-
-```text
-CONFIRMATION_DATE < SERVICE_START - 5 calendar days
-```
-
-then:
+If the intended confirmation date is more than 5 calendar days before `SERVICE_START`:
 
 ```text
 CONFIRMATION_PAYMENT = 30% × FIXED_CONFIRMED_BOOKING_VALUE
@@ -279,7 +273,21 @@ An extension beyond the default must state an explicit later `valid_until` date.
 
 Decision: D-026.
 
-## 6.3 Validity is not confirmation readiness
+## 6.3 Late-quote interaction
+
+The default formula can yield a date earlier than `issue_date` when a quote is issued inside the six-calendar-day pre-service boundary. The formula is not silently clamped or rewritten.
+
+Therefore:
+
+```text
+if default_valid_until < issue_date:
+    default validity is unusable for that quote
+    -> an explicit later `valid_until` override is required
+```
+
+This is a derived interaction of D-025 and D-026, not a new owner decision. It preserves the <=5-day booking path in D-003 while preventing an already-expired default quote from being treated as valid implicitly.
+
+## 6.4 Validity is not confirmation readiness
 
 A quote may still be within its validity window while confirmation remains blocked by unresolved material gates.
 
@@ -876,9 +884,14 @@ One path.
 
 ```text
 SERVICE_START = 20 Sep
-confirmation = 17 Sep
+quote issued = 17 Sep
+intended confirmation = 17 Sep
 
-<=5 days
+default valid_until = 14 Sep
+=> default validity unusable because it predates issue_date
+=> explicit later valid_until override required
+
+confirmation occurs <=5 days
 => 100% required at confirmation
 => no later balance stage
 ```
@@ -1011,65 +1024,66 @@ Implementation is incomplete unless the suite covers at least the following.
 13. shorter override accepted.
 14. extension requires explicit later date.
 15. valid quote + `TRANSPORT_UNVERIFIED` cannot confirm.
+16. when default `valid_until < issue_date`, default validity cannot be used and an explicit later-date override is required for the late quote.
 
 ## 20.3 Cancellation accounting
 
-16. 15+ boundary selects 10%.
-17. 6-14 boundary selects 30%.
-18. 0-5 boundary selects 100%.
-19. calculation separates charge / collected / refund / uncollected balance.
-20. `UNCOLLECTED_CANCELLATION_BALANCE` absent from CLIENT_SAFE by default.
-21. explicit collection authorization required before exposing an uncollected balance as payable.
+17. 15+ boundary selects 10%.
+18. 6-14 boundary selects 30%.
+19. 0-5 boundary selects 100%.
+20. calculation separates charge / collected / refund / uncollected balance.
+21. `UNCOLLECTED_CANCELLATION_BALANCE` absent from CLIENT_SAFE by default.
+22. explicit collection authorization required before exposing an uncollected balance as payable.
 
 ## 20.4 Postponement
 
-22. only one client postponement per booking.
-23. replacement date bounded to 6 months from original `SERVICE_START`.
-24. written owner extension uses explicit expiry and does not reset history.
-25. anti-reset uses `max(tier_at_request, tier_at_final_cancellation)`.
-26. expired credit uses tier at postponement request.
-27. excess credit refund is calculated after settlement.
-28. Evochia/external reschedule does not consume client postponement or activate anti-reset/6-month rule.
-29. rescheduled booking reprices under current terms/rates.
+23. only one client postponement per booking.
+24. replacement date bounded to 6 months from original `SERVICE_START`.
+25. written owner extension uses explicit expiry and does not reset history.
+26. anti-reset uses `max(tier_at_request, tier_at_final_cancellation)`.
+27. expired credit uses tier at postponement request.
+28. excess credit refund is calculated after settlement.
+29. Evochia/external reschedule does not consume client postponement or activate anti-reset/6-month rule.
+30. rescheduled booking reprices under current terms/rates.
 
 ## 20.5 Scope reduction
 
-30. `REMOVED_FIXED_VALUE` formula correct.
-31. tier applies only to removed value.
-32. same confirmed pricing methodology used for revised value.
-33. non-scaling elements stay fixed unless explicitly revised.
-34. staffing triggers are recalculated, not proportionally scaled.
-35. lower day-of attendance alone does not reduce fixed value.
-36. successive reductions can accumulate.
-37. each fixed-scope unit can be charged only once.
+31. `REMOVED_FIXED_VALUE` formula correct.
+32. tier applies only to removed value.
+33. same confirmed pricing methodology used for revised value.
+34. non-scaling elements stay fixed unless explicitly revised.
+35. staffing triggers are recalculated, not proportionally scaled.
+36. lower day-of attendance alone does not reduce fixed value.
+37. successive reductions can accumulate.
+38. each fixed-scope unit can be charged only once.
 
 ## 20.6 Impediments / partial performance
 
-38. canonical regime vocabulary only.
-39. one controlling classification per event.
-40. hybrid/disputed material cause -> `OWNER_REVIEW_REQUIRED`.
-41. no economically favorable auto-selection.
-42. `PARTIAL_PERFORMANCE` cannot be selected as a regime.
-43. unitized allocation rule covered.
-44. direct attributable-cost allocation covered.
-45. shared/indivisible allocation covered.
-46. ambiguous shared allocation -> owner review.
+39. canonical regime vocabulary only.
+40. one controlling classification per event.
+41. hybrid/disputed material cause -> `OWNER_REVIEW_REQUIRED`.
+42. no economically favorable auto-selection.
+43. `PARTIAL_PERFORMANCE` cannot be selected as a regime.
+44. unitized allocation rule covered.
+45. direct attributable-cost allocation covered.
+46. shared/indivisible allocation covered.
+47. ambiguous shared allocation -> owner review.
 
 ## 20.7 Legal identity / export boundary
 
-47. binding artifact fails closed when legal identity unresolved.
-48. client-facing company/group characterization blocked unless runtime-resolved/authorized.
-49. INTERNAL projection can contain internal-only fields.
-50. CLIENT_SAFE projection blocks internal-only fields.
+48. binding artifact fails closed when legal identity unresolved.
+49. client-facing company/group characterization blocked unless runtime-resolved/authorized.
+50. INTERNAL projection can contain internal-only fields.
+51. CLIENT_SAFE projection blocks internal-only fields.
 
 ## 20.8 Cross-file synchronization
 
-51. `terms_policy.md` has no stale OPEN for decisions closed here.
-52. `commercial_policy.md` has no stale OPEN for balance/cancellation/validity/peak global policy.
-53. `current_rates.md` records no global peak surcharge and no global household rate card as approved decisions, not OPEN.
-54. `company_profile.md` reflects `RUNTIME_RESOLVED` legal identity model.
-55. unrelated unresolved rows remain unresolved.
-56. `policy_state_contract.yaml`, routing, release readiness and evals agree with runtime policy state.
+52. `terms_policy.md` has no stale OPEN for decisions closed here.
+53. `commercial_policy.md` has no stale OPEN for balance/cancellation/validity/peak global policy.
+54. `current_rates.md` records no global peak surcharge and no global household rate card as approved decisions, not OPEN.
+55. `company_profile.md` reflects `RUNTIME_RESOLVED` legal identity model.
+56. unrelated unresolved rows remain unresolved.
+57. `policy_state_contract.yaml`, routing, release readiness and evals agree with runtime policy state.
 
 Decision: D-034.
 
