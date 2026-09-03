@@ -2,15 +2,18 @@
 """Validate the repository as a private Chef AI Pro Business skill-package candidate."""
 from __future__ import annotations
 
+import argparse
 import fnmatch
 from pathlib import Path
 import re
+import subprocess
 import sys
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 POLICY_PATH = ROOT / "release/package_policy.yaml"
 OWNERSHIP_PATH = ROOT / "release/runtime_resource_ownership.yaml"
+GENERATED_CACHE_PARTS = {"__pycache__", ".pytest_cache"}
 
 
 def _frontmatter(text: str) -> dict:
@@ -49,6 +52,37 @@ def _is_forbidden(rel: Path, patterns: list[str], exceptions: set[str]) -> bool:
         elif pattern in rel.parts or rel.name == pattern:
             return True
     return False
+
+
+def _candidate_files(root: Path):
+    """Yield files that can actually be part of the package candidate.
+
+    In a Git working tree, tracked files are the source of truth. In a materialized
+    non-Git package, scan the filesystem but ignore test/runtime cache directories.
+    """
+    if (root / ".git").exists():
+        result = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "-z"],
+            capture_output=True,
+            check=False,
+        )
+        if result.returncode == 0:
+            for raw in result.stdout.split(b"\0"):
+                if not raw:
+                    continue
+                rel = Path(raw.decode("utf-8"))
+                path = root / rel
+                if path.is_file():
+                    yield path
+            return
+
+    for path in root.rglob("*"):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(root)
+        if ".git" in rel.parts or GENERATED_CACHE_PARTS & set(rel.parts):
+            continue
+        yield path
 
 
 def validate_runtime_resource_ownership(root: Path | str, data: dict) -> list[str]:
@@ -130,12 +164,9 @@ def validate(root: Path | str = ROOT) -> list[str]:
 
     patterns = policy.get("forbidden_patterns", [])
     exceptions = set(policy.get("allowed_exception_files", []))
+    candidate_files = list(_candidate_files(root))
     total_bytes = 0
-    for path in root.rglob("*"):
-        if ".git" in path.parts:
-            continue
-        if not path.is_file():
-            continue
+    for path in candidate_files:
         rel = path.relative_to(root)
         if _is_forbidden(rel, patterns, exceptions):
             issues.append(f"forbidden package file: {rel.as_posix()}")
@@ -158,15 +189,18 @@ def validate(root: Path | str = ROOT) -> list[str]:
             issues.append("source registry ids missing or duplicated")
 
     if policy.get("font_binaries_in_package") is False:
-        for path in root.rglob("*"):
-            if path.is_file() and path.suffix.lower() in {".ttf", ".otf", ".woff", ".woff2"}:
+        for path in candidate_files:
+            if path.suffix.lower() in {".ttf", ".otf", ".woff", ".woff2"}:
                 issues.append(f"font binary in package: {path.relative_to(root).as_posix()}")
 
     return sorted(set(issues))
 
 
-def main() -> int:
-    issues = validate(ROOT)
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("repo_root", nargs="?", default=str(ROOT))
+    args = parser.parse_args(argv)
+    issues = validate(args.repo_root)
     if issues:
         print("Skill package validation: FAIL", file=sys.stderr)
         for issue in issues:
