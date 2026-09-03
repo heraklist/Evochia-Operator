@@ -23,11 +23,12 @@ def test_phase13_is_documented_as_parallel_during_build_but_required_before_fina
     assert "mandatory before final commercial release" in content
 
 
-def test_typography_is_documented_as_technically_specified_but_owner_review_draft():
+def test_typography_current_state_records_legal_owner_approval_transition():
     content = text(CURRENT)
-    assert "technically specified candidate" in content
-    assert "OWNER_REVIEW_DRAFT" in content
-    assert "not yet canonical" in content
+    assert "Phase 13.1 visual/typography owner lock: `APPROVED`" in content
+    assert "evochia_visual_system_v1" in content
+    assert "effective 2026-09-03" in content
+    assert "brand voice remains a separate authority/review decision" in content.lower()
 
 
 def test_current_state_declares_actual_policy_path_and_implementation_tree_authority():
