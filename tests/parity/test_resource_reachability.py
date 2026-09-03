@@ -4,6 +4,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 PARITY = ROOT / "evals/legacy/parity_matrix.yaml"
+REACHABILITY = ROOT / "evals/legacy/resource_reachability.yaml"
 COSTING_SKILL = ROOT / "skills/costing-commercial-intelligence/SKILL.md"
 VALIDATOR = ROOT / "scripts/validate_parity_coverage.py"
 EXPORT_DOCTRINE = "references/exports/excel_sheets_export_spec_v2_4.md"
@@ -16,31 +17,46 @@ def load_validator():
     return module
 
 
+def load_contracts():
+    matrix = yaml.safe_load(PARITY.read_text(encoding="utf-8"))
+    reachability = yaml.safe_load(REACHABILITY.read_text(encoding="utf-8"))
+    return matrix, reachability
+
+
 def test_excel_export_capabilities_are_reachable_from_target_skill():
     text = COSTING_SKILL.read_text(encoding="utf-8")
     assert EXPORT_DOCTRINE in text
     assert "Excel" in text or "workbook" in text.lower()
 
 
-def test_parity_validator_checks_declared_required_resources_against_target_skills():
-    matrix = yaml.safe_load(PARITY.read_text(encoding="utf-8"))
+def test_reachability_manifest_binds_excel_capabilities_to_export_doctrine():
+    matrix, reachability = load_contracts()
     by_id = {item["capability_id"]: item for item in matrix["capabilities"]}
+    requirements = {item["capability_id"]: item for item in reachability["requirements"]}
 
     for capability_id in ["excel_workbook_structure", "excel_formula_patterns"]:
-        item = by_id[capability_id]
+        item = requirements[capability_id]
         assert item["required_resources"] == [EXPORT_DOCTRINE]
-        assert "costing-commercial-intelligence" in item["target_skills"]
+        assert item["reachable_via_skills"] == ["costing-commercial-intelligence"]
+        assert "costing-commercial-intelligence" in by_id[capability_id]["target_skills"]
 
+
+def test_parity_validator_checks_capability_skill_resource_reachability():
+    matrix, reachability = load_contracts()
     validator = load_validator()
-    issues = validator.validate_matrix(matrix, repo_root=ROOT)
+    issues = validator.validate_matrix(matrix, repo_root=ROOT, reachability=reachability)
     assert issues == []
 
 
-def test_parity_validator_fails_when_required_resource_is_not_reachable_from_any_target_skill(tmp_path):
-    matrix = yaml.safe_load(PARITY.read_text(encoding="utf-8"))
-    item = next(x for x in matrix["capabilities"] if x["capability_id"] == "excel_workbook_structure")
-    item["required_resources"] = ["references/exports/nonexistent-export-doctrine.md"]
+def test_parity_validator_fails_when_required_resource_is_not_reachable():
+    matrix, reachability = load_contracts()
+    reachability["requirements"][0]["required_resources"] = [
+        "references/exports/nonexistent-export-doctrine.md"
+    ]
 
     validator = load_validator()
-    issues = validator.validate_matrix(matrix, repo_root=ROOT)
-    assert any("excel_workbook_structure" in issue and "required resource" in issue for issue in issues)
+    issues = validator.validate_matrix(matrix, repo_root=ROOT, reachability=reachability)
+    assert any(
+        "excel_workbook_structure" in issue and "required resource" in issue
+        for issue in issues
+    )
