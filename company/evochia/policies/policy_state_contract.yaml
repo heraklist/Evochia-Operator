@@ -1,0 +1,50 @@
+schema_version: 1
+allowed_statuses:
+  - OWNER_REVIEW_DRAFT
+  - PARTIALLY_APPROVED
+  - APPROVED
+approval_metadata_required:
+  - approved_by
+  - effective_date
+  - approval_reference
+release_readiness_mapping:
+  OWNER_REVIEW_DRAFT: OWNER_REVIEW_REQUIRED
+  PARTIALLY_APPROVED: PARTIALLY_APPROVED
+  APPROVED: APPROVED
+policies:
+  company_profile.md:
+    status: OWNER_REVIEW_DRAFT
+    source_class_when_approved: canonical_current_data
+    approved_by: null
+    effective_date: null
+    approval_reference: null
+  commercial_policy.md:
+    status: OWNER_REVIEW_DRAFT
+    source_class_when_approved: canonical_policy
+    approved_by: null
+    effective_date: null
+    approval_reference: null
+  current_rates.md:
+    status: OWNER_REVIEW_DRAFT
+    source_class_when_approved: canonical_current_data
+    approved_by: null
+    effective_date: null
+    approval_reference: null
+  staffing_policy.md:
+    status: OWNER_REVIEW_DRAFT
+    source_class_when_approved: canonical_policy
+    approved_by: null
+    effective_date: null
+    approval_reference: null
+  terms_policy.md:
+    status: OWNER_REVIEW_DRAFT
+    source_class_when_approved: canonical_policy
+    approved_by: null
+    effective_date: null
+    approval_reference: null
+rules:
+  - approved status requires all approval metadata fields
+  - document Policy status must match this contract
+  - historical proposal evidence never gains current authority through approval of a different policy file
+  - current rates approval does not convert historical proposal rows into approved rates
+  - mixed policy states map commercial readiness to PARTIALLY_APPROVED until all required commercial policies are approved
