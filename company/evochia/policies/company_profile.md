@@ -1,18 +1,21 @@
 # Evochia Company Profile
 
-**Policy status:** `OWNER_REVIEW_DRAFT`
-**Purpose:** consolidate current company context and explicit approval boundaries before any promotion to canonical current data.
+**Policy status:** `PARTIALLY_APPROVED`
+**Approved by:** `Evochia Owner`
+**Effective date:** `2026-09-03`
+**Approval reference:** `owner-approval-2026-09-03-phase13.2`
+**Purpose:** canonical current company context with explicit row-level approval boundaries.
 
 ## Rule-state vocabulary
 
-- `APPROVED_EXISTING_CONTEXT` — already established in current company knowledge/site context.
-- `CANDIDATE_FROM_OWNER_WORKING_DECISION` — working business decision prepared for explicit owner review.
+- `APPROVED_EXISTING_CONTEXT` — established and approved current company context.
+- `APPROVED_OWNER_DECISION` — explicitly approved by the owner in the current policy lock.
 - `PROPOSAL_SPECIFIC_EVIDENCE` — true for a specific proposal/booking, not automatically general policy.
 - `NEEDS_OWNER_APPROVAL` — unresolved before canonical use.
 
 ## Identity and positioning
 
-| Field | Working value | State |
+| Field | Current value | State |
 | --- | --- | --- |
 | Brand | Evochia | `APPROVED_EXISTING_CONTEXT` |
 | Business model | Chef-led hospitality: Private Chef + Catering / event food service | `APPROVED_EXISTING_CONTEXT` |
@@ -21,7 +24,7 @@
 | Brand architecture | Branded-house approach under Evochia | `APPROVED_EXISTING_CONTEXT` |
 | Working umbrella descriptor | Evochia Food & Hospitality Group | `NEEDS_OWNER_APPROVAL` for legal/commercial use |
 
-The detailed client-facing positioning language is governed by `company/evochia/brand/brand_voice.md`. The internal “restaurant-at-home” constraint belongs to Brand Voice governance and is not a default client-facing phrase.
+The detailed client-facing positioning language is governed by the approved `company/evochia/brand/brand_voice.md`. The internal “restaurant-at-home” constraint belongs to Brand Voice governance and is not a default client-facing phrase.
 
 ## Current service families
 
@@ -40,12 +43,12 @@ Pop-up/festival directions are opportunity areas unless separately approved as l
 4. Use current approved company policy over generic F&B pricing heuristics when `company=evochia`.
 5. Food safety and allergen authority always outrank brand or commercial preferences.
 
-## File-level approval does not approve unresolved rows
+## File-level partial approval does not approve unresolved rows
 
-A future file status of `PARTIALLY_APPROVED` does **not** silently promote every field in this document. Any field that remains `NEEDS_OWNER_APPROVAL` retains that state until its own explicit owner decision is recorded.
+`PARTIALLY_APPROVED` does **not** silently promote every field in this document. Any field that remains `NEEDS_OWNER_APPROVAL` retains that state until its own explicit owner decision is recorded.
 
-In particular, legal entity naming and the working umbrella descriptor **Evochia Food & Hospitality Group** remain unresolved unless separately approved. No file-level status transition may be interpreted as legal-name approval.
+In particular, legal entity naming and the working umbrella descriptor **Evochia Food & Hospitality Group** remain unresolved. No file-level status transition may be interpreted as legal-name or umbrella-descriptor approval.
 
-## Approval gap
+## Remaining approval gap
 
-Final legal/entity naming, unresolved service-taxonomy questions, peak-date policy and any other row explicitly marked `NEEDS_OWNER_APPROVAL` remain open until separate owner approval. Rates, staffing and commercial terms are governed by their dedicated policy files and their own state metadata.
+Final legal/entity naming, unresolved service-taxonomy questions and any other row explicitly marked `NEEDS_OWNER_APPROVAL` remain open until separate owner approval. Rates, staffing and commercial terms are governed by their dedicated policy files and their own row-level state/OPEN markers.
