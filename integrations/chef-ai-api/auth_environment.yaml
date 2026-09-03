@@ -1,0 +1,26 @@
+schema_version: 1
+auth_mode_default: api_key
+api_key_header: x-api-key
+workspace_header: x-workspace-id
+actor_role_header: x-actor-role
+confirmation_header: x-confirmation-token
+confirmation_value: confirmed
+idempotency_header: Idempotency-Key
+secret_storage_rule: SECRET_STORE_OR_RUNTIME_ENV_ONLY
+environment_variables:
+  - API_KEY
+  - AUTH_MODE
+  - DEFAULT_WORKSPACE_ID
+  - REQUIRE_IDEMPOTENCY_FOR_WRITES
+  - REQUIRE_CONFIRMATION_FOR_WRITES
+  - RATE_LIMIT_WINDOW_MS
+  - RATE_LIMIT_MAX
+rules:
+  commit_real_secret_values: false
+  include_secrets_in_knowledge_or_skill_files: false
+  include_secrets_in_screenshots_or_logs: false
+  send_api_key_in_request_body: false
+  auth_mode_none_allowed_for_production: false
+  auth_mode_none_scope: isolated_local_testing_only
+  workspace_context_required_when_no_safe_default: true
+  role_context_must_not_be_fabricated: true

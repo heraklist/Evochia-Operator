@@ -1,0 +1,47 @@
+schema_version: 1
+source_repository: heraklist/chef-ai-pro-business-api
+source_commit: 74aaa31a7f5f725ad661aa3fe19f8100a36b17b7
+source_route_catalog: src/router/routeCatalog.ts
+reads:
+  - {operation_id: listIngredients, method: GET, path: /api/v3_0/ingredients, min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getIngredient, method: GET, path: '/api/v3_0/ingredients/:ingredientId', min_role: viewer, write: false, sensitive: false}
+  - {operation_id: listCurrentSupplierPrices, method: GET, path: /api/v3_0/supplier-prices/current, min_role: viewer, write: false, sensitive: false}
+  - {operation_id: searchSupplierPrices, method: GET, path: /api/v3_0/supplier-prices/search, min_role: viewer, write: false, sensitive: false}
+  - {operation_id: searchYieldProfiles, method: GET, path: /api/v3_0/yield-profiles/search, min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getIngredientAllergens, method: GET, path: '/api/v3_0/allergens/ingredients/:ingredientId', min_role: viewer, write: false, sensitive: false}
+  - {operation_id: searchRecipes, method: GET, path: /api/v3_0/recipes/search, min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getRecipeRevision, method: GET, path: '/api/v3_0/recipes/:recipeRevisionId', min_role: viewer, write: false, sensitive: false}
+  - {operation_id: listPricingProfiles, method: GET, path: /api/v3_0/pricing-profiles, min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getQuote, method: GET, path: '/api/v3_0/quotes/:quoteId', min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getQuoteDrift, method: GET, path: '/api/v3_0/quotes/:quoteId/drift', min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getSupplierPriceIntakeJob, method: GET, path: '/api/v3_1/supplier-price-intake/jobs/:jobId', min_role: viewer, write: false, sensitive: false}
+  - {operation_id: listGoogleDriveFolderFiles, method: GET, path: '/api/v3_2/integrations/google-drive/folders/:folderId/files', min_role: operator, write: false, sensitive: false}
+  - {operation_id: getExportStatus, method: GET, path: '/api/v3_2/exports/:exportId/status', min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getPosSales, method: GET, path: /api/v3_2/integrations/pos/sales, min_role: manager, write: false, sensitive: false}
+  - {operation_id: getMenuMixAnalytics, method: GET, path: /api/v3_2/analytics/menu-mix, min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getIngredientDemandForecast, method: GET, path: /api/v3_2/forecast/ingredient-demand, min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getPurchasePlan, method: GET, path: '/api/v3_2/purchase-plans/:planId', min_role: viewer, write: false, sensitive: false}
+  - {operation_id: getCurrentInventory, method: GET, path: /api/v3_2/inventory/current, min_role: viewer, write: false, sensitive: false}
+writes:
+  - {operation_id: createSupplierPriceIntakeJob, method: POST, path: /api/v3_1/supplier-price-intake/jobs, min_role: operator, write: true, sensitive: true}
+  - {operation_id: createProposedSupplierPrice, method: POST, path: /api/v3_1/supplier-prices/proposed, min_role: operator, write: true, sensitive: true}
+  - {operation_id: bulkCreateProposedSupplierPrices, method: POST, path: /api/v3_1/supplier-prices/proposed/bulk, min_role: operator, write: true, sensitive: true}
+  - {operation_id: createRecipeDraft, method: POST, path: /api/v3_1/recipes/drafts, min_role: operator, write: true, sensitive: true}
+  - {operation_id: addRecipeDraftLine, method: POST, path: '/api/v3_1/recipes/:draftId/lines', min_role: operator, write: true, sensitive: true}
+  - {operation_id: createRecipeCostingPreview, method: POST, path: '/api/v3_1/recipes/:draftId/costing-preview', min_role: operator, write: true, sensitive: true}
+  - {operation_id: submitRecipeDraftForReview, method: POST, path: '/api/v3_1/recipes/:draftId/submit-for-review', min_role: manager, write: true, sensitive: true}
+  - {operation_id: createCostingCardDraft, method: POST, path: /api/v3_1/costing-cards/drafts, min_role: operator, write: true, sensitive: true}
+  - {operation_id: createQuoteDraft, method: POST, path: /api/v3_1/quotes/drafts, min_role: manager, write: true, sensitive: true}
+  - {operation_id: createScenarioDraft, method: POST, path: /api/v3_1/scenarios/drafts, min_role: operator, write: true, sensitive: true}
+  - {operation_id: createExportDraft, method: POST, path: /api/v3_1/exports/drafts, min_role: operator, write: true, sensitive: true}
+  - {operation_id: exportCostingWorkbookToGoogleSheets, method: POST, path: /api/v3_2/exports/google-sheets/costing-workbook, min_role: manager, write: true, sensitive: true}
+  - {operation_id: exportRecipeCardToGoogleSheets, method: POST, path: /api/v3_2/exports/google-sheets/recipe-card, min_role: manager, write: true, sensitive: true}
+  - {operation_id: exportPricingReportToGoogleSheets, method: POST, path: /api/v3_2/exports/google-sheets/pricing-report, min_role: manager, write: true, sensitive: true}
+  - {operation_id: exportAllergenMatrixToGoogleSheets, method: POST, path: /api/v3_2/exports/google-sheets/allergen-matrix, min_role: manager, write: true, sensitive: true}
+  - {operation_id: createEventDraft, method: POST, path: /api/v3_2/events/drafts, min_role: operator, write: true, sensitive: true}
+  - {operation_id: createQuoteScenario, method: POST, path: '/api/v3_2/quotes/:quoteId/scenario', min_role: manager, write: true, sensitive: true}
+  - {operation_id: exportQuote, method: POST, path: '/api/v3_2/quotes/:quoteId/export', min_role: manager, write: true, sensitive: true}
+  - {operation_id: importSales, method: POST, path: /api/v3_2/sales/import, min_role: manager, write: true, sensitive: true}
+  - {operation_id: createPurchasePlanDraft, method: POST, path: /api/v3_2/purchase-plans/drafts, min_role: operator, write: true, sensitive: true}
+  - {operation_id: exportPurchasePlan, method: POST, path: '/api/v3_2/purchase-plans/:planId/export', min_role: manager, write: true, sensitive: true}
+  - {operation_id: createInventoryUsagePreview, method: POST, path: /api/v3_2/inventory/usage-preview, min_role: operator, write: true, sensitive: true}

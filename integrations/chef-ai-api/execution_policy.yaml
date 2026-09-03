@@ -1,0 +1,45 @@
+schema_version: 1
+policy_status: CONTROLLED_EXECUTION_CONTRACT
+reads:
+  invoke_when: USER_REQUESTED_OR_CONFIGURED
+  side_effects: false
+  require_explicit_confirmation: false
+  respect_rbac: true
+  respect_workspace_scope: true
+writes:
+  default: PROPOSE_THEN_CONFIRM
+  required_before_execution:
+    - action_summary
+    - affected_records
+    - material_assumptions
+    - explicit_confirmation
+  idempotency_required: true
+  confirmation_token_required: true
+  retry_policy: IDEMPOTENT_RETRY_ONLY
+  respect_rbac: true
+  respect_workspace_scope: true
+  send_secrets_in_payload: false
+  promote_draft_to_approved_implicitly: false
+  execution_success_requires_backend_response: true
+proposal_semantics:
+  proposed_supplier_prices: NEEDS_REVIEW
+  recipe_creation: DRAFT
+  costing_cards: DRAFT
+  quotes: DRAFT
+  scenarios: DRAFT
+  events: DRAFT
+  purchase_plans: DRAFT
+  exports: EXPLICIT_EXTERNAL_WRITE
+tool_unavailable:
+  behavior: DRAFT_OR_HANDOFF_NO_FAKE_EXECUTION
+  preserve_user_work: true
+  may_prepare_payload: true
+  may_claim_remote_write: false
+error_handling:
+  expose_secret_or_internal_stack: false
+  preserve_request_id_when_available: true
+  distinguish_auth_rate_limit_confirmation_idempotency_and_provider_failure: true
+backend_state:
+  current: FUNCTIONAL_MOCK_ADAPTER
+  production_persistence_assumed: false
+  warning_required_for_non_durable_write: true
