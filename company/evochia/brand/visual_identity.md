@@ -15,7 +15,11 @@ The current website also uses a darker digital family (`#0A1F15`, `#0F2E1F`, `#1
 
 ## Logo
 
-Use the actual approved vector/PNG logo asset. Do not reconstruct the logo or wordmark from a font. The guideline names **Weiss Font** as the logo-family reference; this does not make Weiss the default document body font.
+Use actual approved/verified Evochia artwork. Do not reconstruct the logo or wordmark from a font. The guideline names **Weiss Font** as the logo-family reference; this does not make Weiss the default document body font.
+
+The active rendering contract is `company/evochia/brand/assets/render_integrity.yaml`. A final branded artifact is valid only when the required logo asset resolves to the pinned identity. Missing/mismatched assets cause a render failure rather than silent substitution.
+
+The owner-supplied full lockup is retained as source evidence but is not the default for new artifacts because its embedded tagline artwork contains the spelling `Sofisticated taste & tailored events`. Generated brand copy uses the canonical wording **“Sophisticated taste & tailored events”** until a corrected full lockup is explicitly approved.
 
 ## Typography decision
 
@@ -33,7 +37,16 @@ For proposals, menus, flyers and long-form printable client documents, use the p
 - **Cormorant Garamond** — display/headings
 - **EB Garamond** — body, tables and long-form text
 
-This is intentionally artifact-specific. A future renderer may use the site-native fonts when it has authorized access to them, but the Skill repository does not ship font binaries.
+This is intentionally artifact-specific. Font source identities are pinned in `render_integrity.yaml`; font binaries are materialized temporarily by the renderer rather than duplicated in the Skill repository.
+
+## Final-render rule
+
+- Missing required font → fail final branded render.
+- Font identity mismatch → fail final branded render.
+- Silent font substitution → forbidden.
+- Final PDF → required fonts must be embedded and verified.
+- DOCX → editable source; do not claim pixel-stable/canonical appearance unless the consuming font environment is verified.
+- Any output produced without verified brand assets/fonts must be labelled `DRAFT_UNVERIFIED_BRAND_RENDER`.
 
 ## Visual character
 

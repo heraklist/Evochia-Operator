@@ -1,24 +1,39 @@
-# Evochia Brand Asset Manifest
+# Evochia Brand Assets
 
-**Status:** `OWNER_REVIEW_DRAFT`
+**Status:** `RENDER_INTEGRITY_CONTRACT`
 
-Authoritative source pack: owner-supplied `EVOCHIA-LOGO-GUIDLINES.zip`.
+The Skill repository must be able to produce a branded result that is **correct or explicitly fails**. Silent logo reconstruction, unverified replacements and silent font substitution are forbidden.
 
-The source pack contains duplicate directory trees and many raster/social derivatives. The Skill repository therefore records the canonical asset selection here instead of copying the full pack. Artifact renderers may materialize the selected official files from the registered private source when required.
+## Materialized asset in this repository
 
-## Canonical selections
+- `logo-mark-42.png` — byte-identical production Evochia mark copied from `heraklist/evochia_site` commit `8168999e22ef5ca000dfe5c4be53e6e084c9db6f`, source path `assets/logo-42.png`, Git blob SHA `11676370669ef00c1ed6815300db240c5ce376f8`.
 
-- Primary vector master: `EVOCHIA-LOGO/EVOCHIA/SVG/ORIGINAL TRANSPARENT.svg`
-- Solid-background vector master: `EVOCHIA-LOGO/EVOCHIA/SVG/ORIGINAL.svg`
-- Grayscale vector fallback: `EVOCHIA-LOGO/EVOCHIA/SVG/GREYSCALE TRANSPARENT.svg`
-- High-resolution raster fallback: `EVOCHIA-LOGO/EVOCHIA/PNG LOGO FILE 1850x1063/ORIGINAL-TRANSPARENT.png`
-- Icon: `EVOCHIA LOGO, ICON/ICON/ICON-ORIGINAL.png`
-- Favicon: `EVOCHIA-LOGO/EVOCHIA/FAVICON-256x256/FAVICON-ORIGINAL.png`
+This file is sufficient for small UI/preview use. It is **not** the print-resolution source.
 
-## Rules
+## Pinned production sources for higher-resolution rendering
 
-- Use actual approved artwork; do not retype/reconstruct the logo.
-- Preserve aspect ratio and approved colors.
-- Do not copy the entire duplicate-heavy source pack into the Skill repo.
-- Do not commit font binaries.
-- Generated text outside logo artwork uses the canonical tagline spelling in `brand_voice.md`.
+The renderer may materialize these exact assets into a temporary render cache only after verifying their Git blob identity:
+
+- `assets/logo-84.png` → `25e4e8643a9fbec55213901181bde4ffcb5b2b3c`
+- `assets/logo-280.png` → `59f8a5e406b77abc45fe5938b154f5e73f9e86af`
+
+If the exact required asset cannot be retrieved and verified, the renderer must fail the final-brand gate rather than substitute another logo.
+
+## Owner-supplied identity pack
+
+Authoritative source evidence: `EVOCHIA-LOGO-GUIDLINES.zip`.
+
+Recorded canonical paths:
+
+- `EVOCHIA-LOGO/EVOCHIA/SVG/ORIGINAL TRANSPARENT.svg`
+- `EVOCHIA-LOGO/EVOCHIA/SVG/ORIGINAL.svg`
+- `EVOCHIA-LOGO/EVOCHIA/SVG/GREYSCALE TRANSPARENT.svg`
+- `EVOCHIA-LOGO/EVOCHIA/PNG LOGO FILE 1850x1063/ORIGINAL-TRANSPARENT.png`
+
+The supplied full lockup contains the source-artwork spelling **“Sofisticated taste & tailored events”**. Preserve the source asset unchanged as evidence, but do not use that lockup as the default for newly generated artifacts. Generated brand copy uses **“Sophisticated taste & tailored events”**.
+
+A corrected full lockup may become the default only after explicit owner approval plus visual/checksum verification.
+
+## Font rule
+
+Font binaries are not duplicated into this Skill repository. `render_integrity.yaml` pins exact authorized font sources and identities. Renderers use temporary materialization and a fail-closed preflight. A missing or mismatched font is a render failure, not permission to fall back silently.

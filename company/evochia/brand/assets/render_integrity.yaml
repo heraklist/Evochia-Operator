@@ -1,0 +1,93 @@
+schema_version: 1
+status: RENDER_INTEGRITY_CONTRACT
+resolution_policy: fail_closed
+final_artifact_requires_verified_assets: true
+
+logo:
+  active_default:
+    strategy: production_mark_plus_generated_brand_text
+    source_repo: heraklist/evochia_site
+    source_commit: 8168999e22ef5ca000dfe5c4be53e6e084c9db6f
+    assets:
+      print_raster_mark:
+        path: assets/logo-280.png
+        git_blob_sha: 59f8a5e406b77abc45fe5938b154f5e73f9e86af
+      ui_raster_mark_2x:
+        path: assets/logo-84.png
+        git_blob_sha: 25e4e8643a9fbec55213901181bde4ffcb5b2b3c
+      ui_raster_mark_1x:
+        path: assets/logo-42.png
+        git_blob_sha: 11676370669ef00c1ed6815300db240c5ce376f8
+    requirements:
+      - fetch only from the pinned commit or an exact local copy whose Git blob identity matches
+      - preserve aspect ratio and pixel content
+      - never redraw, trace, recolor or synthesize the mark
+      - generated brand text must use the approved copy and verified typography contract
+
+  official_source_pack:
+    source_file: EVOCHIA-LOGO-GUIDLINES.zip
+    role: source_evidence_and_future_corrected_lockup
+    default_for_new_artifacts: false
+    reason: the supplied full lockup contains the source-artwork spelling "Sofisticated taste & tailored events"
+    canonical_paths_recorded:
+      - EVOCHIA-LOGO/EVOCHIA/SVG/ORIGINAL TRANSPARENT.svg
+      - EVOCHIA-LOGO/EVOCHIA/SVG/ORIGINAL.svg
+      - EVOCHIA-LOGO/EVOCHIA/SVG/GREYSCALE TRANSPARENT.svg
+      - EVOCHIA-LOGO/EVOCHIA/PNG LOGO FILE 1850x1063/ORIGINAL-TRANSPARENT.png
+    promotion_rule: a corrected owner-approved full lockup may replace the active default only after visual and checksum verification
+
+typography:
+  digital_site_native:
+    source_repo: heraklist/evochia_site
+    source_commit: 8168999e22ef5ca000dfe5c4be53e6e084c9db6f
+    files:
+      Alexander:
+        path: assets/fonts/Alexander.woff2
+        git_blob_sha: 74ba32583b811ed366993aff80b700a1e33d58c4
+      Bainsley_regular:
+        path: assets/fonts/bainsley-regular.woff2
+        git_blob_sha: ce45c781df8e5e2393111efe68becf2d47356a45
+      Bainsley_bold:
+        path: assets/fonts/bainsley-bold.woff2
+        git_blob_sha: 3a58424094df75ec103789f30575d7c5136e9740
+      Bainsley_italic:
+        path: assets/fonts/bainsley-italic.woff2
+        git_blob_sha: ba344eed685699936fb864ad99ab7b3217279c87
+      Bainsley_bold_italic:
+        path: assets/fonts/bainsley-bold-italic.woff2
+        git_blob_sha: 02e8cae38958407ed165c6b483b187bcea0c2f1e
+      Miama:
+        path: assets/fonts/Miama-Regular.woff2
+        git_blob_sha: 9977e48ee4c9793448f98f4c4735923aacf5296c
+    repository_storage: external_pinned_source
+    runtime_materialization: temporary_cache_only
+
+  portable_documents:
+    source_repo: google/fonts
+    source_commit: e201719944904d2b21cd158f724c2e5889c6e19a
+    license: SIL_OFL_1_1
+    files:
+      Cormorant_Garamond:
+        path: ofl/cormorantgaramond/CormorantGaramond[wght].ttf
+        git_blob_sha: d992a83ce525c330fad3a19087746bcb2dc038ee
+      Cormorant_Garamond_Italic:
+        path: ofl/cormorantgaramond/CormorantGaramond-Italic[wght].ttf
+        git_blob_sha: 0d914e7663b7a1429d06ec60a5c5bb026031a2ef
+      EB_Garamond:
+        path: ofl/ebgaramond/EBGaramond[wght].ttf
+        git_blob_sha: 52d34b86ec20977f222ce37e8158e6b3002c0a31
+      EB_Garamond_Italic:
+        path: ofl/ebgaramond/EBGaramond-Italic[wght].ttf
+        git_blob_sha: f9ad996001c8ee72fd43b4b8e67c8924b7f615b1
+    repository_storage: external_pinned_source
+    runtime_materialization: temporary_cache_only
+
+render_gate:
+  missing_logo: fail
+  logo_identity_mismatch: fail
+  missing_required_font: fail
+  font_identity_mismatch: fail
+  silent_font_substitution: forbidden
+  pdf_font_embedding_required: true
+  docx_pixel_stable_claim_without_verified_font_environment: forbidden
+  fallback_output_label: DRAFT_UNVERIFIED_BRAND_RENDER
