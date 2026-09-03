@@ -30,8 +30,7 @@ def test_typography_is_documented_as_technically_specified_but_owner_review_draf
     assert "not yet canonical" in content
 
 
-def test_plan_uses_actual_evochia_policy_path_and_current_state_declares_implementation_tree_authority():
-    assert "company/evochia/policies/" in text(PLAN)
+def test_current_state_declares_actual_policy_path_and_implementation_tree_authority():
     current = text(CURRENT)
     assert "company/evochia/policies/" in current
     assert "implemented repository tree is authoritative" in current
@@ -42,3 +41,4 @@ def test_historical_design_and_plan_are_preserved_as_records_not_silently_rewrit
     assert "# Chef AI Pro Business vNext — Implementation Plan" in text(PLAN)
     current = text(CURRENT)
     assert "historical design/plan records" in current
+    assert "earlier directory sketches" in current
