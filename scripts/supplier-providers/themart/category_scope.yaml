@@ -1,0 +1,30 @@
+schema_version: 1
+provider: themart
+root_categories:
+  - id: fruit_veg
+    label: Fruit & Vegetables
+  - id: fish
+    label: Fish & Seafood
+  - id: dairy_chilled
+    label: Dairy & Chilled
+  - id: butcher
+    label: Butcher & Meat
+  - id: frozen
+    label: Frozen Foods
+  - id: cold_cuts
+    label: Cold Cuts, Salted Products & Accompaniments
+  - id: pantry
+    label: Pantry & Dry Goods
+  - id: bakery
+    label: Bakery
+  - id: breakfast_sweet
+    label: Breakfast & Sweet Snacks
+  - id: plant_special_diet
+    label: Plant Based & Special Diet
+  - id: soft_drinks
+    label: Soft Drinks, Water & Juice
+  - id: wine_spirits
+    label: Wine & Spirits
+notes:
+  - These labels describe the 12 audited root-category families from the owner-supplied capture project.
+  - Exact URLs remain in the original categories.json and will be migrated byte-for-byte in Phase 8B.
