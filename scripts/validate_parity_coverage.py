@@ -47,6 +47,7 @@ REQUIRED_DOMAINS = {
     "api_invocation_approval",
 }
 
+DEFAULT_MATRIX = "evals/legacy/parity_matrix.yaml"
 DEFAULT_REACHABILITY = "evals/legacy/resource_reachability.yaml"
 
 
@@ -187,27 +188,22 @@ def validate_matrix(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "matrix",
+        "path",
         nargs="?",
-        default="evals/legacy/parity_matrix.yaml",
-        help="parity matrix YAML path",
-    )
-    parser.add_argument(
-        "--repo-root",
         default=".",
-        help="repository root used for runtime reachability checks",
+        help="repository root (preferred) or explicit parity matrix YAML path",
     )
-    parser.add_argument(
-        "--reachability",
-        default=DEFAULT_REACHABILITY,
-        help="capability-to-resource reachability YAML path",
-    )
+    parser.add_argument("--reachability", default=DEFAULT_REACHABILITY)
     args = parser.parse_args(argv)
 
-    repo_root = Path(args.repo_root).resolve()
-    matrix_path = Path(args.matrix)
-    if not matrix_path.is_absolute():
-        matrix_path = repo_root / matrix_path
+    supplied = Path(args.path)
+    if supplied.is_dir():
+        repo_root = supplied.resolve()
+        matrix_path = repo_root / DEFAULT_MATRIX
+    else:
+        matrix_path = supplied.resolve()
+        repo_root = Path.cwd().resolve()
+
     reachability_path = Path(args.reachability)
     if not reachability_path.is_absolute():
         reachability_path = repo_root / reachability_path
