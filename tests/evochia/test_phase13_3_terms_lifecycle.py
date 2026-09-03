@@ -92,7 +92,7 @@ def test_cure_does_not_force_new_exposure_and_requires_client_notification():
         "food-safety",
     ]:
         assert token in lower
-    assert "not required" in lower or "need not" in lower or "no obligation" in lower
+    assert "does not require evochia to increase unrecoverable exposure" in lower
     assert "writing" in lower
     assert "client" in lower
 
