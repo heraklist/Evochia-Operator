@@ -101,7 +101,8 @@ def test_staffing_policy_is_contextual_not_guest_count_only():
     for term in ["guest", "service format", "plated", "Half Board", "equipment", "travel"]:
         assert term.lower() in text.lower()
     if policy_status("staffing_policy.md") != "APPROVED":
-        assert "NEEDS_OWNER_APPROVAL" in text
+        assert "CANDIDATE_FROM_OWNER_WORKING_DECISION" in text
+        assert "Items intentionally still open" in text
         assert "6+" in text
 
 
