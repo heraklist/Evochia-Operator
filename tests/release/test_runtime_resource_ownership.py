@@ -10,15 +10,21 @@ EXPECTED_ROOTS = {
     "templates/operations/": "kitchen-event-operations",
     "templates/safety/": "food-safety-allergens",
     "templates/product-plans/": "evochia-product-development",
-    "templates/artifacts/": "evochia-brand-documents",
+    "templates/recipes/": "recipe-engineering",
 }
 
 EXPECTED_EXACT = {
+    "templates/artifacts/client_artifact_contracts.yaml": "evochia-brand-documents",
+    "templates/artifacts/recipebook_contract.yaml": "recipe-engineering",
     "schemas/event_brief.schema.json": "kitchen-event-operations",
     "schemas/event_economics.schema.json": "kitchen-event-operations",
     "schemas/haccp_plan.schema.json": "food-safety-allergens",
     "schemas/safety_evidence.schema.json": "food-safety-allergens",
     "schemas/product_plan.schema.json": "evochia-product-development",
+    "schemas/recipe.schema.json": "recipe-engineering",
+    "schemas/menu_experience.schema.json": "menu-experience-design",
+    "schemas/supplier_price_snapshot.schema.json": "supplier-procurement-intelligence",
+    "schemas/market_intelligence_brief.schema.json": "evochia-market-intelligence",
     "schemas/artifact_render_request.schema.json": "evochia-brand-documents",
     "references/artifacts/rendering_policy.md": "evochia-brand-documents",
 }
@@ -37,9 +43,10 @@ def test_runtime_resource_manifest_declares_expected_owners():
     exact = {item["path"]: item["owner_skill"] for item in data["exact_resources"]}
     assert EXPECTED_ROOTS.items() <= roots.items()
     assert EXPECTED_EXACT.items() <= exact.items()
+    assert "schemas/source_registry.schema.json" in data["non_runtime_tooling"]
 
 
-def test_owner_skills_explicitly_reference_their_runtime_resource_roots():
+def test_owner_skills_explicitly_reference_their_runtime_resources():
     data = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     for section in ["resource_roots", "exact_resources"]:
         for item in data[section]:
@@ -55,7 +62,7 @@ def test_package_validator_includes_runtime_resource_ownership_gate():
     assert not [issue for issue in issues if "runtime resource" in issue or "resource owner" in issue]
 
 
-def test_package_validator_detects_unreachable_declared_resource(tmp_path):
+def test_package_validator_detects_unreachable_declared_resource():
     validator = load_validator()
     data = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
     data["exact_resources"].append({
