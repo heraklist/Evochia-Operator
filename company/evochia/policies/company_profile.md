@@ -3,8 +3,8 @@
 **Policy status:** `PARTIALLY_APPROVED`
 **Approved by:** `Evochia Owner`
 **Effective date:** `2026-09-03`
-**Approval reference:** `owner-approval-2026-09-03-phase13.2`
-**Purpose:** canonical current company context with explicit row-level approval boundaries. The header remains on Phase 13.2 metadata until the Phase 13.3 row-audit/state-reconciliation task.
+**Approval reference:** `owner-approval-2026-09-03-phase13.3`
+**Purpose:** canonical current company context with explicit row-level approval boundaries.
 
 ## Rule-state vocabulary
 
