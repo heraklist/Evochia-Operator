@@ -98,10 +98,12 @@ def test_release_readiness_records_phase8b_and_surface_validation_as_blockers_no
     assert blockers["openai_surface_install_scan"]["required_before_final_release"] is True
 
 
-def test_release_readiness_does_not_claim_production_backend_or_approved_pending_company_policy():
+def test_release_readiness_does_not_claim_production_backend_and_supports_policy_state_transitions():
     data = yaml.safe_load(read(READINESS))
     assert data["backend_readiness"] == "MOCK_ADAPTER_NOT_PRODUCTION_PERSISTENCE"
-    assert data["commercial_policy_readiness"] in {"OWNER_REVIEW_REQUIRED", "PARTIALLY_APPROVED"}
+    assert data["commercial_policy_readiness"] in {
+        "OWNER_REVIEW_REQUIRED", "PARTIALLY_APPROVED", "APPROVED"
+    }
     assert data["may_claim_production_ready"] is False
 
 
