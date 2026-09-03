@@ -1,0 +1,21 @@
+schema_version: 1
+repository: heraklist/chef-ai-pro-business-api
+pinned_commit: 74aaa31a7f5f725ad661aa3fe19f8100a36b17b7
+backend_implementation_copied_into_skill_repo: false
+contracts:
+  - path: openapi/chef_ai_pro_business_full_actions_v3_2_2.yaml
+    git_blob_sha: 0cd9eaf16a29e38361d9f0fc48452e119124e438
+    role: full_action_surface_reference
+  - path: openapi/chef_ai_pro_business_primary_actions_v3_2_2.yaml
+    git_blob_sha: 80848b8667f2789d25a8f33dd9dfc2fc4b8df066
+    role: primary_action_surface_reference
+  - path: openapi/chef_ai_pro_business_v3_0_read_only.yaml
+    git_blob_sha: 216cfd2a654b3d8f8ce5eea6ba92e1c266f3cbae
+    role: read_only_contract
+  - path: openapi/chef_ai_pro_business_v3_1_controlled_writes.yaml
+    git_blob_sha: ace07e4c848b074136160e7edee9d121fa480212
+    role: controlled_write_contract
+  - path: openapi/chef_ai_pro_business_v3_2_integrations.yaml
+    git_blob_sha: 0075356f6b7a4014a97c3e20e077ad38cab15c2d
+    role: integration_contract
+refresh_rule: re_audit_backend_and_update_pins_together
