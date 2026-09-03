@@ -72,4 +72,15 @@ routes:
     output_audience: CLIENT-SAFE
     required_skills: [evochia-company-operations, costing-commercial-intelligence, evochia-brand-documents]
     optional_skills: [kitchen-event-operations, menu-experience-design]
-    blockers: [unapproved_material_commercial_terms, unresolved_safety_conflict]
+    commercial_terms_policy: per_quote_explicit_material_terms
+    commercial_terms_requirements:
+      - do_not_present_unresolved_company_default_as_canonical
+      - quote_validity_explicit_when_no_company_default
+      - payment_and_balance_terms_explicit_when_material
+      - cancellation_refundability_explicit_when_material
+      - transport_verification_state_explicit_when_material
+      - material_repricing_triggers_explicit
+      - vat_net_gross_presentation_explicit_when_material
+    blockers:
+      - missing_or_ambiguous_per_quote_material_terms
+      - unresolved_safety_conflict
