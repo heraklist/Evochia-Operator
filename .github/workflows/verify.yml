@@ -29,8 +29,8 @@ jobs:
       - name: Validate repository hygiene
         run: python scripts/validate_repo_hygiene.py .
       - name: Validate legacy parity
-        run: python scripts/validate_parity_coverage.py .
+        run: python scripts/validate_parity_coverage.py
       - name: Validate source registry
-        run: python scripts/validate_source_registry.py .
+        run: python scripts/validate_source_registry.py
       - name: Validate doctrine integrity
-        run: python scripts/validate_doctrine_integrity.py .
+        run: python scripts/validate_doctrine_integrity.py
