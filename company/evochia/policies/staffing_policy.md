@@ -1,30 +1,35 @@
 # Evochia Staffing Policy
 
-**Policy status:** `OWNER_REVIEW_DRAFT`
-**Current authority:** prepared owner-review candidate only; no threshold, rate or transport rule below is canonical until explicit owner approval.
+**Policy status:** `PARTIALLY_APPROVED`
+**Approved by:** `Evochia Owner`
+**Effective date:** `2026-09-03`
+**Approval reference:** `owner-approval-2026-09-03-phase13.2`
+**Current authority:** approved Phase 13.2 staffing, plated-rate and transport rules below are canonical within their stated scope; explicitly OPEN items remain unresolved.
 
 ## 1. Principle
 
 Staffing is a feasibility, safety and service-quality decision. Guest count is a hard trigger in defined cases, but **service format**, menu complexity, plated synchronization, meal frequency, dietary splits, kitchen/equipment constraints, setup/pack-down, stewarding, travel and venue conditions can require more support than the minimum rule.
 
-The current prepared rate card uses one support-staff category (kitchen assistant / service support) **per person per day**. Future separation into distinct kitchen/service/stewarding roles and rate cards remains open unless explicitly approved later.
+The current rate card uses one support-staff category (kitchen assistant / service support) **per person per day**. Future separation into distinct kitchen/service/stewarding roles and rate cards remains open unless explicitly approved later.
 
 ## 2. Mandatory and review triggers
 
-**Prepared rule — `CANDIDATE_FROM_OWNER_WORKING_DECISION`:**
+**Approved rule — `APPROVED_OWNER_DECISION`:**
 
 - **6+ guests OR plated service:** at least one assistant/support person is mandatory.
 - **Plated service:** always requires assistant/support regardless of guest count.
 - **Half Board under 6:** `MANDATORY_REVIEW_TRIGGER`, not automatic assistant. Review menu complexity, meal turnaround, dietary splits, kitchen constraints, prep/reset load and cleanup.
-- **Full Board under 6:** `MANDATORY_REVIEW_TRIGGER` is a prepared proposal awaiting explicit owner approval; it is not an automatic assistant requirement in this draft.
+- **Full Board under 6:** `MANDATORY_REVIEW_TRIGGER`, not automatic assistant. Apply the same mandatory workload/feasibility review principle with stricter attention to the three-meal operating day, turnaround, reset and cleanup load.
 - Operational constraints may require additional labour even below the normal guest threshold.
 - Additional staffing above the minimum remains workload/role based; no universal waiter/stewarding ratio is approved here.
 
-## 3. Prepared support-staff base rates
+## 3. Support-staff base rates
+
+**State:** `APPROVED_OWNER_DECISION`.
 
 All values are labour compensation only. Accommodation, tickets and special travel costs are separate.
 
-| Geography / service context | Default base | Prepared range / rule |
+| Geography / service context | Default base | Range / rule |
 | --- | ---: | --- |
 | Within Attica | €90/person/day | €90–120; default = minimum |
 | Outside Attica — dinner only | €180/person/day | €180 minimum; higher amount quote-specific where justified |
@@ -43,7 +48,9 @@ Use **within Attica / outside Attica** consistently for this staff rate card. At
 
 ## 4. Plated-rate calculation
 
-The prepared plated rule is **not** represented as a final flat “+10%” rate because rounding changes the realized uplift.
+**State:** `APPROVED_OWNER_DECISION`.
+
+The plated rule is **not** represented as a final flat “+10%” rate because rounding changes the realized uplift.
 
 For integer-euro base rates:
 
@@ -55,7 +62,7 @@ Equivalent rule: calculate `base_rate × 11 / 10`, then round **up** to the smal
 
 Do **not** implement this calculation with binary floating-point arithmetic. For future cent-level support, use decimal/fixed-point arithmetic.
 
-Prepared reference results:
+Reference results:
 
 | Base rate | Calculated before rounding | Final plated rate |
 | ---: | ---: | ---: |
@@ -101,7 +108,7 @@ INTERNAL transport cost must use current route, fuel and toll evidence whenever 
 
 Client transport is a fixed commercial line **per journey/vehicle, not per person**.
 
-Prepared working reference: **€150 indicative minimum for assignments up to 100 km each way**, explicitly editable by quote and not a universal distance tariff.
+Approved working reference: **€150 indicative minimum for assignments up to 100 km each way**, explicitly editable by quote and not a universal distance tariff.
 
 Assistants travelling in the same vehicle do not create an additional transport charge. Ferry/air tickets and other person-specific tickets are separate actual/quoted lines.
 
@@ -113,7 +120,7 @@ This floor is a commercial safety rule; it does not require the client-facing li
 
 ### 6.4 Offline/provisional fallback
 
-When INTERNAL transport verification is unavailable, a proposal may use the prepared indicative minimum where applicable and must mark the transport line **`TRANSPORT_UNVERIFIED`**.
+When INTERNAL transport verification is unavailable, a proposal may use the approved indicative minimum where applicable and must mark the transport line **`TRANSPORT_UNVERIFIED`**.
 
 `TRANSPORT_UNVERIFIED` means provisional, not final. The quote must state that transport is subject to verification/repricing. Verification must occur **before final acceptance / booking confirmation**. Once verified, the verified-cost floor applies before the client can finally accept the booking.
 
