@@ -70,6 +70,12 @@ def test_staffing_draft_contains_exact_plated_and_transport_rules():
     assert "Commute model" in staffing
 
 
+def test_outside_attica_half_board_uses_existing_minimum_staff_rate():
+    staffing = read(POLICY_DIR / "staffing_policy.md")
+    assert "Outside Attica — Half Board | €180/person/day | €180 minimum" in staffing
+    assert "Outside Attica Half Board support-day rate" not in staffing
+
+
 def test_terms_and_routing_allow_provisional_quote_but_gate_final_acceptance():
     terms = read(POLICY_DIR / "terms_policy.md")
     routing = yaml.safe_load(read(ROUTING))
