@@ -15,6 +15,8 @@ import yaml
 CURRENT_CLASSES = {"canonical_policy", "canonical_current_data"}
 PRICING_AUTHORITY_USES = {"current_rates", "pricing_policy", "canonical_pricing_policy"}
 CURRENT_AUTHORITIES = {"current", "canonical"}
+DEFAULT_REGISTRY = "references/source_registry.yaml"
+DEFAULT_SCHEMA = "schemas/source_registry.schema.json"
 
 
 def load_registry(path: Path | str) -> dict[str, Any]:
@@ -121,11 +123,27 @@ def validate_registry(registry: dict[str, Any], schema_path: Path | str) -> list
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("registry", nargs="?", default="references/source_registry.yaml")
-    parser.add_argument("--schema", default="schemas/source_registry.schema.json")
+    parser.add_argument(
+        "path",
+        nargs="?",
+        default=".",
+        help="repository root (preferred) or explicit source registry YAML path",
+    )
+    parser.add_argument("--schema", default=None)
     args = parser.parse_args(argv)
-    registry = load_registry(args.registry)
-    issues = validate_registry(registry, args.schema)
+
+    supplied = Path(args.path)
+    if supplied.is_dir():
+        repo_root = supplied.resolve()
+        registry_path = repo_root / DEFAULT_REGISTRY
+        schema_path = repo_root / (args.schema or DEFAULT_SCHEMA)
+    else:
+        registry_path = supplied.resolve()
+        repo_root = Path.cwd().resolve()
+        schema_path = Path(args.schema).resolve() if args.schema else repo_root / DEFAULT_SCHEMA
+
+    registry = load_registry(registry_path)
+    issues = validate_registry(registry, schema_path)
     if issues:
         print("Source registry: FAIL", file=sys.stderr)
         for issue in issues:
