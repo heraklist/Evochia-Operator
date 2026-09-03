@@ -1,0 +1,98 @@
+schema_version: 1
+policy_status: CANONICAL_METHOD_CONTRACT
+
+version_authority:
+  methodology_source_id: evochia_ci_research_protocol
+  current_dataset_source_id: evochia_ci_v33
+  time_bound_version_pointer_rule: SOURCE_REGISTRY_CURRENT_DATASET_WINS
+  preserve_historical_baselines: true
+  restart_research_from_zero: false
+  notes:
+    - The CI research protocol governs methodology and evidence rules.
+    - Any historical sentence inside that protocol naming a then-current workbook does not override the machine-readable Source Registry.
+    - Superseded workbooks remain historical evidence and migration/audit trace.
+
+canonical_entities:
+  deduplication: company_level
+  relationship_types: [Direct, Adjacent, Referral, Candidate, Alias, Excluded]
+  base_geography_separate_from_service_geography: true
+  directory_only_signal_is_sufficient_for_direct_count: false
+  canonical_inclusion_requires_current_primary_or_equivalent_evidence: true
+  false_geo_control: true
+  archive_before_canonical_change: true
+
+analysis_dimensions:
+  - Research Priority
+  - Competitive Threat
+  - Partner / Opportunity
+
+interpretation_rules:
+  missing_information_is_competitive_weakness: false
+  entry_count_proves_market_dominance: false
+  competitor_price_becomes_evochia_policy: false
+  adjacent_entity_counts_as_direct_without_evidence: false
+  market_conclusion_requires_evidence: true
+
+source_hierarchy:
+  - official_company_website
+  - google_local_or_places_signal
+  - official_social_account
+  - official_professional_or_institutional_source
+  - marketplace
+  - directory
+  - secondary_blog_or_aggregator
+
+freshness:
+  internal_workbook_role: COMPANY_INTELLIGENCE_SNAPSHOT
+  current_public_claim_requires_fresh_external_evidence: true
+  fresh_research_may_silently_mutate_canonical_workbook: false
+  new_competitor_first_state: DATED_ARCHIVE_FINDING
+  canonical_promotion_requires: [evidence_check, dedup_check, archive_before_change]
+  mutable_claim_examples:
+    - public_price
+    - service_availability
+    - ranking
+    - rating
+    - review_count
+    - social_metric
+    - website_or_page_status
+    - partnership_or_service_claim
+  historical_question_may_use_snapshot_without_web_refresh: true
+  uncertainty_must_be_explicit: true
+
+seo:
+  never_invent:
+    - monthly_search_volume
+    - cpc
+    - keyword_difficulty
+    - follower_growth
+    - hashtag_reach
+    - rankings
+  missing_numeric_metric_label: Not estimated
+  ci_workbook_role: COMPETITOR_BENCHMARK
+  own_analytics_primary_layer: [GA4, Google Search Console]
+  search_console_integration_status: DEFERRED
+  keyword_serp_social_geo_claims_require_evidence: true
+  mass_location_page_generation_without_user_value: forbidden
+
+evidence:
+  required_record_fields: [source_ref, research_date, confidence]
+  claim_classes: [FACT, EXTERNAL_EVIDENCE, ESTIMATE, ASSUMPTION, INFERENCE]
+  evidence_states: [CANONICAL_SNAPSHOT, VERIFIED_CURRENT, UNVERIFIED, INFERENCE]
+  confidence_states: [HIGH, MEDIUM, LOW, NEEDS_REVIEW]
+  source_conflict_behavior: surface_conflict_do_not_silently_resolve
+
+privacy_and_collection:
+  business_facing_public_information_only: true
+  follower_lists: forbidden
+  unrelated_personal_data: forbidden
+  unauthorized_bulk_social_scraping: forbidden
+  preferred_social_collection: [authorized_api, manual_public_snapshot]
+
+workbook_governance:
+  append_new_phase_sheets: true
+  preserve_master_and_history: true
+  delete_historical_evidence_silently: false
+  qa_required_before_phase_close: true
+  phase_close_requires: [what_closed, what_remains_open, residual_risk]
+  claim_100_percent_market_coverage: forbidden
