@@ -3,9 +3,9 @@
 **Policy status:** `PARTIALLY_APPROVED`
 **Approved by:** `Evochia Owner`
 **Effective date:** `2026-09-03`
-**Approval reference:** `owner-approval-2026-09-03-phase13.2`
+**Approval reference:** `owner-approval-2026-09-03-phase13.3`
 
-This file is the canonical runtime authority for Evochia booking lifecycle and impediment economics once Phase 13.3 implementation is complete. The header/status metadata remains on the Phase 13.2 approval reference until the Phase 13.3 row audit and file-level reconciliation in the dedicated policy-state step. Historical booking terms remain evidence only and do not override the approved rules below.
+This file is the canonical runtime authority for Evochia booking lifecycle and impediment economics. Historical booking terms remain evidence only and do not override the approved rules below.
 
 ## 1. Canonical definitions
 
