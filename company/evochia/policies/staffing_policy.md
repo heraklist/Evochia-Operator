@@ -33,7 +33,7 @@ All values are labour compensation only. Accommodation, tickets and special trav
 
 ### Outside-Attica day-floor rationale
 
-**€180/person/day is the minimum support-staff day commitment once travel outside Attica is required.** It is a **day-floor**, not a per-meal rate. Dinner-only and Half Board therefore legitimately share the same €180 default/minimum: once the person travels outside Attica, the working day is already materially committed even if the assignment contains one versus two meal services.
+**€180/person/day is the minimum support-staff day commitment once travel outside Attica is required.** It is a **day-floor** and is **not priced per meal**. Dinner-only and Half Board therefore legitimately share the same €180 default/minimum: once the person travels outside Attica, the working day is already materially committed even if the assignment contains one versus two meal services.
 
 Full Board starts at €200 because the longer operating day, additional service/reset cycles and greater total workload justify a higher labour commitment. The sequence `€180 / €180 / €200` is intentional and must not be “corrected” by interpolation merely because the meal count increases from one to two to three.
 
