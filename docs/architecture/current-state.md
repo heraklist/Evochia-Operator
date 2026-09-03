@@ -15,7 +15,9 @@ Phase 13 was intentionally **parallel during early implementation** because typo
 
 ## Typography approval state
 
-The Evochia typography system is now a **technically specified candidate** by artifact class, with pinned/fail-closed asset and font-source contracts. The brand visual system remains `OWNER_REVIEW_DRAFT` and is **not yet canonical** until owner approval.
+Phase 13.1 visual/typography owner lock: `APPROVED`.
+
+The Evochia visual/typography system is canonical as `evochia_visual_system_v1`, effective 2026-09-03. The approved system keeps artifact-specific typography, official/digital palettes, verified logo assets and the existing fail-closed render-integrity contract. Brand voice remains a separate authority/review decision and is not implicitly approved by this visual-system lock.
 
 ## Current implementation paths
 
