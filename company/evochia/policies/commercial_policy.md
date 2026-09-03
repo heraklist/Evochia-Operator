@@ -1,11 +1,11 @@
 # Evochia Commercial Policy
 
-**Policy status:** `PARTIALLY_APPROVED`
+**Policy status:** `APPROVED`
 **Approved by:** `Evochia Owner`
 **Effective date:** `2026-09-03`
-**Approval reference:** `owner-approval-2026-09-03-phase13.2`
+**Approval reference:** `owner-approval-2026-09-03-phase13.3`
 
-The Phase 13.3 commercial body below is owner-approved. File-level status and approval metadata remain on the Phase 13.2 header until the dedicated row-audit/state-reconciliation task. Canonical booking lifecycle formulas and impediment economics live in `terms_policy.md`; this file owns the higher-level commercial architecture, rate-boundary rules and service-model governance.
+The Phase 13.3 commercial body below is owner-approved. Canonical booking lifecycle formulas and impediment economics live in `terms_policy.md`; this file owns the higher-level commercial architecture, rate-boundary rules and service-model governance.
 
 ## 1. Core commercial model
 
