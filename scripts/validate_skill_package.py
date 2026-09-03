@@ -10,6 +10,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 POLICY_PATH = ROOT / "release/package_policy.yaml"
+OWNERSHIP_PATH = ROOT / "release/runtime_resource_ownership.yaml"
 
 
 def _frontmatter(text: str) -> dict:
@@ -50,6 +51,48 @@ def _is_forbidden(rel: Path, patterns: list[str], exceptions: set[str]) -> bool:
     return False
 
 
+def validate_runtime_resource_ownership(root: Path | str, data: dict) -> list[str]:
+    root = Path(root).resolve()
+    issues: list[str] = []
+    seen_paths: set[str] = set()
+
+    for section, expect_dir in (("resource_roots", True), ("exact_resources", False)):
+        for item in data.get(section, []):
+            path = item.get("path")
+            owner = item.get("owner_skill")
+            token = item.get("reference_token")
+            label = path or f"{section}:<missing-path>"
+            if not path or not owner or not token:
+                issues.append(f"runtime resource {label}: incomplete ownership declaration")
+                continue
+            if path in seen_paths:
+                issues.append(f"runtime resource {path}: duplicate ownership declaration")
+            seen_paths.add(path)
+
+            resource = root / path
+            if not resource.exists():
+                issues.append(f"runtime resource missing: {path}")
+                continue
+            if expect_dir and not resource.is_dir():
+                issues.append(f"runtime resource root is not a directory: {path}")
+            if not expect_dir and not resource.is_file():
+                issues.append(f"runtime resource is not a file: {path}")
+
+            skill_file = root / "skills" / owner / "SKILL.md"
+            if not skill_file.exists():
+                issues.append(f"resource owner {owner}: missing SKILL.md for {path}")
+                continue
+            skill_text = skill_file.read_text(encoding="utf-8")
+            if token not in skill_text:
+                issues.append(f"resource owner {owner}: {path} is not reachable via token {token}")
+
+    for path in data.get("non_runtime_tooling", []):
+        if not (root / path).exists():
+            issues.append(f"non-runtime tooling resource missing: {path}")
+
+    return issues
+
+
 def validate(root: Path | str = ROOT) -> list[str]:
     root = Path(root).resolve()
     issues: list[str] = []
@@ -77,6 +120,13 @@ def validate(root: Path | str = ROOT) -> list[str]:
             candidates = [root / ref, skill_dir / ref]
             if not any(path.exists() for path in candidates):
                 issues.append(f"{skill_name}: broken referenced path {ref}")
+
+    ownership_path = root / "release/runtime_resource_ownership.yaml"
+    if not ownership_path.exists():
+        issues.append("missing release/runtime_resource_ownership.yaml")
+    else:
+        ownership = yaml.safe_load(ownership_path.read_text(encoding="utf-8")) or {}
+        issues.extend(validate_runtime_resource_ownership(root, ownership))
 
     patterns = policy.get("forbidden_patterns", [])
     exceptions = set(policy.get("allowed_exception_files", []))

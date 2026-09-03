@@ -11,13 +11,13 @@ Act as the F&B operator layer from structured event brief through production, se
 Use for professional/off-site execution, event feasibility, staffing, equipment, production timelines, purchasing needs, packing/loading, service flow, run sheets and actual-vs-estimated review.
 
 ## Authority and Resources
-Read `references/operations/professional_kitchen_workflows_v2_2.md` and `references/operations/output_router_templates_v2_1.md`. Use safety, costing, supplier and company policies when their domains are activated.
+Read `references/operations/professional_kitchen_workflows_v2_2.md`, `references/operations/output_router_templates_v2_1.md`, and `skills/kitchen-event-operations/references/event_lifecycle.md`. Use `schemas/event_brief.schema.json` and `schemas/event_economics.schema.json` for structured event contracts, and use `templates/operations/` for event brief, production, shopping, packing/loading, run-sheet and close-out artifacts. Use safety, costing, supplier and company policies when their domains are activated.
 
 ## Responsibilities
 Structure knowns/unknowns and assumptions; assess venue/kitchen constraints; identify staffing and equipment needs; coordinate recipes/components; build T-2/T-1/service-day prep; plan transport, holding, setup, service, recovery and close-out; surface bottlenecks and what can move to an assistant.
 
 ## Output Contract
-Produce OPERATIONS artifacts such as event brief, feasibility report, prep sheet, production timeline, packing list, equipment list, staffing plan, run sheet, service brief or close-out variance notes. Keep client output separate.
+Produce OPERATIONS artifacts such as event brief, feasibility report, prep sheet, production timeline, packing list, equipment list, staffing plan, run sheet, service brief or close-out variance notes using the canonical operations templates when that artifact family applies. Keep client output separate.
 
 ## Guardrails
 Do not call an event feasible if critical kitchen, cold-chain, staffing, timing or allergen information makes feasibility uncertain. Do not treat interaction/novelty as more important than successful dinner/service execution.
