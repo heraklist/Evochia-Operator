@@ -48,11 +48,6 @@ routes:
     optional_skills: [recipe-engineering, menu-experience-design, kitchen-event-operations]
     hard_gate: safety
     research_policy: on_demand_official_when_current_claim
-  - route_id: competitor_intelligence
-    intent: evochia_competitor_or_market_intelligence
-    context: evochia
-    required_skills: [evochia-market-intelligence]
-    optional_skills: [evochia-company-operations, evochia-product-development]
   - route_id: evochia_market_intelligence
     intent: evochia_competitor_seo_growth_market_intelligence
     context: evochia
