@@ -1,0 +1,20 @@
+schema_version: 1
+provider: themart
+source: audited Recovery Extractor v5 behavior from owner-supplied archive
+cases:
+  - id: no_cross_product_price_bleed
+    requirement: Prices detected in one product/SKU block must not contaminate another product.
+  - id: correct_product_url_association
+    requirement: Product URL must belong to the current product block and must not fall back to an unrelated body link.
+  - id: spreadsheet_formula_injection_protection
+    requirement: Export values beginning with =, +, -, @, tab or carriage return must be neutralized before spreadsheet output.
+  - id: local_path_privacy_sanitization
+    requirement: Export source_html_file as sanitized filename/reference, never an absolute local filesystem path.
+  - id: strict_zero_extraction_failure
+    requirement: When input HTML exists but extraction yields zero products, strict mode must return a failure state (legacy exit code 2).
+  - id: deterministic_fixture_normalization
+    requirement: Identical fixture input must produce deterministic normalized output independent of local machine paths.
+  - id: multi_sku_product_url_not_guessed
+    requirement: For ambiguous multi-SKU blocks, product_url remains blank rather than attaching an unsafe guessed URL.
+  - id: raw_card_text_current_product_only
+    requirement: raw_card_text must be scoped to the current product block rather than arbitrary surrounding page text.
