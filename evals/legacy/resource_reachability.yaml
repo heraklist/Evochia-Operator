@@ -1,0 +1,14 @@
+schema_version: 1
+purpose: >-
+  Bind legacy capabilities that require a specific runtime doctrine/resource to at least one target Skill that explicitly references that resource.
+requirements:
+  - capability_id: excel_workbook_structure
+    required_resources:
+      - references/exports/excel_sheets_export_spec_v2_4.md
+    reachable_via_skills:
+      - costing-commercial-intelligence
+  - capability_id: excel_formula_patterns
+    required_resources:
+      - references/exports/excel_sheets_export_spec_v2_4.md
+    reachable_via_skills:
+      - costing-commercial-intelligence
