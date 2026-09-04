@@ -1,0 +1,12 @@
+schema_version: 1
+source_package_policy: release/package_policy.yaml
+operator_name: evochia-operator
+orchestrator_skill: chef-ai-pro-business
+template: release/operator/SKILL.template.md
+routing: skills/chef-ai-pro-business/references/routing.yaml
+module_index_path: references/module_index.md
+icon:
+  source_path: company/evochia/brand/assets/logo-mark-42.png
+  artifact_path: assets/evochia-operator-icon.png
+  expected_git_blob: 11676370669ef00c1ed6815300db240c5ce376f8
+provenance_manifest_path: provenance/build_manifest.yaml
