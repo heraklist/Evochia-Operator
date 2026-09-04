@@ -2,7 +2,9 @@ schema_version: 1
 provider: themart
 source_archive: themart_capture.zip
 source_archive_observed_size_bytes: 479430903
-exact_source_migration_state: BLOCKED_PENDING_BYTE_ACCESS
+exact_source_migration_state: MIGRATED_EXACT_SOURCE_VERIFIED
+completed_at: '2026-09-04'
+provenance_manifest: scripts/supplier-providers/themart/source_provenance.yaml
 reconstruction_from_memory_forbidden: true
 safe_source_allowlist:
   - themart_capture.py
@@ -40,9 +42,14 @@ migration_policy:
   preserve_existing_recovery_behavior: true
   browser_profile_local_only: true
   credentials_never_committed: true
-blocked_reason: >-
-  The conversation ZIP is known and audited at archive level, but the current
-  Files parser does not expose its internal source bytes and the container
-  extraction path is unavailable. The collector/extractor must therefore not
-  be reconstructed or approximated. Phase 8B resumes when exact bytes are
-  directly readable.
+completion_evidence:
+  inventory_file_count: 9
+  canonical_python_files_exact: true
+  checksum_verifier: scripts/verify_themart_source_provenance.py
+  supported_output_boundary: fail_closed_recovery_and_formula_scan
+  historical_raw_spreadsheet_export: unsupported_internal_staging_only
+compatibility_artifacts:
+  - scripts/supplier-providers/themart/provider_adapter.py
+  - scripts/supplier-providers/themart/requirements-runtime.txt
+  - scripts/supplier-providers/themart/dependency_evidence.yaml
+  - scripts/supplier-providers/themart/RUNBOOK_GR.md

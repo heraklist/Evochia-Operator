@@ -8,6 +8,7 @@ PROVIDER = ROOT / "scripts/supplier-providers/themart"
 SCHEMA = ROOT / "schemas/supplier_price_snapshot.schema.json"
 ENV_EXAMPLE = ROOT / ".env.example"
 SKILL = ROOT / "skills/supplier-procurement-intelligence/SKILL.md"
+RUNTIME_REQUIREMENTS = PROVIDER / "requirements-runtime.txt"
 
 
 def read(path: Path) -> str:
@@ -38,7 +39,8 @@ def test_migration_manifest_uses_explicit_allowlist_and_denies_sensitive_archive
     denied = "\n".join(manifest["deny_patterns"]).lower()
     for token in [".browser_profile_themart", "cookies", ".venv", "__pycache__", "output", ".git"]:
         assert token in denied
-    assert manifest["exact_source_migration_state"] == "BLOCKED_PENDING_BYTE_ACCESS"
+    assert manifest["exact_source_migration_state"] == "MIGRATED_EXACT_SOURCE_VERIFIED"
+    assert manifest["provenance_manifest"] == "scripts/supplier-providers/themart/source_provenance.yaml"
     assert manifest["reconstruction_from_memory_forbidden"] is True
 
 
@@ -50,6 +52,8 @@ def test_provider_contract_is_explicit_on_demand_and_local_profile_only():
     assert contract["browser_profile"]["repository_storage"] == "forbidden"
     assert contract["credentials"]["collection_by_provider"] is False
     assert contract["credentials"]["repository_storage"] == "forbidden"
+    assert contract["output_root"]["environment_variable"] == "THEMART_OUTPUT_DIR"
+    assert contract["output_root"]["repository_storage"] == "forbidden"
 
 
 def test_env_example_names_profile_variable_without_real_secret_or_path():
@@ -57,8 +61,15 @@ def test_env_example_names_profile_variable_without_real_secret_or_path():
     assert "THEMART_BROWSER_PROFILE_DIR=" in text
     line = next(line for line in text.splitlines() if line.startswith("THEMART_BROWSER_PROFILE_DIR="))
     assert line == "THEMART_BROWSER_PROFILE_DIR="
+    output_line = next(line for line in text.splitlines() if line.startswith("THEMART_OUTPUT_DIR="))
+    assert output_line == "THEMART_OUTPUT_DIR="
     assert "password" not in text.lower()
     assert "cookie" not in text.lower()
+
+
+def test_runtime_requirements_preserve_original_pins_and_add_audited_playwright_dependency():
+    text = read(RUNTIME_REQUIREMENTS)
+    assert text.splitlines() == ["-r requirements.txt", "playwright==1.49.1"]
 
 
 def test_runbook_preserves_manual_login_privacy_and_snapshot_fallback():
@@ -97,4 +108,6 @@ def test_supplier_skill_is_wired_to_provider_contract_and_snapshot_schema():
     assert "scripts/supplier-providers/themart/provider_contract.yaml" in text
     assert "schemas/supplier_price_snapshot.schema.json" in text
     assert "THEMART_BROWSER_PROFILE_DIR" in text
+    assert "scripts/supplier-providers/themart/provider_adapter.py" in text
+    assert "scripts/verify_themart_source_provenance.py" in text
     assert "explicit user request" in text.lower()

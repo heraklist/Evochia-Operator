@@ -4,20 +4,47 @@ role: supplier_price_evidence_provider
 execution_mode: explicit_user_request_only
 background_monitoring: false
 network_scope: provider_site_only_when_explicitly_executed
+supported_execution:
+  entrypoint: scripts/supplier-providers/themart/provider_adapter.py capture
+  direct_historical_scripts_supported: false
+  raw_spreadsheet_exports_supported: false
+  staging_directory: .themart_capture_staging
+  publication_mode: fail_closed_after_recovery_and_formula_scan
+  formula_prefixes_rejected:
+    - '='
+    - '+'
+    - '-'
+    - '@'
+    - TAB
+    - CR
+  bypass_option_available: false
 browser_profile:
   environment_variable: THEMART_BROWSER_PROFILE_DIR
   repository_storage: forbidden
   source: local_user_environment
   required_for_authenticated_capture: true
+output_root:
+  environment_variable: THEMART_OUTPUT_DIR
+  repository_storage: forbidden
+  required: false
+  default: themart_capture_output beside the configured browser profile
 credentials:
   collection_by_provider: false
   repository_storage: forbidden
   login_method: manual_user_login
 outputs:
   canonical_schema: schemas/supplier_price_snapshot.schema.json
+  normalization_adapter: scripts/supplier-providers/themart/provider_adapter.py
+  normalized_format: jsonl
   raw_html_storage: local_only
   raw_html_default_export: excluded
   spreadsheet_formula_injection_protection: required
+  supported_spreadsheets:
+    - products_raw_recovered.csv
+    - products_raw_recovered.xlsx
+    - extraction_diagnostics.csv
+  supported_archive: recovered_indexes_only.zip
+  historical_raw_spreadsheets: unsupported_internal_staging_only
   local_path_redaction: required
 freshness:
   captured_at_required: true

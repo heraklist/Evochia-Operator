@@ -11,17 +11,33 @@ legacy_parity_readiness: VALIDATED_92_CAPABILITIES
 release_principle: unresolved_required_gates_block_final_release
 blockers:
   - id: phase8b_exact_themart_source_migration
-    status: OPEN
+    status: CLOSED
     required_before_final_release: true
+    closed_at: '2026-09-04'
     planned_executor: CODEX
     execution_mode: EXACT_SOURCE_MIGRATION
-    reason: exact allowlisted provider source/test bytes have not yet been migrated from the supplied archive
+    reason: exact allowlisted provider source bytes, derived repository-compatible tests, provenance, fail-closed hardened output boundary and regression gates are verified
     prohibition: do_not_reconstruct_collector_or_extractor_from_memory
     expected_artifacts:
       - themart_capture.py
       - themart_extract_existing_html.py
       - categories.json
       - normalized_original_provider_tests
+    completion_evidence:
+      provenance_manifest: scripts/supplier-providers/themart/source_provenance.yaml
+      checksum_verifier: scripts/verify_themart_source_provenance.py
+      canonical_python_files_byte_identical: true
+      supported_output_boundary: PASS
+      spreadsheet_formula_injection_protection: PASS
+      historical_raw_spreadsheet_export: UNSUPPORTED_INTERNAL_STAGING_ONLY
+      focused_themart_tests: PASS
+      full_pytest: PASS
+      static_eval_harness: PASS
+      skill_package_validation: PASS
+      repository_hygiene: PASS
+      source_registry_validation: PASS
+      parity_and_doctrine_validation: PASS
+      forbidden_file_privacy_scan: PASS
 
   - id: openai_surface_install_scan
     status: NOT_RUN
@@ -59,5 +75,5 @@ notes:
   - Historical proposal prices never become current policy automatically.
   - Phase 13.3 closes the previously open balance timing, cancellation/refundability, standard quote validity, peak-date policy boundary, household-chef global-rate-card boundary and legal-identity commercial rows. Narrow legal drafting, undefined service-family rates, future public price-list policy and unrelated service-taxonomy rows remain explicit in their owning policy files.
   - Commercial bundle readiness remains PARTIALLY_APPROVED because required policy files still contain unrelated explicit partial rows; approval of commercial_policy.md does not promote those rows.
-  - Final release remains BLOCKED by the required Phase 8B exact The Mart source migration and OpenAI surface install/scan gates.
-  - Phase 8B is planned for Codex execution using exact audited source bytes; assignment does not change blocker status until verified migration is merged.
+  - Final release remains BLOCKED by the required OpenAI surface install/scan gate.
+  - Phase 8B exact The Mart source migration is closed with byte-level provenance and fail-closed verification; this does not imply live OpenAI-surface validation or production readiness.
