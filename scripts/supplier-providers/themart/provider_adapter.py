@@ -9,7 +9,7 @@ import csv
 import importlib.util
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import re
 import shutil
 import sys
@@ -273,7 +273,7 @@ def _integer(value: object) -> int | None:
 def _sanitized_filename(value: object) -> str | None:
     if value is None or value == "":
         return None
-    return Path(str(value)).name or None
+    return PureWindowsPath(str(value)).name or None
 
 
 def normalize_recovered_row(row: Mapping[str, object], *, freshness_state: str) -> dict:

@@ -153,6 +153,30 @@ def test_complete_recovered_row_normalizes_to_the_existing_snapshot_schema():
     }
 
 
+@pytest.mark.parametrize(
+    "local_source_path",
+    [
+        r"C:\Users\owner\private\page_001.html",
+        r"D:\different-owner\capture\page_001.html",
+        "/home/owner/private/page_001.html",
+        r"mixed\private/path/page_001.html",
+    ],
+)
+def test_normalized_local_source_reference_is_platform_independent_basename(local_source_path):
+    adapter = _load_adapter()
+    record = adapter.normalize_recovered_row(
+        {
+            "captured_at": "2026-09-04T09:30:00+03:00",
+            "product_name": "Product A",
+            "source_html_file": local_source_path,
+        },
+        freshness_state="CURRENT_SNAPSHOT",
+    )
+
+    assert record["raw_capture_reference"] == "page_001.html"
+    assert record["source_reference"] == "page_001.html"
+
+
 def test_incomplete_row_stays_evidence_needs_review_without_inventing_values():
     adapter = _load_adapter()
     row = {

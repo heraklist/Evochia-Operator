@@ -148,3 +148,4 @@ def test_snapshot_normalization_is_independent_of_local_machine_path():
 
     assert first == second
     assert first["raw_capture_reference"] == "page_001.html"
+    assert first["source_reference"] == "page_001.html"
