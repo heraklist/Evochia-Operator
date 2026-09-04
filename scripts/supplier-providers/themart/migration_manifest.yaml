@@ -46,3 +46,7 @@ completion_evidence:
   inventory_file_count: 9
   canonical_python_files_exact: true
   checksum_verifier: scripts/verify_themart_source_provenance.py
+compatibility_artifacts:
+  - scripts/supplier-providers/themart/provider_adapter.py
+  - scripts/supplier-providers/themart/requirements-runtime.txt
+  - scripts/supplier-providers/themart/RUNBOOK_GR.md

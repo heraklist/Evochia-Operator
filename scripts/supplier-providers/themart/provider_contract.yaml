@@ -9,12 +9,19 @@ browser_profile:
   repository_storage: forbidden
   source: local_user_environment
   required_for_authenticated_capture: true
+output_root:
+  environment_variable: THEMART_OUTPUT_DIR
+  repository_storage: forbidden
+  required: false
+  default: themart_capture_output beside the configured browser profile
 credentials:
   collection_by_provider: false
   repository_storage: forbidden
   login_method: manual_user_login
 outputs:
   canonical_schema: schemas/supplier_price_snapshot.schema.json
+  normalization_adapter: scripts/supplier-providers/themart/provider_adapter.py
+  normalized_format: jsonl
   raw_html_storage: local_only
   raw_html_default_export: excluded
   spreadsheet_formula_injection_protection: required
