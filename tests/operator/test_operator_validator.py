@@ -94,6 +94,10 @@ def make_source_repo(tmp_path: Path) -> tuple[Path, str]:
             b"`references/module_index.md`.\n"
         ),
         "references/source_registry.yaml": b"schema_version: 1\nsources: []\n",
+        "references/evidence.md": (
+            "# Packaged evidence\nRecorded external path "
+            "`EVOCHIA-LOGO/EVOCHIA/SVG/ORIGINAL.svg`.\n"
+        ).encode("utf-8"),
         "skills/chef-ai-pro-business/SKILL.md": (
             b"---\nname: chef-ai-pro-business\ndescription: Fixture orchestrator.\n---\n# Orchestrator\n"
         ),
@@ -156,6 +160,7 @@ def make_valid_artifact(tmp_path: Path) -> Fixture:
         "SKILL.md": ("release/operator/SKILL.template.md", "TEMPLATE_EXACT_COPY"),
         "VERSION": ("VERSION", "EXACT_BYTE_COPY"),
         "references/source_registry.yaml": ("references/source_registry.yaml", "EXACT_BYTE_COPY"),
+        "references/evidence.md": ("references/evidence.md", "EXACT_BYTE_COPY"),
         "skills/chef-ai-pro-business/references/routing.yaml": (
             "skills/chef-ai-pro-business/references/routing.yaml",
             "EXACT_BYTE_COPY",
@@ -249,6 +254,8 @@ def test_valid_handcrafted_operator_passes_without_canonical_icon_path_in_artifa
     files = read_zip(fixture.artifact)
     assert "assets/evochia-operator-icon.png" in files
     assert "company/evochia/brand/assets/logo-mark-42.png" not in files
+    assert "references/evidence.md" in files
+    assert "EVOCHIA-LOGO/EVOCHIA/SVG/ORIGINAL.svg" not in files
 
     result = run_validator(fixture)
 

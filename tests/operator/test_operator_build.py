@@ -137,6 +137,13 @@ def test_operator_projects_canonical_domains_references_index_and_verified_icon(
     icon_entry = next(entry for entry in source.entries(icon["source_path"]) if entry.path == icon["source_path"])
     assert icon_entry.blob_sha == icon["expected_git_blob"]
 
+    # Packaged brand evidence is documentation, not a repo-path authority. Its
+    # recorded paths live inside an external owner-supplied ZIP and must not be
+    # resolved as repository runtime paths.
+    brand_readme = "company/evochia/brand/assets/README.md"
+    assert files[brand_readme] == source.read_bytes(brand_readme)
+    assert "EVOCHIA-LOGO/EVOCHIA/SVG/ORIGINAL.svg" not in files
+
     assert "scripts/build_skill_package.py" not in files
     assert not [path for path in files if path.startswith("tests/")]
     assert not [path for path in files if path.startswith("release/")]
@@ -173,13 +180,11 @@ def test_operator_closure_includes_owned_roots_exact_resources_and_preserves_git
             assert archive.getinfo(projected_path).external_attr >> 16 == normalized_mode(source_entries[source_path].mode)
 
     icon_source = operator_policy["icon"]["source_path"]
-    for path, data in sorted(files.items()):
-        if not (path == "SKILL.md" or path.endswith("/MODULE.md") or path.endswith(".md")):
-            continue
-        try:
-            text = data.decode("utf-8")
-        except UnicodeDecodeError:
-            continue
+    contract_paths = ["SKILL.md"] + sorted(
+        path for path in files if path.startswith("skills/") and path.endswith("/MODULE.md")
+    )
+    for path in contract_paths:
+        text = files[path].decode("utf-8")
         for ref in extract_contract_paths(text):
             if ref == icon_source:
                 continue
@@ -239,7 +244,7 @@ def test_operator_manifest_is_source_anchored_sorted_and_hash_complete(tmp_path)
                 assert projected == source_bytes
 
 
-def test_operator_closure_follows_backticked_paths_to_fixed_point(tmp_path):
+def test_operator_closure_does_not_follow_backticked_paths_from_included_documentation(tmp_path):
     repo, _ = clone_repo(tmp_path)
     skill = repo / "skills/recipe-engineering/SKILL.md"
     skill.write_text(
@@ -248,17 +253,19 @@ def test_operator_closure_follows_backticked_paths_to_fixed_point(tmp_path):
     )
     level1 = repo / "company/operator-fixture/level1.md"
     level1.parent.mkdir(parents=True, exist_ok=True)
-    level1.write_text("# Level 1\nRead `company/operator-fixture/level2.txt`.\n", encoding="utf-8")
-    (level1.parent / "level2.txt").write_text("level two\n", encoding="utf-8")
+    level1.write_text("# Evidence\nRecorded external path `external-pack/level2.txt`.\n", encoding="utf-8")
+    external = repo / "external-pack/level2.txt"
+    external.parent.mkdir(parents=True, exist_ok=True)
+    external.write_text("external evidence\n", encoding="utf-8")
     git(repo, "add", ".")
-    git(repo, "commit", "-m", "add closure fixture")
+    git(repo, "commit", "-m", "add documentation authority fixture")
     commit = git(repo, "rev-parse", "HEAD")
 
     artifact = run_operator_builder(repo, commit, tmp_path / "out")
     files = archive_files(artifact)
 
     assert files["company/operator-fixture/level1.md"] == GitSource(repo, commit).read_bytes("company/operator-fixture/level1.md")
-    assert files["company/operator-fixture/level2.txt"] == GitSource(repo, commit).read_bytes("company/operator-fixture/level2.txt")
+    assert "external-pack/level2.txt" not in files
 
 
 def test_operator_build_fails_closed_when_backticked_runtime_path_is_missing(tmp_path):
