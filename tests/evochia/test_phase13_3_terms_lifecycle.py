@@ -1,8 +1,17 @@
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parents[2]
 POLICY_DIR = ROOT / "company/evochia/policies"
 TERMS = POLICY_DIR / "terms_policy.md"
+
+SERVICE_START_HEADING = "### `SERVICE_START`"
+SERVICE_START_DEFINITION_RE = re.compile(
+    r"(?im)^\s*`?SERVICE_START`?\s+(?:is|means|refers\s+to)\b"
+)
+SERVICE_START_ASSIGNMENT_RE = re.compile(
+    r"(?im)^\s*`?SERVICE_START`?\s*="
+)
 
 
 def read_terms() -> str:
@@ -11,6 +20,92 @@ def read_terms() -> str:
 
 def lower_terms() -> str:
     return read_terms().lower()
+
+
+def read_policy_texts() -> dict[str, str]:
+    return {
+        path.name: path.read_text(encoding="utf-8")
+        for path in sorted(POLICY_DIR.glob("*.md"))
+    }
+
+
+def service_start_authority_issues(policy_texts: dict[str, str]) -> list[str]:
+    issues: list[str] = []
+    terms = policy_texts.get("terms_policy.md", "")
+
+    heading_locations = [
+        name
+        for name, text in policy_texts.items()
+        for _ in range(text.count(SERVICE_START_HEADING))
+    ]
+    if heading_locations != ["terms_policy.md"]:
+        issues.append(
+            "SERVICE_START canonical heading must appear exactly once in terms_policy.md"
+        )
+
+    definition_locations: list[str] = []
+    for name, text in policy_texts.items():
+        matches = list(SERVICE_START_DEFINITION_RE.finditer(text))
+        matches.extend(SERVICE_START_ASSIGNMENT_RE.finditer(text))
+        definition_locations.extend([name] * len(matches))
+
+    if definition_locations != ["terms_policy.md"]:
+        issues.append(
+            "SERVICE_START definition-form syntax must appear exactly once and only in terms_policy.md"
+        )
+
+    exact_phrase_count = sum(
+        text.lower().count("first scheduled service date")
+        for text in policy_texts.values()
+    )
+    if exact_phrase_count != 1:
+        issues.append(
+            "first scheduled service date must appear exactly once in canonical policy files"
+        )
+
+    required_terms_tokens = [
+        "as defined in the quote",
+        "travel",
+        "shopping",
+        "setup",
+        "preparation",
+        "accommodation check-in",
+        "does not redefine",
+    ]
+    lower = terms.lower()
+    missing = [token for token in required_terms_tokens if token not in lower]
+    if missing:
+        issues.append(
+            "SERVICE_START canonical definition missing explicit boundary tokens: "
+            + ", ".join(missing)
+        )
+
+    return issues
+
+
+def test_service_start_has_single_canonical_policy_definition():
+    assert service_start_authority_issues(read_policy_texts()) == []
+
+
+def test_service_start_authority_checker_rejects_competing_definition():
+    policy_texts = read_policy_texts()
+    policy_texts["commercial_policy.md"] += (
+        "\nSERVICE_START means the first service date in the booking.\n"
+    )
+    issues = service_start_authority_issues(policy_texts)
+    assert any("definition-form syntax" in issue for issue in issues)
+
+
+def test_service_start_assignment_guard_only_matches_left_hand_side():
+    assert SERVICE_START_ASSIGNMENT_RE.search(
+        "SERVICE_START = first scheduled service date as defined in the quote"
+    )
+    assert not SERVICE_START_ASSIGNMENT_RE.search(
+        "BALANCE_DUE_DATE = SERVICE_START - 5 calendar days"
+    )
+    assert not SERVICE_START_ASSIGNMENT_RE.search(
+        "CURE_DEADLINE = min(candidate_cure_deadline, SERVICE_START)"
+    )
 
 
 def test_quote_validity_formula_and_late_quote_override_are_canonical():
