@@ -7,6 +7,7 @@ MANIFEST = ROOT / "release/runtime_resource_ownership.yaml"
 VALIDATOR = ROOT / "scripts/validate_skill_package.py"
 
 EXPECTED_ROOTS = {
+    "integrations/chef-ai-api/": "chef-ai-pro-business",
     "templates/operations/": "kitchen-event-operations",
     "templates/safety/": "food-safety-allergens",
     "templates/product-plans/": "evochia-product-development",
