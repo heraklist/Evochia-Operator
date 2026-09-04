@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
+import fnmatch
+from pathlib import Path, PurePosixPath
 import subprocess
 import sys
 from zipfile import BadZipFile, ZipFile
@@ -41,14 +42,17 @@ def _zip_files(path: Path) -> dict[str, bytes]:
         }
 
 
-def _domain_ids(source: GitSource, operator_policy: dict) -> tuple[str, ...]:
+def _package_policy(source: GitSource, operator_policy: dict) -> dict:
     package_policy_path = operator_policy.get("source_package_policy")
     if not isinstance(package_policy_path, str) or not package_policy_path:
         raise ValueError("operator policy missing source_package_policy")
-    package_policy = _load_yaml_bytes(
+    return _load_yaml_bytes(
         source.read_bytes(package_policy_path),
         package_policy_path,
     )
+
+
+def _domain_ids(package_policy: dict, operator_policy: dict) -> tuple[str, ...]:
     required = package_policy.get("required_skills", [])
     orchestrator = operator_policy.get("orchestrator_skill")
     if not isinstance(required, list) or not isinstance(orchestrator, str):
@@ -62,6 +66,20 @@ def _expected_module_index(source: GitSource, domain_ids: tuple[str, ...]) -> by
         meta = parse_frontmatter(source.read_bytes(f"skills/{skill_id}/SKILL.md"))
         descriptors.append(ModuleDescriptor(meta["name"], meta["description"]))
     return render_module_index(descriptors)
+
+
+def _manifest_rows(manifest: dict, issues: list[str]) -> list[dict]:
+    rows = manifest.get("files", [])
+    if not isinstance(rows, list):
+        issues.append("manifest files must be a list")
+        return []
+    valid_rows: list[dict] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            issues.append("manifest contains invalid file entry")
+            continue
+        valid_rows.append(row)
+    return valid_rows
 
 
 def _validate_manifest(files: dict[str, bytes], source: GitSource, issues: list[str]) -> dict:
@@ -87,10 +105,7 @@ def _validate_manifest(files: dict[str, bytes], source: GitSource, issues: list[
     if manifest.get("source_version") != expected_version:
         issues.append("manifest source_version differs from Git source VERSION")
 
-    for row in manifest.get("files", []):
-        if not isinstance(row, dict):
-            issues.append("manifest contains invalid file entry")
-            continue
+    for row in _manifest_rows(manifest, issues):
         projected_path = row.get("projected_path")
         if not isinstance(projected_path, str) or not projected_path:
             issues.append("manifest file entry missing projected_path")
@@ -134,6 +149,128 @@ def _validate_manifest(files: dict[str, bytes], source: GitSource, issues: list[
                     issues.append("builder runtime_sha256 differs from committed builder")
 
     return manifest
+
+
+def _validate_closed_world_inventory(files: dict[str, bytes], manifest: dict, issues: list[str]) -> None:
+    rows = _manifest_rows(manifest, issues)
+    projected_paths = [row.get("projected_path") for row in rows if isinstance(row.get("projected_path"), str)]
+    if len(projected_paths) != len(set(projected_paths)):
+        issues.append("manifest contains duplicate projected_path entries")
+
+    declared = set(projected_paths)
+    actual = set(files) - {MANIFEST_PATH}
+    for path in sorted(actual - declared):
+        issues.append(f"artifact file absent from manifest inventory: {path}")
+    for path in sorted(declared - actual):
+        issues.append(f"manifest inventory file absent from artifact: {path}")
+
+
+def _validate_topology(files: dict[str, bytes], domain_ids: tuple[str, ...], issues: list[str]) -> None:
+    skill_paths = sorted(
+        path
+        for path in files
+        if path == "SKILL.md" or path.endswith("/SKILL.md")
+    )
+    if skill_paths != ["SKILL.md"]:
+        issues.append(f"operator artifact must contain exactly one root SKILL.md, found: {skill_paths}")
+
+    expected_modules = {f"skills/{skill_id}/MODULE.md" for skill_id in domain_ids}
+    actual_modules = {path for path in files if path.endswith("/MODULE.md")}
+    missing = sorted(expected_modules - actual_modules)
+    unexpected = sorted(actual_modules - expected_modules)
+    if missing:
+        issues.append(f"expected operator modules missing: {missing}")
+    if unexpected:
+        issues.append(f"unexpected operator modules present: {unexpected}")
+    if len(actual_modules) != len(expected_modules):
+        issues.append(
+            f"operator module count mismatch: expected {len(expected_modules)}, found {len(actual_modules)}"
+        )
+
+
+def _validate_projection_paths(
+    manifest: dict,
+    operator_policy: dict,
+    domain_ids: tuple[str, ...],
+    issues: list[str],
+) -> None:
+    template = operator_policy.get("template")
+    icon = operator_policy.get("icon") or {}
+    icon_source = icon.get("source_path") if isinstance(icon, dict) else None
+    icon_artifact = icon.get("artifact_path") if isinstance(icon, dict) else None
+
+    explicit_projections: dict[str, tuple[str, str]] = {}
+    if isinstance(template, str):
+        explicit_projections[template] = ("SKILL.md", "TEMPLATE_EXACT_COPY")
+    for skill_id in domain_ids:
+        explicit_projections[f"skills/{skill_id}/SKILL.md"] = (
+            f"skills/{skill_id}/MODULE.md",
+            "EXACT_BYTE_COPY",
+        )
+    if isinstance(icon_source, str) and isinstance(icon_artifact, str):
+        explicit_projections[icon_source] = (icon_artifact, "RENAMED_EXACT_BYTE_COPY")
+
+    for row in _manifest_rows(manifest, issues):
+        source_path = row.get("source_path")
+        projected_path = row.get("projected_path")
+        relation = row.get("relation")
+        if not isinstance(source_path, str) or not source_path:
+            continue
+        if not isinstance(projected_path, str) or not projected_path:
+            continue
+
+        explicit = explicit_projections.get(source_path)
+        if explicit is not None:
+            expected_path, expected_relation = explicit
+            if projected_path != expected_path or relation != expected_relation:
+                issues.append(
+                    f"invalid explicit projection {source_path}: expected {expected_path} ({expected_relation})"
+                )
+            continue
+
+        if projected_path != source_path:
+            issues.append(
+                f"source-derived runtime resource moved from canonical path: {source_path} -> {projected_path}"
+            )
+        if relation != "EXACT_BYTE_COPY":
+            issues.append(f"canonical-path source projection has unexpected relation: {projected_path}")
+
+
+def _is_forbidden_path(path: str, patterns: list[str], exceptions: set[str]) -> bool:
+    rel = PurePosixPath(path)
+    if path in exceptions or rel.name in exceptions:
+        return False
+    for pattern in patterns:
+        if not isinstance(pattern, str):
+            continue
+        if pattern.startswith("*."):
+            if fnmatch.fnmatch(rel.name, pattern):
+                return True
+        elif pattern in rel.parts or rel.name == pattern:
+            return True
+    return False
+
+
+def _validate_package_restrictions(files: dict[str, bytes], package_policy: dict, issues: list[str]) -> None:
+    patterns = package_policy.get("forbidden_patterns", [])
+    if not isinstance(patterns, list):
+        patterns = []
+    exceptions_raw = package_policy.get("allowed_exception_files", [])
+    exceptions = set(exceptions_raw) if isinstance(exceptions_raw, list) else set()
+
+    for path in sorted(files):
+        if _is_forbidden_path(path, patterns, exceptions):
+            issues.append(f"forbidden package file: {path}")
+
+    if package_policy.get("font_binaries_in_package") is False:
+        for path in sorted(files):
+            if PurePosixPath(path).suffix.lower() in {".ttf", ".otf", ".woff", ".woff2"}:
+                issues.append(f"font binary in operator package: {path}")
+
+    if package_policy.get("backend_source_in_package") is False:
+        for path in sorted(files):
+            if path == "backend" or path.startswith("backend/"):
+                issues.append(f"backend source in operator package: {path}")
 
 
 def _artifact_resolves_path(files: dict[str, bytes], ref: str) -> bool:
@@ -180,15 +317,24 @@ def validate_operator_artifact(
             source.read_bytes("release/operator/package_policy.yaml"),
             "release/operator/package_policy.yaml",
         )
-        domain_ids = _domain_ids(source, operator_policy)
+        package_policy = _package_policy(source, operator_policy)
+        domain_ids = _domain_ids(package_policy, operator_policy)
     except (subprocess.CalledProcessError, UnicodeDecodeError, ValueError, yaml.YAMLError) as exc:
         return [f"canonical operator policy unavailable: {exc}"]
 
     manifest = _validate_manifest(files, source, issues)
+    if manifest:
+        _validate_closed_world_inventory(files, manifest, issues)
+        _validate_projection_paths(manifest, operator_policy, domain_ids, issues)
+
+    _validate_topology(files, domain_ids, issues)
+    _validate_package_restrictions(files, package_policy, issues)
 
     expected_template = source.read_bytes(operator_policy["template"])
     if files.get("SKILL.md") != expected_template:
         issues.append("operator root SKILL.md differs from canonical template")
+    if manifest and manifest.get("root_template_sha256") != sha256_bytes(expected_template):
+        issues.append("manifest root_template_sha256 differs from canonical source template")
 
     routing_path = operator_policy["routing"]
     if files.get(routing_path) != source.read_bytes(routing_path):
