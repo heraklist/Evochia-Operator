@@ -18,7 +18,16 @@ artifacts:
       - final_fee
     commercial_terms_authority: approved_evochia_policy_only
     historical_proposal_prices_as_current_policy: false
-    forbidden_internal_fields: [internal_margin, opportunity_cost, supplier_comparison, hidden_cost_basis, internal_assumptions]
+    forbidden_internal_fields:
+      - uncollected_cancellation_balance
+      - internal_margin
+      - opportunity_cost
+      - supplier_comparison
+      - hidden_cost_basis
+      - internal_assumptions
+      - owner_review_reason
+      - classification_evidence
+      - internal_allocation_notes
   client_menu:
     audience: CLIENT_SAFE
     source: approved_menu_projection
@@ -44,3 +53,5 @@ confidentiality:
   remove_internal_appendices: true
   remove_supplier_evidence: true
   remove_hidden_economics: true
+  projection_before_rendering: true
+  uncollected_cancellation_balance_requires_explicit_owner_collection_authorization: true

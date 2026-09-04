@@ -17,19 +17,19 @@ policies:
     source_class_when_approved: canonical_current_data
     approved_by: Evochia Owner
     effective_date: '2026-09-03'
-    approval_reference: owner-approval-2026-09-03-phase13.2
+    approval_reference: owner-approval-2026-09-03-phase13.3
   commercial_policy.md:
-    status: PARTIALLY_APPROVED
+    status: APPROVED
     source_class_when_approved: canonical_policy
     approved_by: Evochia Owner
     effective_date: '2026-09-03'
-    approval_reference: owner-approval-2026-09-03-phase13.2
+    approval_reference: owner-approval-2026-09-03-phase13.3
   current_rates.md:
     status: PARTIALLY_APPROVED
     source_class_when_approved: canonical_current_data
     approved_by: Evochia Owner
     effective_date: '2026-09-03'
-    approval_reference: owner-approval-2026-09-03-phase13.2
+    approval_reference: owner-approval-2026-09-03-phase13.3
   staffing_policy.md:
     status: PARTIALLY_APPROVED
     source_class_when_approved: canonical_policy
@@ -41,10 +41,12 @@ policies:
     source_class_when_approved: canonical_policy
     approved_by: Evochia Owner
     effective_date: '2026-09-03'
-    approval_reference: owner-approval-2026-09-03-phase13.2
+    approval_reference: owner-approval-2026-09-03-phase13.3
 rules:
   - PARTIALLY_APPROVED or APPROVED status requires all approval metadata fields
   - document Policy status must match this contract
+  - row closure must be established before any file-level status promotion
+  - APPROVED file status requires no actual OPEN or NEEDS_OWNER_APPROVAL rows in that policy body
   - file-level partial approval never promotes rows explicitly marked OPEN or NEEDS_OWNER_APPROVAL
   - historical proposal evidence never gains current authority through approval of a different policy file
   - current rates approval does not convert historical proposal rows into approved rates

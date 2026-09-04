@@ -12,7 +12,20 @@ Rendering preserves the information boundary of the source projection:
 - `OPERATIONS` may contain production, staffing, equipment, allergen and service instructions.
 - `CLIENT_SAFE` contains only approved client-facing content.
 
-A template must not transform INTERNAL fields into CLIENT-SAFE content by hiding labels or changing wording. Projection happens before rendering.
+A template must not transform INTERNAL fields into CLIENT-SAFE content by hiding labels, changing wording or inventing a client-facing label. **Projection happens before rendering.**
+
+For Evochia commercial artifacts, the following remain INTERNAL by default unless a dedicated policy explicitly authorizes the specific field for CLIENT_SAFE use:
+
+- `uncollected_cancellation_balance`;
+- internal margin and opportunity cost;
+- classification evidence;
+- owner-review rationale/deliberation;
+- internal allocation notes;
+- unsupported third-party estimates or internal supplier evidence.
+
+A renderer may not expose `uncollected_cancellation_balance` merely because an internal cancellation reconciliation contains it. A separately valid owner collection decision must exist before any authorized client collection/demand projection.
+
+This boundary does **not** prohibit client disclosure of evidenced separately chargeable third-party actual costs when the canonical Evochia policy and the specific commercial model authorize those costs. The restriction is on internal evidence/deliberation and unauthorized internal balances, not on every legitimate third-party client allocation.
 
 ## Brand preflight
 

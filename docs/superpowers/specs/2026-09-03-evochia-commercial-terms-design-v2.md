@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-03  
 **Phase:** 13.3 — Commercial Terms Completion  
-**Status:** CANONICAL SPEC CANDIDATE — AWAITING OWNER REVIEW  
+**Status:** `OWNER-APPROVED CANONICAL SPEC`  
 **Decision source:** `docs/superpowers/specs/2026-09-03-evochia-commercial-terms-decisions.md`  
 **Supersedes:** `docs/superpowers/specs/2026-09-03-evochia-commercial-terms-design.md`
 
@@ -10,7 +10,7 @@
 
 This specification defines the canonical Evochia commercial model for quotes, confirmation, payment, cancellation, postponement, scope reduction, transport verification, performance impediments, partial performance, household engagements, peak-date adjustments, legal identity and audience-safe financial projection.
 
-The decision register is the owner-decision authority for this design phase. This spec structures D-001 through D-051 but may not change their substance. Runtime authority moves to the policy files only after implementation.
+The decision register is the owner-decision authority for this design phase. This spec structures D-001 through D-053 but may not change their substance. D-052 and D-053 record the two implementation clarifications approved together with owner approval of this v2; they do not reopen the design-review cycle. Runtime authority moves to the policy files only after implementation.
 
 Core invariants:
 
@@ -583,20 +583,24 @@ The modifier never changes the controlling regime.
 
 # 13. Peak-date quote-specific adjustment
 
-There is **no global peak-date surcharge**. [D-048]
+There is **no global peak-date surcharge**. [D-048, D-052]
 
-Any quote-specific peak adjustment requires structured INTERNAL fields:
+Any quote-specific peak adjustment requires exactly these structured INTERNAL evidence fields:
 
 ```text
-peak_date_context
-adjustment_reason
-adjustment_method_or_amount
-owner_approval
-client_disclosure
-causal_overlap_check
+reason
+amount_or_method
+date_specific_basis
+costs_already_covered_elsewhere
+double_count_check
+owner_decision/reference
 ```
 
-Peak adjustment and yacht/island/remote disruption uplift may coexist only if their documented causes are genuinely distinct. The same availability/disruption cause cannot be charged twice under different labels. [D-048]
+`date_specific_basis` records why the **specific service date** itself creates scarcity, demand or availability justification for the adjustment. Geography, yacht/island status or remote disruption alone is not a positive peak-date basis.
+
+`costs_already_covered_elsewhere` inventories costs/burdens already recovered through other quote lines or uplifts. `double_count_check` must verify that the same causal burden is not recovered again through yacht/island/remote uplift or another label.
+
+Peak adjustment and yacht/island/remote disruption uplift may coexist only if their documented causes are genuinely distinct. The same availability/disruption cause cannot be charged twice under different labels. [D-052]
 
 This means "peak date" is not a generic multiplier and cannot silently stack because a date is also on an island/yacht.
 
@@ -617,9 +621,11 @@ food_and_pass_through_treatment
 travel
 billing_cycle
 termination_and_notice
-rate_review
+rate_review_and_escalation
 absence_or_non_use
 ```
+
+`rate_review_and_escalation` must define both the timing/trigger for rate review and the mechanism or rule by which the rate may change. A bare right to review with no adjustment mechanism is insufficient. [D-053]
 
 Household service is a recurring engagement model and has its **own billing/termination framework**. One-off event deposit, T-5 balance and 10/30/100 cancellation logic do not apply by default. [D-049]
 
@@ -676,7 +682,7 @@ This prohibition is not unlockable by later inference from the trade name. A fut
 - refunds/credits/reuse offsets;
 - mitigation alternatives/costs;
 - collection decision;
-- peak causal-overlap record;
+- peak date-specific basis and double-count record;
 - legal-identity resolution state.
 
 ## 16.2 CLIENT_SAFE may contain
@@ -765,11 +771,11 @@ Valid impediment exists; proposed workaround requires material incremental cash 
 
 ## S15 — Peak-date + island
 
-Quote proposes peak adjustment and island uplift -> causal-overlap check required. If both reflect same disruption/availability burden, double charge prohibited; if distinct documented causes, both may be explicitly quoted.
+Quote proposes peak adjustment and island uplift -> `date_specific_basis` and `double_count_check` required. If both reflect the same disruption/availability burden, double charge is prohibited; if the peak basis is date-specific and distinct from the documented island disruption, both may be explicitly quoted.
 
 ## S16 — Household engagement
 
-Monthly recurring household engagement -> own quote-specific scope/rate/billing/termination/absence framework -> does not inherit one-off event T-5/cancellation tiers automatically.
+Monthly recurring household engagement -> own quote-specific scope/rate/billing/termination/absence and `rate_review_and_escalation` framework -> does not inherit one-off event T-5/cancellation tiers automatically.
 
 ## S17 — Binding artifact legal identity
 
@@ -787,7 +793,7 @@ Canonical runtime authority for definitions and terms lifecycle, including confi
 
 ## `commercial_policy.md`
 
-References the terms authority; removes stale OPEN statements for closed decisions; encodes no-double-recovery/no-markup, peak causal separation and household recurring-framework boundary without duplicating all formulas.
+References the terms authority; removes stale OPEN statements for closed decisions; encodes no-double-recovery/no-markup, exact peak evidence fields, date-specific peak basis, causal separation and household recurring-framework boundary without duplicating all formulas.
 
 ## `current_rates.md`
 
@@ -908,11 +914,11 @@ At minimum, implementation must prove:
 
 ### Peak / household / legal / export
 78. no global peak surcharge.
-79. all peak structured fields required when adjustment used.
-80. peak/yacht/island causal-overlap check.
+79. all six canonical peak fields are required: `reason`, `amount_or_method`, `date_specific_basis`, `costs_already_covered_elsewhere`, `double_count_check`, `owner_decision/reference`.
+80. peak/yacht/island causal-overlap check, including positive date-specific basis.
 81. same causal burden cannot be charged twice.
 82. no global household rate card.
-83. all ten household framework fields required.
+83. all ten household framework fields required, including `rate_review_and_escalation` with both review timing and adjustment mechanism.
 84. household uses recurring billing/termination framework.
 85. event cancellation/payment rules not inherited by default.
 86. entity type fixed as sole proprietorship.
@@ -933,7 +939,7 @@ At minimum, implementation must prove:
 99. policy-state contract matches runtime files.
 100. release-readiness notes match implemented Phase 13.3 state.
 
-[D-034, D-051]
+[D-034, D-051, D-052, D-053]
 
 ---
 
@@ -942,7 +948,7 @@ At minimum, implementation must prove:
 Phase 13.3 is not complete merely because this spec exists. Completion requires:
 
 1. owner approval of this v2 spec;
-2. an implementation plan derived from this v2 spec and D-001–D-051;
+2. an implementation plan derived from this v2 spec and D-001–D-053;
 3. TDD implementation of runtime policies/contracts/tests;
 4. cross-file stale-OPEN reconciliation;
 5. green validation/release gates;

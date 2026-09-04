@@ -45,3 +45,18 @@ cases:
       canonical_visual_reference: verified_pdf_if_available
     must_not:
       claim_final_pixel_identity: true
+  - id: phase13_3_client_safe_uncollected_balance_guard
+    input: internal cancellation reconciliation containing an uncollected cancellation balance with no owner collection decision
+    expected:
+      artifact_type: proposal
+      audience: CLIENT_SAFE
+      uncollected_cancellation_balance_exposed: false
+    must_not:
+      imply_uncollected_internal_balance_is_client_debt: true
+  - id: phase13_3_binding_identity_fail_closed
+    input: binding Evochia client document request with unresolved required legal particulars
+    expected:
+      binding_document_generated: false
+      identity_gate: fail_closed
+    must_not:
+      characterize_evochia_as_company_or_group: true

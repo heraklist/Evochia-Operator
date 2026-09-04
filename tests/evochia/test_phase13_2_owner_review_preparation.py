@@ -85,10 +85,14 @@ def test_terms_and_routing_allow_provisional_quote_but_gate_final_acceptance():
     routing = yaml.safe_load(read(ROUTING))
     assert "TRANSPORT_UNVERIFIED" in terms
     assert "before final acceptance" in terms
-    assert "written acceptance + deposit" in terms
+    assert "written acceptance" in terms
+    assert "CONFIRMATION_PAYMENT" in terms
 
     route = next(r for r in routing["routes"] if r["route_id"] == "client_safe_proposal")
-    assert route["commercial_terms_policy"] == "per_quote_explicit_material_terms"
+    assert route["commercial_terms_policy"] in {
+        "per_quote_explicit_material_terms",
+        "canonical_evochia_terms_with_explicit_overrides",
+    }
     assert "unresolved_safety_conflict" in route["blockers"]
     assert "unapproved_material_commercial_terms" not in route["blockers"]
 
