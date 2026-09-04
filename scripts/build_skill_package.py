@@ -6,17 +6,18 @@ import argparse
 from dataclasses import dataclass
 from pathlib import Path
 import sys
-from typing import Iterable
 
 import yaml
 
 try:
     from scripts.operator_support.contract_paths import extract_contract_paths
+    from scripts.operator_support.contract_scope import operator_contract_paths
     from scripts.operator_support.deterministic_zip import ArchiveEntry, write_deterministic_zip
     from scripts.operator_support.git_source import GitEntry, GitSource, sha256_bytes
     from scripts.operator_support.module_index import ModuleDescriptor, parse_frontmatter, render_module_index
 except ModuleNotFoundError:  # direct: python scripts/build_skill_package.py
     from operator_support.contract_paths import extract_contract_paths
+    from operator_support.contract_scope import operator_contract_paths
     from operator_support.deterministic_zip import ArchiveEntry, write_deterministic_zip
     from operator_support.git_source import GitEntry, GitSource, sha256_bytes
     from operator_support.module_index import ModuleDescriptor, parse_frontmatter, render_module_index
@@ -115,22 +116,20 @@ def _resolve_runtime_reference(
     source: GitSource,
     entries: dict[str, GitEntry],
     excluded_source_paths: set[str],
-) -> tuple[str, ...]:
-    """Materialize one exact backticked runtime path from committed Git objects.
+) -> None:
+    """Materialize one exact contract runtime path from committed Git objects.
 
     The extractor intentionally normalizes a trailing slash away. Exact blobs win;
     otherwise the path is treated as a directory root and all committed blobs below
-    that prefix are included. Paths already materialized/generated require no source
-    lookup. non_runtime_tooling and the remapped icon source remain excluded.
+    that prefix are included. non_runtime_tooling and the remapped icon source remain
+    excluded from ordinary path resolution.
     """
-    if ref in projections:
-        return ()
-    if ref in excluded_source_paths:
-        return ()
+    if ref in projections or ref in excluded_source_paths:
+        return
 
     if ref in entries:
         _add_source_projection(projections, source, entries, source_path=ref)
-        return (ref,)
+        return
 
     prefix = ref.rstrip("/") + "/"
     matches = tuple(
@@ -142,48 +141,35 @@ def _resolve_runtime_reference(
         raise ValueError(f"missing referenced runtime path: {ref}")
     for source_path in matches:
         _add_source_projection(projections, source, entries, source_path=source_path)
-    return matches
 
 
-def _expand_markdown_closure(
+def _expand_contract_closure(
     projections: dict[str, Projection],
     *,
     source: GitSource,
     entries: dict[str, GitEntry],
     excluded_source_paths: set[str],
 ) -> None:
-    """Follow backticked repository paths to a fixed point with cycle detection."""
-    scanned_paths: set[str] = set()
+    """Resolve backticked runtime paths only from operator contract authority files."""
     visited_refs: set[str] = set()
+    for contract_path in operator_contract_paths(projections):
+        projection = projections[contract_path]
+        try:
+            text = projection.data.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise ValueError(f"operator contract is not UTF-8: {contract_path}") from exc
 
-    while True:
-        pending = [
-            projection
-            for path, projection in sorted(projections.items())
-            if path not in scanned_paths
-            and (path == "SKILL.md" or path.endswith("/MODULE.md") or path.endswith(".md"))
-        ]
-        if not pending:
-            return
-
-        for projection in pending:
-            scanned_paths.add(projection.projected_path)
-            try:
-                text = projection.data.decode("utf-8")
-            except UnicodeDecodeError as exc:
-                raise ValueError(f"runtime Markdown is not UTF-8: {projection.projected_path}") from exc
-
-            for ref in extract_contract_paths(text):
-                if ref in visited_refs:
-                    continue
-                visited_refs.add(ref)
-                _resolve_runtime_reference(
-                    ref,
-                    projections=projections,
-                    source=source,
-                    entries=entries,
-                    excluded_source_paths=excluded_source_paths,
-                )
+        for ref in extract_contract_paths(text):
+            if ref in visited_refs:
+                continue
+            visited_refs.add(ref)
+            _resolve_runtime_reference(
+                ref,
+                projections=projections,
+                source=source,
+                entries=entries,
+                excluded_source_paths=excluded_source_paths,
+            )
 
 
 def _manifest_row(projection: Projection) -> dict:
@@ -290,7 +276,6 @@ def _build_operator(source: GitSource, output_dir: Path) -> BuildResult:
     )
     _add_source_projection(projections, source, entries, source_path="VERSION")
 
-    # Entire canonical references subtree is an exact runtime projection.
     _add_source_tree(
         projections,
         source,
@@ -299,8 +284,6 @@ def _build_operator(source: GitSource, output_dir: Path) -> BuildResult:
         skip_paths=excluded_source_paths,
     )
 
-    # Each domain remains a governed source Skill, projected as MODULE.md with all
-    # skill-local resources preserved at their canonical repository paths.
     descriptors: list[ModuleDescriptor] = []
     for skill_id in domains:
         skill_source = f"skills/{skill_id}/SKILL.md"
@@ -327,7 +310,6 @@ def _build_operator(source: GitSource, output_dir: Path) -> BuildResult:
                     source_path=entry.path,
                 )
 
-    # The nested orchestrator contributes only the canonical routing contract.
     _add_source_projection(projections, source, entries, source_path=routing_path)
 
     module_index = render_module_index(descriptors)
@@ -338,8 +320,6 @@ def _build_operator(source: GitSource, output_dir: Path) -> BuildResult:
         relation=MANIFEST_RELATION_GENERATED,
     )
 
-    # Explicit runtime ownership is a seed, not a second registry. non_runtime_tooling
-    # is deliberately omitted from the artifact.
     for item in ownership.get("resource_roots", []):
         if not isinstance(item, dict) or not isinstance(item.get("path"), str):
             raise ValueError("invalid runtime resource root declaration")
@@ -360,16 +340,15 @@ def _build_operator(source: GitSource, output_dir: Path) -> BuildResult:
             raise ValueError(f"runtime resource conflicts with non-runtime exclusion: {path}")
         _add_source_projection(projections, source, entries, source_path=path)
 
-    # Contract references are resolved strictly from committed Git objects to a
-    # fixed point. This is intentionally backtick-only, matching contract_paths.py.
-    _expand_markdown_closure(
+    # Only root SKILL.md and projected MODULE.md files create path obligations.
+    # Packaged references, evidence and READMEs are content, not closure authority.
+    _expand_contract_closure(
         projections,
         source=source,
         entries=entries,
         excluded_source_paths=excluded_source_paths,
     )
 
-    # The brand mark is the sole explicit source-path remap.
     _add_source_projection(
         projections,
         source,

@@ -12,10 +12,12 @@ import yaml
 
 try:
     from scripts.operator_support.contract_paths import extract_contract_paths
+    from scripts.operator_support.contract_scope import operator_contract_paths
     from scripts.operator_support.git_source import GitSource, sha256_bytes
     from scripts.operator_support.module_index import ModuleDescriptor, parse_frontmatter, render_module_index
 except ModuleNotFoundError:  # direct: python scripts/validate_operator_package.py
     from operator_support.contract_paths import extract_contract_paths
+    from operator_support.contract_scope import operator_contract_paths
     from operator_support.git_source import GitSource, sha256_bytes
     from operator_support.module_index import ModuleDescriptor, parse_frontmatter, render_module_index
 
@@ -134,24 +136,22 @@ def _validate_manifest(files: dict[str, bytes], source: GitSource, issues: list[
     return manifest
 
 
+def _artifact_resolves_path(files: dict[str, bytes], ref: str) -> bool:
+    if ref in files:
+        return True
+    prefix = ref.rstrip("/") + "/"
+    return any(path.startswith(prefix) for path in files)
+
+
 def _validate_exact_contract_paths(files: dict[str, bytes], issues: list[str]) -> None:
-    scan_paths = [
-        path
-        for path in files
-        if path == "SKILL.md"
-        or path.endswith("/MODULE.md")
-        or (path.startswith("references/") and path.endswith(".md"))
-    ]
-    for contract_path in sorted(scan_paths):
+    for contract_path in operator_contract_paths(files):
         try:
             text = files[contract_path].decode("utf-8")
         except UnicodeDecodeError:
             issues.append(f"contract is not UTF-8: {contract_path}")
             continue
         for ref in extract_contract_paths(text):
-            # Icon source paths are validated by source blob identity and projected bytes,
-            # not by artifact path resolution. They are not behavioral contract paths.
-            if ref not in files:
+            if not _artifact_resolves_path(files, ref):
                 issues.append(f"broken referenced path {ref}")
 
 
