@@ -292,7 +292,7 @@ def test_requires_exact_written_contract_path_even_when_same_bytes_exist_elsewhe
 
 def test_rejects_generated_index_and_manifest_tampered_together(tmp_path):
     fixture = make_valid_artifact(tmp_path)
-    tampered = b"<!-- GENERATED — DO NOT EDIT -->\n# Internal Capability Index\n\n- `alpha`\n  Forged.\n"
+    tampered = render_module_index([ModuleDescriptor("alpha", "Forged.")])
 
     def mutate(files: dict[str, bytes]) -> None:
         files["references/module_index.md"] = tampered
