@@ -14,7 +14,8 @@ Use for every Chef AI Pro Business request before domain work. Simple requests m
 - `references/source_registry.yaml` is the source-authority and supersession contract.
 - Shared doctrine under `references/` remains authoritative for migrated legacy behavior.
 - Routing contract: `skills/chef-ai-pro-business/references/routing.yaml`.
-- Controlled external execution: `integrations/chef-ai-api/execution_policy.yaml`.
+- Chef AI API integration-contract root: `integrations/chef-ai-api/`.
+- Controlled external execution within that contract root: `integrations/chef-ai-api/execution_policy.yaml`.
 - FnB Central persistence boundary and structured handoff: `integrations/fnb-central/handoff_contract.md`.
 - Safety authority outranks creativity, commercial optimization and presentation.
 
