@@ -46,7 +46,10 @@ completion_evidence:
   inventory_file_count: 9
   canonical_python_files_exact: true
   checksum_verifier: scripts/verify_themart_source_provenance.py
+  supported_output_boundary: fail_closed_recovery_and_formula_scan
+  historical_raw_spreadsheet_export: unsupported_internal_staging_only
 compatibility_artifacts:
   - scripts/supplier-providers/themart/provider_adapter.py
   - scripts/supplier-providers/themart/requirements-runtime.txt
+  - scripts/supplier-providers/themart/dependency_evidence.yaml
   - scripts/supplier-providers/themart/RUNBOOK_GR.md

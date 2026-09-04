@@ -82,7 +82,7 @@ def test_capture_module_receives_only_resolved_external_runtime_paths(tmp_path):
     adapter.configure_capture_module(capture_module, paths)
 
     assert capture_module.USER_DATA_DIR == paths.browser_profile
-    assert capture_module.OUT_ROOT == paths.output_root
+    assert capture_module.OUT_ROOT == paths.output_root / ".themart_capture_staging"
 
 
 def test_prepare_capture_module_configures_the_exact_source_without_launching_browser(tmp_path):
@@ -95,7 +95,7 @@ def test_prepare_capture_module_configures_the_exact_source_without_launching_br
 
     assert Path(capture_module.__file__).resolve() == CAPTURE.resolve()
     assert capture_module.USER_DATA_DIR == paths.browser_profile
-    assert capture_module.OUT_ROOT == paths.output_root
+    assert capture_module.OUT_ROOT == paths.output_root / ".themart_capture_staging"
 
 
 def test_complete_recovered_row_normalizes_to_the_existing_snapshot_schema():

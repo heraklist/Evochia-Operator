@@ -16,7 +16,7 @@ blockers:
     closed_at: '2026-09-04'
     planned_executor: CODEX
     execution_mode: EXACT_SOURCE_MIGRATION
-    reason: exact allowlisted provider source bytes, derived repository-compatible tests, provenance, compatibility adapter and regression gates are verified
+    reason: exact allowlisted provider source bytes, derived repository-compatible tests, provenance, fail-closed hardened output boundary and regression gates are verified
     prohibition: do_not_reconstruct_collector_or_extractor_from_memory
     expected_artifacts:
       - themart_capture.py
@@ -27,6 +27,9 @@ blockers:
       provenance_manifest: scripts/supplier-providers/themart/source_provenance.yaml
       checksum_verifier: scripts/verify_themart_source_provenance.py
       canonical_python_files_byte_identical: true
+      supported_output_boundary: PASS
+      spreadsheet_formula_injection_protection: PASS
+      historical_raw_spreadsheet_export: UNSUPPORTED_INTERNAL_STAGING_ONLY
       focused_themart_tests: PASS
       full_pytest: PASS
       static_eval_harness: PASS

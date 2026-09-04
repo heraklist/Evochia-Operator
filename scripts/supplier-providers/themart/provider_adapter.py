@@ -11,20 +11,40 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import sys
 from typing import Mapping, NamedTuple
 
 
 FRESHNESS_STATES = {"CURRENT_SNAPSHOT", "STALE", "UNKNOWN"}
+DANGEROUS_SPREADSHEET_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
+STAGING_DIRECTORY = ".themart_capture_staging"
 
 
 class ProviderConfigurationError(ValueError):
     """Raised when local-only provider configuration crosses repository boundaries."""
 
 
+class UnsafeSpreadsheetError(RuntimeError):
+    """Raised when a candidate supported spreadsheet contains an unsafe cell."""
+
+
+class SupportedOutputError(RuntimeError):
+    """Raised when capture output cannot cross the hardened publication boundary."""
+
+
 class RuntimePaths(NamedTuple):
     browser_profile: Path
     output_root: Path
+
+
+class SupportedCapture(NamedTuple):
+    capture_dir: Path
+    products_csv: Path
+    products_xlsx: Path
+    diagnostics_csv: Path
+    snapshot_jsonl: Path
+    data_zip: Path
 
 
 def _is_within(path: Path, root: Path) -> bool:
@@ -74,7 +94,7 @@ def configure_capture_module(capture_module: object, paths: RuntimePaths) -> Non
     """Apply validated local paths to the untouched exact-source capture module."""
 
     setattr(capture_module, "USER_DATA_DIR", paths.browser_profile)
-    setattr(capture_module, "OUT_ROOT", paths.output_root)
+    setattr(capture_module, "OUT_ROOT", paths.output_root / STAGING_DIRECTORY)
 
 
 def prepare_capture_module(repository_root: Path | str, environ: Mapping[str, str]):
@@ -89,6 +109,127 @@ def prepare_capture_module(repository_root: Path | str, environ: Mapping[str, st
     spec.loader.exec_module(capture_module)
     configure_capture_module(capture_module, paths)
     return capture_module, paths
+
+
+def _load_exact_recovery_module():
+    exact_source = Path(__file__).with_name("themart_extract_existing_html.py")
+    spec = importlib.util.spec_from_file_location("themart_exact_recovery", exact_source)
+    if spec is None or spec.loader is None:
+        raise SupportedOutputError("cannot load exact The Mart recovery source")
+    recovery_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(recovery_module)
+    return recovery_module
+
+
+def _unsafe_spreadsheet_value(value: object) -> bool:
+    return isinstance(value, str) and value.startswith(DANGEROUS_SPREADSHEET_PREFIXES)
+
+
+def verify_supported_spreadsheets(paths: list[Path] | tuple[Path, ...]) -> None:
+    """Fail closed if any supported CSV/XLSX cell can be interpreted as a formula."""
+
+    from openpyxl import load_workbook
+
+    for path in paths:
+        candidate = Path(path)
+        if not candidate.is_file():
+            raise UnsafeSpreadsheetError(f"supported spreadsheet is missing: {candidate.name}")
+        if candidate.suffix.lower() == ".csv":
+            with candidate.open("r", encoding="utf-8-sig", newline="") as handle:
+                for row_number, row in enumerate(csv.reader(handle), start=1):
+                    for column_number, value in enumerate(row, start=1):
+                        if _unsafe_spreadsheet_value(value):
+                            raise UnsafeSpreadsheetError(
+                                f"unsafe spreadsheet cell: {candidate.name}:{row_number}:{column_number}"
+                            )
+        elif candidate.suffix.lower() == ".xlsx":
+            workbook = load_workbook(candidate, read_only=True, data_only=False)
+            try:
+                for sheet in workbook.worksheets:
+                    for row in sheet.iter_rows():
+                        for cell in row:
+                            if _unsafe_spreadsheet_value(cell.value):
+                                raise UnsafeSpreadsheetError(
+                                    f"unsafe spreadsheet cell: {candidate.name}:{sheet.title}:{cell.coordinate}"
+                                )
+            finally:
+                workbook.close()
+        else:
+            raise UnsafeSpreadsheetError(f"unsupported spreadsheet type: {candidate.name}")
+
+
+def run_supported_capture(capture_module: object, paths: RuntimePaths) -> SupportedCapture:
+    """Capture into private staging and publish only verified hardened outputs."""
+
+    configure_capture_module(capture_module, paths)
+    staging_root = paths.output_root / STAGING_DIRECTORY
+    if staging_root.exists() and any(staging_root.iterdir()):
+        raise SupportedOutputError("capture staging is not empty; refusing ambiguous publication")
+    staging_root.mkdir(parents=True, exist_ok=True)
+
+    asyncio.run(capture_module.main())
+    capture_dirs = sorted(
+        path for path in staging_root.glob("themart_capture_*") if path.is_dir()
+    )
+    if len(capture_dirs) != 1:
+        raise SupportedOutputError(
+            f"expected exactly one staged capture directory, found {len(capture_dirs)}"
+        )
+    staged_capture = capture_dirs[0]
+
+    recovery = _load_exact_recovery_module()
+    try:
+        recovery.main(["--strict", str(staged_capture)])
+    except SystemExit as exc:
+        if exc.code not in (None, 0):
+            raise SupportedOutputError(f"hardened recovery failed with exit code {exc.code}") from exc
+
+    staged_indexes = staged_capture / "indexes"
+    products_csv = staged_indexes / "products_raw_recovered.csv"
+    products_xlsx = staged_indexes / "products_raw_recovered.xlsx"
+    diagnostics_csv = staged_indexes / "extraction_diagnostics.csv"
+    verify_supported_spreadsheets((products_csv, products_xlsx, diagnostics_csv))
+
+    snapshot_jsonl = staged_indexes / "supplier_snapshot.jsonl"
+    normalize_recovered_csv(
+        products_csv,
+        snapshot_jsonl,
+        freshness_state="CURRENT_SNAPSHOT",
+    )
+
+    raw_indexes = (
+        staged_indexes / "products_raw.csv",
+        staged_indexes / "products_raw.xlsx",
+        staged_indexes / "captured_pages.csv",
+    )
+    for raw_path in raw_indexes:
+        raw_path.unlink(missing_ok=True)
+    (staged_capture / "capture_summary.txt").unlink(missing_ok=True)
+    (staging_root / f"{staged_capture.name}.zip").unlink(missing_ok=True)
+
+    staged_data_zip = staging_root / f"{staged_capture.name}_recovered_indexes_only.zip"
+    if not staged_data_zip.is_file():
+        raise SupportedOutputError("hardened data-only ZIP is missing")
+
+    paths.output_root.mkdir(parents=True, exist_ok=True)
+    published_capture = paths.output_root / staged_capture.name
+    published_zip = paths.output_root / staged_data_zip.name
+    if published_capture.exists() or published_zip.exists():
+        raise SupportedOutputError("supported output destination already exists")
+    shutil.move(str(staged_capture), str(published_capture))
+    shutil.move(str(staged_data_zip), str(published_zip))
+    if staging_root.exists() and not any(staging_root.iterdir()):
+        staging_root.rmdir()
+
+    published_indexes = published_capture / "indexes"
+    return SupportedCapture(
+        capture_dir=published_capture,
+        products_csv=published_indexes / products_csv.name,
+        products_xlsx=published_indexes / products_xlsx.name,
+        diagnostics_csv=published_indexes / diagnostics_csv.name,
+        snapshot_jsonl=published_indexes / snapshot_jsonl.name,
+        data_zip=published_zip,
+    )
 
 
 def _money(value: object) -> float | None:
@@ -288,8 +429,8 @@ def main(argv: list[str] | None = None, *, environ: Mapping[str, str] | None = N
         print("The Mart live capture configuration: READY")
         return 0
 
-    paths.output_root.mkdir(parents=True, exist_ok=True)
-    asyncio.run(capture_module.main())
+    result = run_supported_capture(capture_module, paths)
+    print(f"Supported hardened capture: {result.capture_dir.name}")
     return 0
 
 
