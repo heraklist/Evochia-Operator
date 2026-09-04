@@ -27,6 +27,9 @@ def test_operator_template_is_router_not_policy_monolith():
     assert "FnB Central" in text
     assert "system of record" in text.lower()
     assert "routing transcript" in text.lower()
+    assert "unknown is not safe" in text.lower()
+    assert "NEEDS_REVIEW" in text
+    assert "does not map cleanly onto a single canonical route" in text
 
 
 def test_operator_template_does_not_duplicate_rate_policy():
