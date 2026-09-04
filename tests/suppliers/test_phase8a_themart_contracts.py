@@ -38,7 +38,8 @@ def test_migration_manifest_uses_explicit_allowlist_and_denies_sensitive_archive
     denied = "\n".join(manifest["deny_patterns"]).lower()
     for token in [".browser_profile_themart", "cookies", ".venv", "__pycache__", "output", ".git"]:
         assert token in denied
-    assert manifest["exact_source_migration_state"] == "BLOCKED_PENDING_BYTE_ACCESS"
+    assert manifest["exact_source_migration_state"] == "MIGRATED_EXACT_SOURCE_VERIFIED"
+    assert manifest["provenance_manifest"] == "scripts/supplier-providers/themart/source_provenance.yaml"
     assert manifest["reconstruction_from_memory_forbidden"] is True
 
 

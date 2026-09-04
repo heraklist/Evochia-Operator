@@ -1,0 +1,82 @@
+schema_version: 1
+provider: themart
+recorded_at: '2026-09-04'
+source_root_reference: owner_local_themart_capture_tool
+path_policy: original paths are relative; absolute local machine paths are forbidden
+files:
+  - original_relative_path: themart_capture.py
+    original_byte_length: 18048
+    original_sha256: 62a14ae84897a4bc5decc673567573c22b17e9f1dd1007ad14f7e6f23cf5787d
+    repository_destination: scripts/supplier-providers/themart/themart_capture.py
+    migrated_byte_length: 18048
+    migrated_sha256: 62a14ae84897a4bc5decc673567573c22b17e9f1dd1007ad14f7e6f23cf5787d
+    migration_mode: EXACT_BYTE_COPY
+    derivation_rationale: []
+  - original_relative_path: themart_extract_existing_html.py
+    original_byte_length: 20431
+    original_sha256: 5fc4a636c75c129094d3485a761890203f15aa17d37f6679be1f830968acbc33
+    repository_destination: scripts/supplier-providers/themart/themart_extract_existing_html.py
+    migrated_byte_length: 20431
+    migrated_sha256: 5fc4a636c75c129094d3485a761890203f15aa17d37f6679be1f830968acbc33
+    migration_mode: EXACT_BYTE_COPY
+    derivation_rationale: []
+  - original_relative_path: categories.json
+    original_byte_length: 1395
+    original_sha256: 8d53cb62e069aa49262dd347fa411b93499bfeec0c8a25be2ed7a7ba892c4f31
+    repository_destination: scripts/supplier-providers/themart/categories.json
+    migrated_byte_length: 1395
+    migrated_sha256: 8d53cb62e069aa49262dd347fa411b93499bfeec0c8a25be2ed7a7ba892c4f31
+    migration_mode: EXACT_BYTE_COPY
+    derivation_rationale: []
+  - original_relative_path: requirements.txt
+    original_byte_length: 53
+    original_sha256: 47ac3b7adce44abacc2120dc99ae1f9badd024b048d6c6b21b19a8df771ee198
+    repository_destination: scripts/supplier-providers/themart/requirements.txt
+    migrated_byte_length: 53
+    migrated_sha256: 47ac3b7adce44abacc2120dc99ae1f9badd024b048d6c6b21b19a8df771ee198
+    migration_mode: EXACT_BYTE_COPY
+    derivation_rationale: []
+  - original_relative_path: run_windows.bat
+    original_byte_length: 256
+    original_sha256: 6ef919d3d861205e2b38d1e564b4ec8f8f89d3e076fb2f6ee1a0a74279b0e61e
+    repository_destination: scripts/supplier-providers/themart/run_windows.bat
+    migrated_byte_length: 256
+    migrated_sha256: 6ef919d3d861205e2b38d1e564b4ec8f8f89d3e076fb2f6ee1a0a74279b0e61e
+    migration_mode: EXACT_BYTE_COPY
+    derivation_rationale: []
+  - original_relative_path: README_GR.md
+    original_byte_length: 3321
+    original_sha256: 7e633735a4dc81f11bb0b918c7d94e13dcf9512fa3a0b317fd4cfc6844bc258b
+    repository_destination: scripts/supplier-providers/themart/README_GR.md
+    migrated_byte_length: 3321
+    migrated_sha256: 7e633735a4dc81f11bb0b918c7d94e13dcf9512fa3a0b317fd4cfc6844bc258b
+    migration_mode: EXACT_BYTE_COPY
+    derivation_rationale: []
+  - original_relative_path: README_HOTFIX_GR.md
+    original_byte_length: 3647
+    original_sha256: 2e107b6816cdecdbd67493ea661076e89fc62f6024555ad5225a77d151426a11
+    repository_destination: scripts/supplier-providers/themart/README_HOTFIX_GR.md
+    migrated_byte_length: 3647
+    migrated_sha256: 2e107b6816cdecdbd67493ea661076e89fc62f6024555ad5225a77d151426a11
+    migration_mode: EXACT_BYTE_COPY
+    derivation_rationale: []
+  - original_relative_path: tests/test_navigation.py
+    original_byte_length: 1094
+    original_sha256: 430f887de2df8be272574e809623284d0f9b82efdcfd0d90a6290e7fa7c253be
+    repository_destination: tests/suppliers/test_themart_navigation.py
+    migrated_byte_length: 1252
+    migrated_sha256: 37554554ac7c371663348ab95030d465f1650ac0144ea9389d0e840e4075be10
+    migration_mode: DERIVED_NORMALIZED_COPY
+    derivation_rationale:
+      - Relocated under the repository supplier-test structure.
+      - Added an explicit provider-directory import path; original behavioral assertion is unchanged.
+  - original_relative_path: test_recovery_extractor.py
+    original_byte_length: 2512
+    original_sha256: fc782408f823b9d22c7788d47a2e39e5b3711f7ed49bd197a185452b4ff25a03
+    repository_destination: tests/suppliers/test_themart_recovery_extractor.py
+    migrated_byte_length: 2671
+    migrated_sha256: 706c1b19c610d4e913b637c2ae1e994d46e0cd130ccd3598a2c0e3d92d42b961
+    migration_mode: DERIVED_NORMALIZED_COPY
+    derivation_rationale:
+      - Relocated under the repository supplier-test structure.
+      - Added an explicit provider-directory import path; original behavioral assertions are unchanged.
