@@ -65,7 +65,7 @@ def test_phase13_2_release_record_stays_closed_while_release_remains_blocked():
     blocker = next(b for b in readiness["blockers"] if b["id"] == "phase13_commercial_policy_owner_lock")
     assert blocker["status"] == "CLOSED"
     assert any(
-        b["id"] == "phase8b_exact_themart_source_migration" and b["status"] == "OPEN"
+        b["id"] == "openai_surface_install_scan" and b["status"] == "NOT_RUN"
         for b in readiness["blockers"]
     )
 

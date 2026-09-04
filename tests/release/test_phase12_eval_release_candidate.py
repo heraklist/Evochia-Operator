@@ -86,13 +86,13 @@ def test_package_validator_passes_repository_candidate_and_checks_skill_frontmat
     assert issues == [], issues
 
 
-def test_release_readiness_records_phase8b_and_surface_validation_as_blockers_not_completed_work():
+def test_release_readiness_closes_phase8b_but_keeps_surface_validation_blocking():
     data = yaml.safe_load(read(READINESS))
     assert data["candidate_version"] == "4.0.0-alpha.0"
     assert data["repository_candidate_status"] == "READY_FOR_FINAL_BLOCKERS"
     assert data["final_release_status"] == "BLOCKED"
     blockers = {item["id"]: item for item in data["blockers"]}
-    assert blockers["phase8b_exact_themart_source_migration"]["status"] == "OPEN"
+    assert blockers["phase8b_exact_themart_source_migration"]["status"] == "CLOSED"
     assert blockers["openai_surface_install_scan"]["status"] == "NOT_RUN"
     assert blockers["phase8b_exact_themart_source_migration"]["required_before_final_release"] is True
     assert blockers["openai_surface_install_scan"]["required_before_final_release"] is True
