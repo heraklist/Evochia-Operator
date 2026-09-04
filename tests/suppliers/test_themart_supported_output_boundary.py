@@ -214,7 +214,7 @@ def test_playwright_pin_has_audited_local_compatibility_evidence_and_no_conflict
     assert playwright["selection_rationale"].startswith("match the installed Playwright package")
     assert playwright["evidence_source"] == "owner-local themart_capture_tool virtual-environment package metadata"
     assert playwright["observed_python"] == "3.12.13"
-    assert "exact source imports playwright.sync_api" in playwright["compatibility_evidence"]
+    assert "exact source imports playwright.async_api" in playwright["compatibility_evidence"]
     assert playwright["relationship_to_original_bytes"] == "COMPANION_DEPENDENCY_NOT_PART_OF_EXACT_SOURCE"
 
     declarations = []

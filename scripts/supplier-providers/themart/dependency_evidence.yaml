@@ -6,7 +6,7 @@ playwright:
   evidence_source: owner-local themart_capture_tool virtual-environment package metadata
   evidence_command: python -m pip show playwright
   observed_python: 3.12.13
-  compatibility_evidence: exact source imports playwright.sync_api; the owner-local Python 3.12.13 environment exposes that API at the pinned version
+  compatibility_evidence: exact source imports playwright.async_api; the audited owner-local Python 3.12.13 environment with playwright==1.49.1 exposes that API successfully
   observed_at: '2026-09-04'
   relationship_to_original_bytes: COMPANION_DEPENDENCY_NOT_PART_OF_EXACT_SOURCE
   original_requirements_sha256: 47ac3b7adce44abacc2120dc99ae1f9badd024b048d6c6b21b19a8df771ee198
