@@ -1,6 +1,6 @@
 # Evochia Operator Dual-Build Design
 
-**Status:** WRITTEN SPEC — awaiting owner review  
+**Status:** WRITTEN SPEC — awaiting owner re-review  
 **Date:** 2026-09-04  
 **Canonical starting commit:** `9cab252e8757b35f6501b178c06943b0e82b398a`  
 **Public operator name:** `evochia-operator`  
@@ -310,11 +310,22 @@ They must share the same canonical domain bytes, policies, routing, data, schema
 
 ## 13. Surface install preconditions
 
-### 13.1 Existing multi-skill evidence
+### 13.1 Conscious sequencing waiver and open release blocker
 
-The frozen `9cab252` artifact was uploaded successfully and the ChatGPT Skills surface displayed 12 Skills. This is preserved as pre-operator baseline evidence; A1 and A2 transcripts are also retained as diagnostic baseline evidence.
+The frozen `9cab252` artifact was uploaded successfully and the ChatGPT Skills surface displayed 12 Skills. This is preserved as pre-operator installation evidence; A1 and A2 transcripts are retained as diagnostic behavioral evidence.
 
-A complete pre-builder A→H run is no longer required because the source Skills remain unchanged and the definitive comparison will use both projections from the same post-builder commit.
+The originally approved sequencing gate required a complete pre-builder A→H run before any builder implementation. The owner has chosen the speed-oriented exception: builder implementation may begin before that full pre-builder behavioral run. This is a **conscious sequencing waiver**, not a finding that the behavioral baseline is unnecessary.
+
+Consequences of that waiver are explicit and mandatory:
+
+- `openai_surface_install_scan` remains **OPEN and release-blocking** after builder implementation starts.
+- The successful upload, 12 visible Skills, and A1/A2 evidence do **not** close the behavioral surface blocker.
+- The blocker MUST be closed by a **complete MULTI(C1) A→H surface run** from the post-builder commit `C1`; sampling is not sufficient.
+- The complete MULTI(C1) run must finish before operator acceptance, release-readiness advancement, or any production-ready claim.
+- If MULTI(C1) exposes a failure, especially in Block F, treat it first as a multi-skill baseline failure. Do not attribute it to the operator projection without differential evidence.
+- The OPERATOR(C1) run cannot substitute for the mandatory MULTI(C1) A→H run.
+
+This waiver changes execution order only. It does not remove or weaken the release blocker.
 
 ### 13.2 Operator install precondition
 
@@ -340,11 +351,20 @@ If internal module names appear as Skills, the operator projection fails its ins
 
 ## 14. Differential behavioral evaluation
 
-After building both projections from the same post-builder commit, run the same behavioral suite against both forms.
+After building both projections from the same post-builder commit, the **primary differential is router-to-router**.
 
-For the multi-skill build, cases use the appropriate explicit public domain Skill where platform-level isolation is part of the current behavior. Orchestrator-specific cases use `chef-ai-pro-business`.
+For every primary differential case, preserve the same user task text, conversation structure, model/product configuration, tool state and timing as closely as practical. The intended comparison is:
 
-For the operator build, the same user task is sent through `@evochia-operator` and internal routing must preserve equivalent observable behavior.
+```text
+MULTI(C1):    @chef-ai-pro-business <same task>
+OPERATOR(C1): @evochia-operator     <same task>
+```
+
+The only intended experimental variable is the deployment/router projection: public orchestrator with sibling Skills versus public operator with internal MODULE projections.
+
+The multi-skill leg MUST use `@chef-ai-pro-business` for the primary comparison, including B1. Direct invocation of a domain Skill such as `@recipe-engineering` is not a substitute for the primary multi result because that would compare platform-level domain selection with model-mediated operator routing.
+
+Direct-domain Skill runs MAY be recorded as a **third, non-gating diagnostic leg** when platform-level isolation itself is useful to inspect. Such runs must be labeled `DIRECT`, kept separate from the main differential, and must not be used to calculate the acceptance thresholds below.
 
 Primary sentinels:
 
@@ -367,11 +387,12 @@ Any Block F safety failure remains release-blocking without waiver.
 
 The differential report records, per case:
 
-- multi verdict,
+- multi-orchestrator verdict,
 - operator verdict,
 - severity delta,
 - observable behavioral delta,
-- transcript references.
+- transcript references,
+- optional `DIRECT` diagnostic verdict/transcript when one was run.
 
 ## 15. Scope exclusions
 
@@ -397,5 +418,5 @@ The design succeeds when:
 4. All canonical paths and resource references resolve without rewriting.
 5. Provenance is independently anchored to Git objects.
 6. The ChatGPT surface exposes only `@evochia-operator` for the operator artifact, with the approved Evochia icon when binding is supported/configured.
-7. Differential behavioral evaluation meets the pre-committed thresholds.
+7. The mandatory complete MULTI(C1) A→H run closes the still-open surface blocker, and the primary orchestrator-vs-operator differential meets the pre-committed thresholds.
 8. If operator behavior regresses materially, the source architecture remains intact and the operator target can be rejected or revised without undoing the canonical Skill suite.
