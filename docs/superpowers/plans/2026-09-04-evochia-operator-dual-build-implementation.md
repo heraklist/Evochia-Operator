@@ -4,81 +4,72 @@
 
 **Goal:** Add a deterministic dual-build system that preserves the canonical 12-Skill source architecture while producing both a 12-public-Skill multi artifact and a one-public-Skill `@evochia-operator` artifact with 11 exact-byte internal module projections.
 
-**Architecture:** The builder reads only committed Git objects from an explicit source commit. The multi target materializes the canonical Git tree; the operator target replaces the public source Skill surface with one source-controlled operator template, projects the 11 domain `SKILL.md` files byte-for-byte as `skills/<id>/MODULE.md`, preserves canonical resource paths, generates only `references/module_index.md` and provenance metadata, and writes a deterministic ZIP. A dedicated source-anchored validator checks artifact bytes against the actual Git objects at the declared source commit.
+**Architecture:** The builder reads committed Git objects from an explicit source commit. The multi target materializes the canonical Git tree; the operator target uses one source-controlled root template, projects the 11 domain `SKILL.md` files byte-for-byte as `skills/<id>/MODULE.md`, preserves canonical paths, generates only the module index and provenance metadata, and writes a deterministic ZIP. A dedicated source-anchored validator independently compares artifact bytes and manifest hashes with the real Git objects at the declared source commit.
 
-**Tech Stack:** Python 3.12, standard-library `subprocess`, `hashlib`, `zipfile`, `pathlib`, `dataclasses`, `re`; PyYAML 6.x; pytest 9.x; Git CLI; existing repository validators and GitHub Actions.
+**Tech Stack:** Python 3.12; standard-library `subprocess`, `hashlib`, `zipfile`, `pathlib`, `dataclasses`, `re`; PyYAML 6.x; pytest 9.x; Git CLI; existing repository validators and GitHub Actions.
 
 **Spec:** `docs/superpowers/specs/2026-09-04-evochia-operator-dual-build-design.md`
 
 ## Global Constraints
 
-- Canonical starting commit for the design: `9cab252e8757b35f6501b178c06943b0e82b398a`.
-- Public operator ID: `evochia-operator`; public invocation target: `@evochia-operator`.
-- The 12 existing source `skills/*/SKILL.md` contracts MUST NOT be semantically modified by this implementation.
-- `skills/chef-ai-pro-business/references/routing.yaml` MUST remain canonical and byte-identical when projected.
-- `references/source_registry.yaml` remains the only canonical source-authority precedence contract; do not add another precedence list.
-- Domain projection path is exactly `skills/<id>/SKILL.md` → `skills/<id>/MODULE.md` with relation `EXACT_BYTE_COPY`; frontmatter and body remain byte-identical.
-- `references/module_index.md` is generated from source frontmatter and is added to, never substituted for, the complete canonical `references/` subtree.
-- The operator root `SKILL.md` comes from source-controlled `release/operator/SKILL.template.md`; the builder MUST NOT embed the behavioral prompt as a Python string.
-- Builder inputs are explicit full Git commit SHAs and committed Git blobs; dirty working-tree bytes MUST NOT affect output.
-- Supported build targets are exactly `multi` and `operator`.
-- Output filenames are `chef-ai-pro-business-<version>-<shortsha>-multi.zip` and `evochia-operator-<version>-<shortsha>-operator.zip`.
-- Deterministic ZIP output requires stable path ordering, timestamps, compression settings, Git-derived executable mode normalization, separators, filename encoding and archive metadata.
-- Release-grade operator validation requires `--artifact`, `--source-repo`, and `--source-commit` and checks actual Git objects rather than trusting the artifact manifest.
-- `openai_surface_install_scan` remains OPEN/release-blocking until a complete post-builder `MULTI(C1)` A→H surface run is completed; operator tests do not close it.
-- The primary surface differential is router-to-router: `@chef-ai-pro-business` versus `@evochia-operator` with the same task. Direct domain-Skill runs are optional non-gating diagnostics.
-- No Phase 14–16 implementation, business-policy change, supplier-policy change, FnB persistence change, or unrelated refactor belongs in this branch.
+- Canonical design base: `9cab252e8757b35f6501b178c06943b0e82b398a`.
+- Public operator ID: `evochia-operator`; invocation: `@evochia-operator`.
+- Existing `skills/*/SKILL.md`, canonical routing, source registry, policies, data and doctrine are not changed to make the operator build work.
+- Domain projection is exactly `skills/<id>/SKILL.md` → `skills/<id>/MODULE.md`, relation `EXACT_BYTE_COPY`, including frontmatter and line endings.
+- `references/module_index.md` is generated from canonical `name` + `description` frontmatter and is added to the complete canonical `references/` subtree.
+- Root `SKILL.md` comes only from `release/operator/SKILL.template.md`.
+- Supported targets are exactly `multi` and `operator`.
+- Builder source inputs are Git objects at an explicit full commit SHA; ordinary dirty-worktree changes must not change the artifact.
+- Release-grade validation requires `--artifact`, `--source-repo`, and `--source-commit` and verifies actual Git objects.
+- `openai_surface_install_scan` remains release-blocking until a complete post-builder `MULTI(C1)` A→H surface run is reviewed.
+- Primary differential is router-to-router: `@chef-ai-pro-business` vs `@evochia-operator`; direct domain-Skill runs are optional `DIRECT` diagnostics only.
+- No Phase 14–16 implementation or unrelated refactor belongs here.
 
----
-
-## File Structure
+## File Map
 
 **Create**
-
-- `release/operator/SKILL.template.md` — sole new behavioral operator instruction surface.
-- `release/operator/package_policy.yaml` — generated-target configuration and pinned icon source, referencing canonical policy rather than duplicating authority.
-- `scripts/contract_paths.py` — shared exact-path extractor for backticked repository-path references.
-- `scripts/operator_git.py` — immutable Git-object reader and Git tree metadata model.
-- `scripts/deterministic_zip.py` — deterministic ZIP serializer for in-memory artifact entries.
-- `scripts/operator_index.py` — canonical frontmatter parser and generated module-index renderer.
-- `scripts/build_skill_package.py` — dual-target build CLI and target composition logic.
-- `scripts/validate_operator_package.py` — source-anchored operator artifact validator CLI.
-- `tests/operator/test_operator_template.py` — root-template behavioral-contract tests.
-- `tests/operator/test_contract_paths.py` — exact-path extractor tests, including the three paths that exposed the design bug.
-- `tests/operator/test_operator_git.py` — Git-object anchoring and dirty-worktree isolation tests.
-- `tests/operator/test_deterministic_zip.py` — deterministic archive primitive tests.
-- `tests/operator/test_operator_index.py` — generated-index source-equivalence tests.
-- `tests/operator/test_operator_policy.py` — target-policy and verified icon-source tests.
-- `tests/operator/test_operator_validator.py` — structural/source-anchored validator tests on controlled fixture repositories/artifacts.
-- `tests/operator/test_dual_build.py` — multi/operator end-to-end build tests.
-- `tests/operator/test_release_gate_preservation.py` — release-blocker preservation tests.
+- `release/operator/SKILL.template.md` — only new behavioral instruction surface.
+- `release/operator/package_policy.yaml` — operator target config; references canonical authorities.
+- `scripts/operator_support/__init__.py` — makes shared build primitives importable in tests and direct CLI wrappers.
+- `scripts/operator_support/contract_paths.py` — exact Markdown path extraction.
+- `scripts/operator_support/git_source.py` — immutable Git-object access.
+- `scripts/operator_support/deterministic_zip.py` — reproducible ZIP writer.
+- `scripts/operator_support/module_index.py` — frontmatter parser/index renderer.
+- `scripts/build_skill_package.py` — dual-target build CLI.
+- `scripts/validate_operator_package.py` — source-anchored operator validator CLI.
+- `tests/operator/test_operator_template.py`
+- `tests/operator/test_contract_paths.py`
+- `tests/operator/test_git_source.py`
+- `tests/operator/test_deterministic_zip.py`
+- `tests/operator/test_module_index.py`
+- `tests/operator/test_operator_policy.py`
+- `tests/operator/test_operator_validator.py`
+- `tests/operator/test_dual_build.py`
+- `tests/operator/test_release_gate_preservation.py`
 
 **Modify**
-
-- `scripts/validate_skill_package.py` — reuse the shared path extractor without changing its source-package semantics.
-- `.github/workflows/verify.yml` — add deterministic dual-build and source-anchored operator validation smoke commands after the existing validation suite.
+- `scripts/validate_skill_package.py` — import the shared extractor while preserving current source-package path-resolution behavior.
+- `.github/workflows/verify.yml` — deterministic dual-build/validation smoke steps.
 
 **Do not modify**
-
-- Any existing `skills/*/SKILL.md`.
+- Existing `skills/*/SKILL.md`.
 - `skills/chef-ai-pro-business/references/routing.yaml`.
 - `references/source_registry.yaml`.
-- Current policy/data/doctrine files solely to make the builder pass.
 - `release/release_readiness.yaml` before surface evidence exists.
 
 ---
 
-### Task 1: Write and lock the operator root template first
+### Task 1: Define and review the operator root template before any builder code
 
 **Files:**
 - Create: `release/operator/SKILL.template.md`
 - Create: `tests/operator/test_operator_template.py`
 
 **Interfaces:**
-- Consumes: canonical paths `references/source_registry.yaml`, `skills/chef-ai-pro-business/references/routing.yaml`, and future generated `references/module_index.md`.
-- Produces: a source-controlled `SKILL.template.md` whose bytes later become the operator artifact root `SKILL.md`.
+- Produces the exact bytes later materialized as operator root `SKILL.md`.
+- References canonical routing, source authority and generated module index; owns orchestration only.
 
-- [ ] **Step 1: Write the failing template-contract test before creating the template**
+- [ ] **Step 1: Write the failing test**
 
 ```python
 from pathlib import Path
@@ -88,15 +79,15 @@ ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE = ROOT / "release/operator/SKILL.template.md"
 
 
-def _frontmatter(text: str) -> dict:
+def frontmatter(text: str) -> dict:
     assert text.startswith("---\n")
     end = text.index("\n---\n", 4)
     return yaml.safe_load(text[4:end]) or {}
 
 
-def test_operator_template_has_only_orchestrator_responsibility():
+def test_operator_template_is_router_not_policy_monolith():
     text = TEMPLATE.read_text(encoding="utf-8")
-    meta = _frontmatter(text)
+    meta = frontmatter(text)
     assert meta["name"] == "evochia-operator"
     assert meta["description"]
     assert "smallest sufficient" in text.lower()
@@ -105,32 +96,28 @@ def test_operator_template_has_only_orchestrator_responsibility():
     assert "references/module_index.md" in text
     assert "references/source_registry.yaml" in text
     assert "food-safety-allergens" in text
-    assert "INTERNAL" in text and "OPERATIONS" in text and "CLIENT-SAFE" in text
+    assert all(token in text for token in ("INTERNAL", "OPERATIONS", "CLIENT-SAFE"))
     assert "DRAFT_OR_HANDOFF_NO_FAKE_EXECUTION" in text
     assert "FnB Central" in text
     assert "system of record" in text.lower()
     assert "routing transcript" in text.lower()
 
 
-def test_operator_template_does_not_duplicate_current_commercial_policy():
+def test_operator_template_does_not_duplicate_rate_policy():
     text = TEMPLATE.read_text(encoding="utf-8")
-    forbidden_policy_literals = ["15+", "6–14", "0–5", "+20%", "+40%", "6500", "6,500"]
-    assert not [token for token in forbidden_policy_literals if token in text]
+    forbidden = ["15+", "6–14", "0–5", "+20%", "+40%", "6500", "6,500"]
+    assert not [token for token in forbidden if token in text]
 ```
 
-- [ ] **Step 2: Run the test and confirm the RED state is a missing template**
-
-Run:
+- [ ] **Step 2: Verify RED**
 
 ```bash
 python -m pytest tests/operator/test_operator_template.py -q
 ```
 
-Expected: FAIL because `release/operator/SKILL.template.md` does not exist.
+Expected: FAIL because the template is absent.
 
-- [ ] **Step 3: Create the template as reviewed behavioral content, not builder code**
-
-Use this content as the implementation baseline:
+- [ ] **Step 3: Create `release/operator/SKILL.template.md` with this reviewed baseline**
 
 ```markdown
 ---
@@ -147,14 +134,14 @@ Act as the single public orchestrator for the packaged Evochia Operator. Classif
 - `skills/chef-ai-pro-business/references/routing.yaml` remains the canonical routing contract.
 - `references/module_index.md` is a generated capability lookup derived from canonical domain frontmatter; it is not a second authority.
 - Within this operator package, a canonical skill ID resolves to `skills/<skill-id>/MODULE.md`.
-- Use the routing contract first. Consult the generated module index when the route is not sufficiently clear. Read only the smallest sufficient module set.
+- Use canonical routing first. Consult the generated module index only when the route is not sufficiently clear. Read only the smallest sufficient module set.
 
 ## Orchestration Rules
-Classify generic-F&B versus Evochia context, safety risk, freshness need, tool availability and output audience before composing the answer. Preserve distinctions among facts, approved data, external evidence, estimates, assumptions and needs-review items. Do not expose the internal routing transcript.
+Classify generic-F&B versus Evochia context, safety risk, freshness need, tool availability and output audience. Preserve distinctions among facts, approved data, external evidence, estimates, assumptions and needs-review items. Do not expose the internal routing transcript.
 
-Safety authority outranks creativity, commercial optimization and presentation. When allergen or food-safety stakes are material, `food-safety-allergens` is a mandatory hard gate and its blocker state propagates to the final answer.
+Safety authority outranks creativity, commercial optimization and presentation. When allergen or food-safety stakes are material, `food-safety-allergens` is a mandatory hard gate and its blocker state propagates.
 
-Choose exactly one audience boundary unless the user explicitly requests multiple:
+Choose exactly one audience boundary unless explicitly asked for multiple:
 - `INTERNAL`: costs, margins, assumptions, supplier evidence and strategy may be present.
 - `OPERATIONS`: production, staffing, equipment, allergens, run sheets and service notes.
 - `CLIENT-SAFE`: approved external concept/menu/scope/fee/terms only; never leak INTERNAL economics or strategy.
@@ -167,9 +154,7 @@ FnB Central remains the persistent F&B system of record. This operator does not 
 Return the requested answer or artifact in the requested audience boundary. Use domain contracts and canonical resources for substantive rules; do not restate current rates, safety doctrine, supplier data or company policy here when a canonical source already owns them.
 ```
 
-- [ ] **Step 4: Run the template tests**
-
-Run:
+- [ ] **Step 4: Verify GREEN**
 
 ```bash
 python -m pytest tests/operator/test_operator_template.py -q
@@ -177,7 +162,7 @@ python -m pytest tests/operator/test_operator_template.py -q
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit the independently reviewable behavioral surface**
+- [ ] **Step 5: Commit**
 
 ```bash
 git add release/operator/SKILL.template.md tests/operator/test_operator_template.py
@@ -186,29 +171,30 @@ git commit -m "feat: define Evochia Operator root contract"
 
 ---
 
-### Task 2: Extract exact repository paths as a reusable contract primitive
+### Task 2: Implement the exact contract-path extractor as its own tested unit
 
 **Files:**
-- Create: `scripts/contract_paths.py`
+- Create: `scripts/operator_support/__init__.py`
+- Create: `scripts/operator_support/contract_paths.py`
 - Create: `tests/operator/test_contract_paths.py`
 - Modify: `scripts/validate_skill_package.py`
 
 **Interfaces:**
-- Produces: `extract_contract_paths(text: str) -> tuple[str, ...]`.
-- Consumers: existing source-package validator, operator closure builder, operator artifact validator.
+- Produces `extract_contract_paths(text: str) -> tuple[str, ...]`.
+- Used by source validator, operator closure logic and operator validator.
 
-- [ ] **Step 1: Write failing extractor tests including the paths that caused the design correction**
+- [ ] **Step 1: Write failing regression tests for the three paths that exposed the design bug**
 
 ```python
-from scripts.contract_paths import extract_contract_paths
+from scripts.operator_support.contract_paths import extract_contract_paths
 
 
 def test_extracts_exact_repo_paths_without_rewriting():
     text = """
-Read `skills/culinary-rnd/references/research_protocol.md`,
-`skills/kitchen-event-operations/references/event_lifecycle.md`, and
-`skills/evochia-market-intelligence/references/intelligence_policy.yaml`.
-Use `references/operations/output_router_templates_v2_1.md`.
+`skills/culinary-rnd/references/research_protocol.md`
+`skills/kitchen-event-operations/references/event_lifecycle.md`
+`skills/evochia-market-intelligence/references/intelligence_policy.yaml`
+`references/operations/output_router_templates_v2_1.md`
 """
     assert extract_contract_paths(text) == (
         "references/operations/output_router_templates_v2_1.md",
@@ -218,76 +204,65 @@ Use `references/operations/output_router_templates_v2_1.md`.
     )
 
 
-def test_ignores_urls_globs_placeholders_commands_and_parent_traversal():
-    text = """
-`https://example.com/a/b`
-`templates/*/x.md`
-`skills/<skill-id>/MODULE.md`
-`python scripts/tool.py --flag`
-`../secret/file`
-`plain-token`
-"""
+def test_rejects_non_repository_tokens():
+    text = "`https://x/a/b` `templates/*/x.md` `skills/<skill-id>/MODULE.md` `../secret/x` `plain-token`"
     assert extract_contract_paths(text) == ()
 ```
 
-- [ ] **Step 2: Verify RED before the extractor exists**
-
-Run:
+- [ ] **Step 2: Verify RED**
 
 ```bash
 python -m pytest tests/operator/test_contract_paths.py -q
 ```
 
-Expected: import failure for `scripts.contract_paths`.
+Expected: import failure.
 
-- [ ] **Step 3: Implement the exact-path extractor**
+- [ ] **Step 3: Implement `extract_contract_paths`**
 
 ```python
-from __future__ import annotations
-
 from pathlib import PurePosixPath
 import re
 
 _BACKTICK = re.compile(r"`([^`\n]+)`")
-_FORBIDDEN_META = set("*{}<>|")
+_META = set("*{}<>|")
 
 
 def extract_contract_paths(text: str) -> tuple[str, ...]:
-    paths: set[str] = set()
+    found: set[str] = set()
     for match in _BACKTICK.finditer(text):
         token = match.group(1).strip().rstrip(".,;:")
-        if "/" not in token:
+        if "/" not in token or token.startswith(("http://", "https://", "/", "-")):
             continue
-        if token.startswith(("http://", "https://", "/")):
-            continue
-        if token.startswith("-") or " " in token:
-            continue
-        if any(ch in token for ch in _FORBIDDEN_META):
+        if " " in token or any(ch in token for ch in _META):
             continue
         path = PurePosixPath(token)
-        if ".." in path.parts or "." in path.parts:
+        if any(part in {".", ".."} for part in path.parts):
             continue
-        paths.add(path.as_posix())
-    return tuple(sorted(paths))
+        found.add(path.as_posix())
+    return tuple(sorted(found))
 ```
 
-- [ ] **Step 4: Reuse the extractor in the existing validator without changing its dual-candidate resolution semantics**
+- [ ] **Step 4: Reuse it in `validate_skill_package.py` without breaking direct CLI or importlib tests**
 
-In `scripts/validate_skill_package.py`, replace the private regex implementation with:
+At the top of the existing script use a dual-context import:
 
 ```python
-from contract_paths import extract_contract_paths
+try:
+    from scripts.operator_support.contract_paths import extract_contract_paths
+except ModuleNotFoundError:  # direct: python scripts/validate_skill_package.py
+    from operator_support.contract_paths import extract_contract_paths
+```
 
-# ...
+Replace only the private extraction loop; preserve the existing source-validator resolution behavior:
+
+```python
 for ref in extract_contract_paths(text):
     candidates = [root / ref, skill_dir / ref]
     if not any(path.exists() for path in candidates):
         issues.append(f"{skill_name}: broken referenced path {ref}")
 ```
 
-Keep the current source validator's `root / ref` and `skill_dir / ref` compatibility behavior. Exact-path-only semantics are enforced later by the operator validator, not retroactively imposed on the canonical source validator.
-
-- [ ] **Step 5: Run focused and existing validator regression tests**
+- [ ] **Step 5: Run focused plus existing validator tests**
 
 ```bash
 python -m pytest tests/operator/test_contract_paths.py tests/release/test_validator_hardening.py tests/release/test_runtime_resource_ownership.py -q
@@ -295,92 +270,79 @@ python -m pytest tests/operator/test_contract_paths.py tests/release/test_valida
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit the shared path primitive**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add scripts/contract_paths.py scripts/validate_skill_package.py tests/operator/test_contract_paths.py
+git add scripts/operator_support/__init__.py scripts/operator_support/contract_paths.py scripts/validate_skill_package.py tests/operator/test_contract_paths.py
 git commit -m "test: enforce exact contract path extraction"
 ```
 
 ---
 
-### Task 3: Prove Git-object anchoring and dirty-worktree isolation before builder code exists
+### Task 3: Prove Git-object anchoring and dirty-worktree isolation before builder implementation
 
 **Files:**
-- Create: `scripts/operator_git.py`
-- Create: `tests/operator/test_operator_git.py`
+- Create: `scripts/operator_support/git_source.py`
+- Create: `tests/operator/test_git_source.py`
 
 **Interfaces:**
-- Produces:
-  - `GitEntry(path: str, mode: int, blob_sha: str)`
-  - `GitSource(repo: Path, commit: str)`
-  - `GitSource.full_commit() -> str`
-  - `GitSource.entries(prefix: str | None = None) -> tuple[GitEntry, ...]`
-  - `GitSource.read_bytes(path: str) -> bytes`
-  - `sha256_bytes(data: bytes) -> str`
-- Consumers: builder, index generator, source-anchored validator.
+- `GitEntry(path: str, mode: int, blob_sha: str)`
+- `GitSource(repo, commit).full_commit() -> str`
+- `GitSource.entries(prefix=None) -> tuple[GitEntry, ...]`
+- `GitSource.read_bytes(path) -> bytes`
+- `sha256_bytes(data) -> str`
 
-This task establishes the foundations for assertions 16, 17 and 19 before the builder is implemented.
+This establishes the foundations for assertions 16, 17 and 19 before builder code exists.
 
-- [ ] **Step 1: Write tests that create a real temporary Git repository and then dirty its working tree**
+- [ ] **Step 1: Write tests using a real temporary Git repository**
 
 ```python
 from pathlib import Path
 import subprocess
-
-from scripts.operator_git import GitSource, sha256_bytes
-
-
-def _git(repo: Path, *args: str) -> str:
-    result = subprocess.run(["git", "-C", str(repo), *args], check=True, text=True, capture_output=True)
-    return result.stdout.strip()
+from scripts.operator_support.git_source import GitSource, sha256_bytes
 
 
-def _committed_repo(tmp_path: Path) -> tuple[Path, str]:
+def git(repo: Path, *args: str) -> str:
+    return subprocess.run(["git", "-C", str(repo), *args], check=True, text=True, capture_output=True).stdout.strip()
+
+
+def make_repo(tmp_path: Path):
     repo = tmp_path / "repo"
     repo.mkdir()
-    _git(repo, "init")
-    _git(repo, "config", "user.email", "test@example.com")
-    _git(repo, "config", "user.name", "Test")
-    (repo / "VERSION").write_bytes(b"4.0.0-alpha.0\n")
+    git(repo, "init")
+    git(repo, "config", "user.email", "test@example.com")
+    git(repo, "config", "user.name", "Test")
     (repo / "contract.md").write_bytes(b"canonical\n")
-    _git(repo, "add", ".")
-    _git(repo, "commit", "-m", "fixture")
-    return repo, _git(repo, "rev-parse", "HEAD")
+    git(repo, "add", ".")
+    git(repo, "commit", "-m", "fixture")
+    return repo, git(repo, "rev-parse", "HEAD")
 
 
-def test_git_source_reads_committed_blob_not_dirty_worktree(tmp_path):
-    repo, commit = _committed_repo(tmp_path)
+def test_reads_committed_blob_not_dirty_worktree(tmp_path):
+    repo, commit = make_repo(tmp_path)
     source = GitSource(repo, commit)
     (repo / "contract.md").write_bytes(b"dirty\r\n")
     assert source.read_bytes("contract.md") == b"canonical\n"
 
 
-def test_git_source_resolves_full_commit_and_real_blob_identity(tmp_path):
-    repo, commit = _committed_repo(tmp_path)
+def test_blob_identity_matches_git_object(tmp_path):
+    repo, commit = make_repo(tmp_path)
     source = GitSource(repo, commit[:8])
     assert source.full_commit() == commit
     entry = next(e for e in source.entries() if e.path == "contract.md")
-    actual_blob = _git(repo, "rev-parse", f"{commit}:contract.md")
-    assert entry.blob_sha == actual_blob
+    assert entry.blob_sha == git(repo, "rev-parse", f"{commit}:contract.md")
     assert sha256_bytes(source.read_bytes("contract.md")) == sha256_bytes(b"canonical\n")
 ```
 
 - [ ] **Step 2: Verify RED**
 
 ```bash
-python -m pytest tests/operator/test_operator_git.py -q
+python -m pytest tests/operator/test_git_source.py -q
 ```
 
-Expected: import failure for `scripts.operator_git`.
-
-- [ ] **Step 3: Implement immutable Git reads**
-
-Use subprocess argument arrays only; never shell interpolation.
+- [ ] **Step 3: Implement immutable Git reads with subprocess argument arrays only**
 
 ```python
-from __future__ import annotations
-
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
@@ -403,92 +365,75 @@ class GitSource:
         self.repo = Path(repo).resolve()
         self.commit = commit
 
-    def _run(self, *args: str, text: bool = False) -> subprocess.CompletedProcess:
-        return subprocess.run(
-            ["git", "-C", str(self.repo), *args],
-            check=True,
-            capture_output=True,
-            text=text,
-        )
+    def _run(self, *args: str, text: bool = False):
+        return subprocess.run(["git", "-C", str(self.repo), *args], check=True, capture_output=True, text=text)
 
     def full_commit(self) -> str:
         return self._run("rev-parse", f"{self.commit}^{{commit}}", text=True).stdout.strip()
 
     def entries(self, prefix: str | None = None) -> tuple[GitEntry, ...]:
-        commit = self.full_commit()
-        args = ["ls-tree", "-r", "-z", commit]
+        args = ["ls-tree", "-r", "-z", self.full_commit()]
         if prefix:
-            args.extend(["--", prefix])
+            args += ["--", prefix]
         raw = self._run(*args).stdout
-        entries: list[GitEntry] = []
+        out = []
         for record in raw.split(b"\0"):
             if not record:
                 continue
             meta, path = record.split(b"\t", 1)
             mode, kind, blob = meta.decode("ascii").split()
-            if kind != "blob":
-                continue
-            entries.append(GitEntry(path.decode("utf-8"), int(mode, 8), blob))
-        return tuple(sorted(entries, key=lambda item: item.path))
+            if kind == "blob":
+                out.append(GitEntry(path.decode("utf-8"), int(mode, 8), blob))
+        return tuple(sorted(out, key=lambda item: item.path))
 
     def read_bytes(self, path: str) -> bytes:
-        commit = self.full_commit()
-        return self._run("show", f"{commit}:{path}").stdout
+        return self._run("show", f"{self.full_commit()}:{path}").stdout
 ```
 
-- [ ] **Step 4: Run the Git anchoring tests**
+- [ ] **Step 4: Verify GREEN**
 
 ```bash
-python -m pytest tests/operator/test_operator_git.py -q
+python -m pytest tests/operator/test_git_source.py -q
 ```
 
-Expected: PASS, including the dirty-worktree case.
-
-- [ ] **Step 5: Commit the Git source primitive**
+- [ ] **Step 5: Commit**
 
 ```bash
-git add scripts/operator_git.py tests/operator/test_operator_git.py
+git add scripts/operator_support/git_source.py tests/operator/test_git_source.py
 git commit -m "feat: add immutable Git object source"
 ```
 
 ---
 
-### Task 4: Prove deterministic ZIP serialization before builder code exists
+### Task 4: Prove deterministic ZIP serialization before builder implementation
 
 **Files:**
-- Create: `scripts/deterministic_zip.py`
+- Create: `scripts/operator_support/deterministic_zip.py`
 - Create: `tests/operator/test_deterministic_zip.py`
 
 **Interfaces:**
-- Consumes: artifact entry bytes and Git-style file modes.
-- Produces:
-  - `ArchiveEntry(path: str, data: bytes, mode: int = 0o100644)`
-  - `write_deterministic_zip(path: Path, entries: Iterable[ArchiveEntry]) -> str` returning uppercase/lowercase consistently chosen SHA-256; use lowercase in code and reports.
+- `ArchiveEntry(path: str, data: bytes, mode: int = 0o100644)`
+- `write_deterministic_zip(path, entries) -> str` returning lowercase SHA-256.
 
-This task establishes the low-level proof needed by assertion 14 before the builder exists.
+This establishes assertion 14 at the archive primitive level before builder code exists.
 
-- [ ] **Step 1: Write deterministic archive tests**
+- [ ] **Step 1: Write failing determinism tests**
 
 ```python
-from scripts.deterministic_zip import ArchiveEntry, write_deterministic_zip
+from scripts.operator_support.deterministic_zip import ArchiveEntry, write_deterministic_zip
 
 
-def test_same_entries_produce_same_zip_hash_regardless_of_input_order(tmp_path):
-    entries_a = [
-        ArchiveEntry("b.txt", b"B\n", 0o100644),
-        ArchiveEntry("a.txt", b"A\n", 0o100755),
-    ]
-    entries_b = list(reversed(entries_a))
-    hash_a = write_deterministic_zip(tmp_path / "a.zip", entries_a)
-    hash_b = write_deterministic_zip(tmp_path / "b.zip", entries_b)
-    assert hash_a == hash_b
+def test_same_entries_same_bytes_and_hash_regardless_of_input_order(tmp_path):
+    a = [ArchiveEntry("b.txt", b"B\n"), ArchiveEntry("a.txt", b"A\n", 0o100755)]
+    b = list(reversed(a))
+    ha = write_deterministic_zip(tmp_path / "a.zip", a)
+    hb = write_deterministic_zip(tmp_path / "b.zip", b)
+    assert ha == hb
     assert (tmp_path / "a.zip").read_bytes() == (tmp_path / "b.zip").read_bytes()
 
 
-def test_changed_content_changes_zip_hash(tmp_path):
-    first = write_deterministic_zip(tmp_path / "a.zip", [ArchiveEntry("a.txt", b"A")])
-    second = write_deterministic_zip(tmp_path / "b.zip", [ArchiveEntry("a.txt", b"B")])
-    assert first != second
+def test_content_change_changes_hash(tmp_path):
+    assert write_deterministic_zip(tmp_path / "a.zip", [ArchiveEntry("a", b"A")]) != write_deterministic_zip(tmp_path / "b.zip", [ArchiveEntry("a", b"B")])
 ```
 
 - [ ] **Step 2: Verify RED**
@@ -497,13 +442,9 @@ def test_changed_content_changes_zip_hash(tmp_path):
 python -m pytest tests/operator/test_deterministic_zip.py -q
 ```
 
-Expected: import failure.
-
-- [ ] **Step 3: Implement deterministic ZIP metadata**
+- [ ] **Step 3: Implement fixed ZIP metadata**
 
 ```python
-from __future__ import annotations
-
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
@@ -520,163 +461,108 @@ class ArchiveEntry:
     mode: int = 0o100644
 
 
-def _zip_info(entry: ArchiveEntry) -> ZipInfo:
-    info = ZipInfo(entry.path, date_time=_FIXED_TIME)
-    info.create_system = 3
-    permission = 0o755 if entry.mode & 0o111 else 0o644
-    info.external_attr = (0o100000 | permission) << 16
-    info.compress_type = ZIP_DEFLATED
-    info.flag_bits |= 0x800
-    info.extra = b""
-    info.comment = b""
-    return info
-
-
 def write_deterministic_zip(path: Path, entries: Iterable[ArchiveEntry]) -> str:
-    ordered = sorted(entries, key=lambda item: item.path)
     with ZipFile(path, "w", compression=ZIP_DEFLATED, compresslevel=9, strict_timestamps=True) as archive:
-        for entry in ordered:
-            archive.writestr(_zip_info(entry), entry.data, compress_type=ZIP_DEFLATED, compresslevel=9)
+        for entry in sorted(entries, key=lambda item: item.path):
+            info = ZipInfo(entry.path, date_time=_FIXED_TIME)
+            info.create_system = 3
+            perm = 0o755 if entry.mode & 0o111 else 0o644
+            info.external_attr = (0o100000 | perm) << 16
+            info.compress_type = ZIP_DEFLATED
+            info.flag_bits |= 0x800
+            info.extra = b""
+            info.comment = b""
+            archive.writestr(info, entry.data, compress_type=ZIP_DEFLATED, compresslevel=9)
     return sha256(path.read_bytes()).hexdigest()
 ```
 
-- [ ] **Step 4: Run deterministic archive tests twice**
+- [ ] **Step 4: Verify GREEN twice**
 
 ```bash
 python -m pytest tests/operator/test_deterministic_zip.py -q
 python -m pytest tests/operator/test_deterministic_zip.py -q
 ```
 
-Expected: PASS both times.
-
-- [ ] **Step 5: Commit deterministic archive support**
+- [ ] **Step 5: Commit**
 
 ```bash
-git add scripts/deterministic_zip.py tests/operator/test_deterministic_zip.py
+git add scripts/operator_support/deterministic_zip.py tests/operator/test_deterministic_zip.py
 git commit -m "feat: add deterministic ZIP primitive"
 ```
 
 ---
 
-### Task 5: Generate the module capability index only from canonical frontmatter
+### Task 5: Generate the capability index only from canonical frontmatter
 
 **Files:**
-- Create: `scripts/operator_index.py`
-- Create: `tests/operator/test_operator_index.py`
+- Create: `scripts/operator_support/module_index.py`
+- Create: `tests/operator/test_module_index.py`
 
 **Interfaces:**
-- Produces:
-  - `parse_frontmatter(data: bytes) -> dict[str, object]`
-  - `ModuleDescriptor(name: str, description: str)`
-  - `render_module_index(modules: Iterable[ModuleDescriptor]) -> bytes`
-- Consumer: operator builder and validator.
+- `parse_frontmatter(data: bytes) -> dict[str, str]`
+- `ModuleDescriptor(name: str, description: str)`
+- `render_module_index(modules) -> bytes`
 
-- [ ] **Step 1: Write source-equivalence tests**
+- [ ] **Step 1: Write failing source-equivalence tests**
 
 ```python
-from scripts.operator_index import ModuleDescriptor, parse_frontmatter, render_module_index
+from scripts.operator_support.module_index import ModuleDescriptor, parse_frontmatter, render_module_index
 
 
-def test_parse_frontmatter_preserves_name_and_description():
+def test_frontmatter_requires_name_and_description():
     raw = b"---\nname: recipe-engineering\ndescription: Exact description.\n---\n# Body\n"
-    assert parse_frontmatter(raw) == {
-        "name": "recipe-engineering",
-        "description": "Exact description.",
-    }
+    assert parse_frontmatter(raw) == {"name": "recipe-engineering", "description": "Exact description."}
 
 
-def test_render_index_is_deterministic_and_does_not_paraphrase():
-    modules = [
+def test_render_is_sorted_and_does_not_paraphrase():
+    raw = render_module_index([
         ModuleDescriptor("recipe-engineering", "Exact recipe description."),
         ModuleDescriptor("culinary-rnd", "Exact culinary description."),
-    ]
-    expected = (
+    ])
+    assert raw == (
         "<!-- GENERATED — DO NOT EDIT -->\n"
         "# Internal Capability Index\n\n"
-        "- `culinary-rnd`\n"
-        "  Exact culinary description.\n\n"
-        "- `recipe-engineering`\n"
-        "  Exact recipe description.\n"
-    ).encode("utf-8")
-    assert render_module_index(modules) == expected
+        "- `culinary-rnd`\n  Exact culinary description.\n\n"
+        "- `recipe-engineering`\n  Exact recipe description.\n"
+    ).encode()
 ```
 
 - [ ] **Step 2: Verify RED**
 
 ```bash
-python -m pytest tests/operator/test_operator_index.py -q
+python -m pytest tests/operator/test_module_index.py -q
 ```
 
-Expected: import failure.
+- [ ] **Step 3: Implement strict parsing/rendering**
 
-- [ ] **Step 3: Implement strict frontmatter parsing and deterministic rendering**
+Use `yaml.safe_load`; raise `ValueError` for missing/empty fields. Sort by `name`; never summarize descriptions.
 
-Use `yaml.safe_load`; reject missing/empty `name` or `description` with `ValueError`. Sort rendering by `name` so source iteration order cannot affect bytes.
-
-```python
-from dataclasses import dataclass
-from typing import Iterable
-import yaml
-
-
-@dataclass(frozen=True)
-class ModuleDescriptor:
-    name: str
-    description: str
-
-
-def parse_frontmatter(data: bytes) -> dict[str, object]:
-    text = data.decode("utf-8")
-    if not text.startswith("---\n"):
-        raise ValueError("missing YAML frontmatter")
-    end = text.find("\n---\n", 4)
-    if end < 0:
-        raise ValueError("unterminated YAML frontmatter")
-    meta = yaml.safe_load(text[4:end]) or {}
-    name = meta.get("name")
-    description = meta.get("description")
-    if not isinstance(name, str) or not name.strip():
-        raise ValueError("frontmatter name missing")
-    if not isinstance(description, str) or not description.strip():
-        raise ValueError("frontmatter description missing")
-    return {"name": name, "description": description}
-
-
-def render_module_index(modules: Iterable[ModuleDescriptor]) -> bytes:
-    lines = ["<!-- GENERATED — DO NOT EDIT -->", "# Internal Capability Index", ""]
-    for module in sorted(modules, key=lambda item: item.name):
-        lines.extend([f"- `{module.name}`", f"  {module.description}", ""])
-    return ("\n".join(lines).rstrip() + "\n").encode("utf-8")
-```
-
-- [ ] **Step 4: Run index tests**
+- [ ] **Step 4: Verify GREEN**
 
 ```bash
-python -m pytest tests/operator/test_operator_index.py -q
+python -m pytest tests/operator/test_module_index.py -q
 ```
 
-Expected: PASS.
-
-- [ ] **Step 5: Commit the generated-index primitive**
+- [ ] **Step 5: Commit**
 
 ```bash
-git add scripts/operator_index.py tests/operator/test_operator_index.py
+git add scripts/operator_support/module_index.py tests/operator/test_module_index.py
 git commit -m "feat: derive operator module index from source"
 ```
 
 ---
 
-### Task 6: Define the operator target policy and pin the verified Evochia icon source
+### Task 6: Define the operator build policy and pin the verified icon source
 
 **Files:**
 - Create: `release/operator/package_policy.yaml`
 - Create: `tests/operator/test_operator_policy.py`
 
 **Interfaces:**
-- Consumes canonical `release/package_policy.yaml` and verified `company/evochia/brand/assets/logo-mark-42.png`.
-- Produces a small target policy; it references canonical authority rather than reproducing all 11 domain IDs.
+- References canonical `release/package_policy.yaml`; does not duplicate the 11 domain IDs.
+- Maps verified `company/evochia/brand/assets/logo-mark-42.png` to artifact `assets/evochia-operator-icon.png`.
 
-- [ ] **Step 1: Write failing policy/icon tests**
+- [ ] **Step 1: Write failing policy tests**
 
 ```python
 from pathlib import Path
@@ -687,36 +573,29 @@ ROOT = Path(__file__).resolve().parents[2]
 POLICY = ROOT / "release/operator/package_policy.yaml"
 
 
-def test_operator_policy_references_canonical_package_policy():
-    data = yaml.safe_load(POLICY.read_text(encoding="utf-8"))
+def test_policy_references_canonical_authorities_not_domain_copy_list():
+    data = yaml.safe_load(POLICY.read_text())
     assert data["source_package_policy"] == "release/package_policy.yaml"
-    assert data["orchestrator_skill"] == "chef-ai-pro-business"
     assert data["operator_name"] == "evochia-operator"
+    assert data["orchestrator_skill"] == "chef-ai-pro-business"
     assert data["template"] == "release/operator/SKILL.template.md"
     assert data["icon"]["source_path"] == "company/evochia/brand/assets/logo-mark-42.png"
     assert data["icon"]["artifact_path"] == "assets/evochia-operator-icon.png"
     assert "domain_skills" not in data
 
 
-def test_icon_source_is_the_verified_evochia_git_blob():
-    blob = subprocess.run(
-        ["git", "-C", str(ROOT), "rev-parse", "HEAD:company/evochia/brand/assets/logo-mark-42.png"],
-        check=True,
-        text=True,
-        capture_output=True,
-    ).stdout.strip()
+def test_icon_source_is_verified_git_blob():
+    blob = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD:company/evochia/brand/assets/logo-mark-42.png"], check=True, text=True, capture_output=True).stdout.strip()
     assert blob == "11676370669ef00c1ed6815300db240c5ce376f8"
 ```
 
-- [ ] **Step 2: Verify RED because the operator policy does not exist**
+- [ ] **Step 2: Verify RED**
 
 ```bash
 python -m pytest tests/operator/test_operator_policy.py -q
 ```
 
-Expected: FAIL on missing policy.
-
-- [ ] **Step 3: Create a minimal target policy**
+- [ ] **Step 3: Create the minimal policy**
 
 ```yaml
 schema_version: 1
@@ -733,17 +612,13 @@ icon:
 provenance_manifest_path: provenance/build_manifest.yaml
 ```
 
-Do not duplicate the 11 domain IDs here; derive them from canonical `required_skills` minus the orchestrator.
-
-- [ ] **Step 4: Run target-policy tests**
+- [ ] **Step 4: Verify GREEN**
 
 ```bash
 python -m pytest tests/operator/test_operator_policy.py -q
 ```
 
-Expected: PASS.
-
-- [ ] **Step 5: Commit the target policy**
+- [ ] **Step 5: Commit**
 
 ```bash
 git add release/operator/package_policy.yaml tests/operator/test_operator_policy.py
@@ -752,66 +627,46 @@ git commit -m "chore: define operator build target policy"
 
 ---
 
-### Task 7: Build the source-anchored validator against handcrafted fixtures before the real builder
+### Task 7: Implement the source-anchored validator against handcrafted fixtures before the real builder
 
 **Files:**
 - Create: `scripts/validate_operator_package.py`
 - Create: `tests/operator/test_operator_validator.py`
 
 **Interfaces:**
-- Consumes `GitSource`, `extract_contract_paths`, `parse_frontmatter`, `render_module_index`, canonical package policy and operator policy.
-- Produces:
-  - `validate_operator_artifact(artifact: Path, source_repo: Path, source_commit: str) -> list[str]`
-  - CLI: `python scripts/validate_operator_package.py --artifact ... --source-repo ... --source-commit ...`
+- `validate_operator_artifact(artifact: Path, source_repo: Path, source_commit: str) -> list[str]`
+- CLI: `python scripts/validate_operator_package.py --artifact ... --source-repo ... --source-commit ...`
 
-The test fixture must be a real temporary Git repository so source SHA and byte checks cannot be satisfied by mutating only the ZIP/manifest.
+**Import rule:** direct CLI wrappers use dual-context imports, exactly as Task 2 does, so both `python scripts/...` and pytest imports work.
 
-- [ ] **Step 1: Write a fixture factory that commits a minimal canonical source graph**
+- [ ] **Step 1: Build a real temporary Git fixture in tests**
 
-In the test file, create helper `_fixture_repo(tmp_path)` that commits:
+Commit a minimal source graph containing `VERSION`, canonical package policy, operator policy/template, source registry, routing, two domain `SKILL.md` files, one `skills/alpha/references/a.md`, and the verified-icon fixture path.
 
-```text
-VERSION
-release/package_policy.yaml
-release/operator/package_policy.yaml
-release/operator/SKILL.template.md
-references/source_registry.yaml
-references/example.md
-skills/chef-ai-pro-business/references/routing.yaml
-skills/alpha/SKILL.md
-skills/alpha/references/a.md
-skills/beta/SKILL.md
-```
+- [ ] **Step 2: Write failing adversarial tests**
 
-The canonical policy fixture has required skills `[chef-ai-pro-business, alpha, beta]` and both domain contracts have valid `name`/`description` frontmatter.
-
-- [ ] **Step 2: Write tests for source anchoring and exact-path resolution before implementing the validator**
+Required tests:
 
 ```python
-def test_validator_rejects_module_and_manifest_tampered_together(tmp_path):
-    repo, commit, artifact = make_valid_fixture_artifact(tmp_path)
-    rewrite_zip_entry(artifact, "skills/alpha/MODULE.md", b"tampered\n")
-    rewrite_manifest_hash_to_match_artifact(artifact, "skills/alpha/MODULE.md")
-    issues = validate_operator_artifact(artifact, repo, commit)
-    assert any("Git source bytes differ" in issue for issue in issues)
+def test_rejects_module_and_manifest_tampered_together(...):
+    # mutate MODULE bytes and both manifest hashes to agree
+    # expected: still FAIL against source_commit Git bytes
+    ...
 
 
-def test_validator_requires_exact_written_contract_path(tmp_path):
-    repo, commit, artifact = make_valid_fixture_artifact(tmp_path)
-    remove_zip_entry(artifact, "skills/alpha/references/a.md")
-    add_zip_entry(artifact, "references/a.md", b"same bytes, wrong path\n")
-    issues = validate_operator_artifact(artifact, repo, commit)
-    assert any("missing exact referenced path: skills/alpha/references/a.md" in issue for issue in issues)
+def test_requires_exact_written_path(...):
+    # remove skills/alpha/references/a.md, place same bytes elsewhere
+    # expected issue contains exact missing canonical path
+    ...
 
 
-def test_validator_rejects_generated_index_not_equal_to_source_render(tmp_path):
-    repo, commit, artifact = make_valid_fixture_artifact(tmp_path)
-    rewrite_zip_entry(artifact, "references/module_index.md", b"manual index\n")
-    issues = validate_operator_artifact(artifact, repo, commit)
-    assert any("module index differs from canonical frontmatter render" in issue for issue in issues)
+def test_rejects_manual_generated_index(...):
+    # mutate module_index only
+    # expected: mismatch against render(extract_frontmatter(source))
+    ...
 ```
 
-Also cover one root `SKILL.md`, exact expected module count, routing exact copy, manifest source commit, icon source identity, and forbidden patterns.
+Also test: exactly one root `SKILL.md`; exact expected modules; routing exact copy; source commit/version match; forbidden patterns absent; manifest file hashes accurate.
 
 - [ ] **Step 3: Verify RED**
 
@@ -819,83 +674,48 @@ Also cover one root `SKILL.md`, exact expected module count, routing exact copy,
 python -m pytest tests/operator/test_operator_validator.py -q
 ```
 
-Expected: import failure for the validator.
-
-- [ ] **Step 4: Implement ZIP loading and source policy derivation**
-
-Core structure:
+- [ ] **Step 4: Implement ZIP loading and canonical domain derivation**
 
 ```python
-from pathlib import Path
 from zipfile import ZipFile
-import argparse
 import yaml
 
-from operator_git import GitSource, sha256_bytes
-from contract_paths import extract_contract_paths
-from operator_index import ModuleDescriptor, parse_frontmatter, render_module_index
+
+def zip_files(path):
+    with ZipFile(path) as zf:
+        return {name: zf.read(name) for name in zf.namelist() if not name.endswith("/")}
 
 
-def _zip_files(artifact: Path) -> dict[str, bytes]:
-    with ZipFile(artifact, "r") as archive:
-        return {name: archive.read(name) for name in archive.namelist() if not name.endswith("/")}
-
-
-def _canonical_domain_ids(source: GitSource) -> tuple[str, ...]:
-    policy = yaml.safe_load(source.read_bytes("release/package_policy.yaml")) or {}
-    required = tuple(policy.get("required_skills", ()))
-    orchestrator = yaml.safe_load(source.read_bytes("release/operator/package_policy.yaml"))["orchestrator_skill"]
-    return tuple(skill for skill in required if skill != orchestrator)
+def canonical_domain_ids(source):
+    package = yaml.safe_load(source.read_bytes("release/package_policy.yaml")) or {}
+    operator = yaml.safe_load(source.read_bytes("release/operator/package_policy.yaml")) or {}
+    return tuple(skill for skill in package["required_skills"] if skill != operator["orchestrator_skill"])
 ```
 
-- [ ] **Step 5: Implement source-anchored exact-copy and index checks**
+- [ ] **Step 5: Implement source anchoring, exact-byte checks, generated-index check and exact-path assertion**
 
-For every domain ID:
+For each domain:
 
 ```python
 source_path = f"skills/{skill_id}/SKILL.md"
-artifact_path = f"skills/{skill_id}/MODULE.md"
-source_bytes = source.read_bytes(source_path)
-if files.get(artifact_path) != source_bytes:
-    issues.append(f"Git source bytes differ: {artifact_path}")
+projected_path = f"skills/{skill_id}/MODULE.md"
+if files.get(projected_path) != source.read_bytes(source_path):
+    issues.append(f"Git source bytes differ: {projected_path}")
 ```
 
-Re-render the index from source frontmatter and compare actual bytes directly. Recompute `source_sha256` from `source.read_bytes(source_path)`, not from manifest values.
+Recompute every manifest `source_sha256` from `source.read_bytes(source_path)`. Never trust a manifest source hash merely because its projected hash matches. For path assertion 10, scan only behavioral/authoritative contract Markdown included in the artifact: root `SKILL.md`, all `MODULE.md`, and Markdown inside canonical `references/`; each extracted token must exist at exactly that artifact path.
 
-- [ ] **Step 6: Implement exact path validation using the shared extractor**
+- [ ] **Step 6: Implement CLI return codes**
 
-Scan root `SKILL.md`, all `MODULE.md`, and packaged authoritative Markdown under `references/` for tokens returned by `extract_contract_paths`. For each token, require exactly that POSIX path to exist in the artifact file map. Do not search by basename and do not rewrite prefixes.
+PASS prints `Operator package validation: PASS` and exits 0; any issue prints `FAIL`, one issue per line, and exits 1.
 
-Ignore the template placeholder `skills/<skill-id>/MODULE.md` because the extractor already rejects `<`/`>` tokens.
-
-- [ ] **Step 7: Implement CLI exit semantics**
-
-```python
-def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--artifact", required=True, type=Path)
-    parser.add_argument("--source-repo", required=True, type=Path)
-    parser.add_argument("--source-commit", required=True)
-    args = parser.parse_args()
-    issues = validate_operator_artifact(args.artifact, args.source_repo, args.source_commit)
-    if issues:
-        print("Operator package validation: FAIL")
-        for issue in issues:
-            print(f"- {issue}")
-        return 1
-    print("Operator package validation: PASS")
-    return 0
-```
-
-- [ ] **Step 8: Run the validator tests**
+- [ ] **Step 7: Verify GREEN**
 
 ```bash
 python -m pytest tests/operator/test_operator_validator.py -q
 ```
 
-Expected: PASS.
-
-- [ ] **Step 9: Commit the validator before the real build implementation**
+- [ ] **Step 8: Commit**
 
 ```bash
 git add scripts/validate_operator_package.py tests/operator/test_operator_validator.py
@@ -904,53 +724,30 @@ git commit -m "feat: add source-anchored operator validator"
 
 ---
 
-### Task 8: Implement the `multi` target first and prove current package behavior is preserved
+### Task 8: Implement `multi` target first and prove package preservation
 
 **Files:**
 - Create: `scripts/build_skill_package.py`
 - Create: `tests/operator/test_dual_build.py`
 
 **Interfaces:**
-- Consumes `GitSource`, `ArchiveEntry`, `write_deterministic_zip`, canonical `VERSION` and package policy.
-- Produces:
-  - `BuildResult(target: str, source_commit: str, version: str, artifact_path: Path, sha256: str)`
-  - `build_package(repo: Path, source_commit: str, target: str, output_dir: Path) -> BuildResult`
-  - CLI with `--target {multi,operator}`, `--source-commit`, `--source-repo`, `--output-dir`.
+- `BuildResult(target, source_commit, version, artifact_path, sha256)`
+- `build_package(repo, source_commit, target, output_dir) -> BuildResult`
+- CLI: `--target {multi,operator} --source-repo --source-commit --output-dir`.
 
-Implement only the multi branch in this task; the operator branch may raise a clear `NotImplementedError` until Task 9.
+- [ ] **Step 1: Write failing `multi` tests before builder implementation**
 
-- [ ] **Step 1: Write failing integration tests for multi determinism and source-tree identity**
+Test that two builds from one explicit commit are byte-identical, contain 12 `SKILL.md`, contain no `MODULE.md`, preserve `VERSION`, and are unaffected by a dirty tracked CSV when source commit is unchanged.
 
-```python
-def test_multi_build_is_deterministic_and_contains_canonical_skill_surface(tmp_path):
-    commit = git_head(ROOT)
-    first = build_package(ROOT, commit, "multi", tmp_path / "one")
-    second = build_package(ROOT, commit, "multi", tmp_path / "two")
-    assert first.sha256 == second.sha256
-    assert first.artifact_path.read_bytes() == second.artifact_path.read_bytes()
-    files = zip_file_map(first.artifact_path)
-    assert len([p for p in files if p.endswith("/SKILL.md")]) == 12
-    assert not [p for p in files if p.endswith("/MODULE.md")]
-    assert files["VERSION"] == git_show(ROOT, commit, "VERSION")
-```
-
-Also dirty one tracked CSV in the worktree between two builds and assert the artifact hash remains unchanged for the same explicit commit.
-
-- [ ] **Step 2: Verify RED before builder implementation**
+- [ ] **Step 2: Verify RED**
 
 ```bash
 python -m pytest tests/operator/test_dual_build.py -k multi -q
 ```
 
-Expected: import failure for `scripts.build_skill_package`.
-
-- [ ] **Step 3: Implement the public result type and filename logic**
+- [ ] **Step 3: Implement result/filename logic**
 
 ```python
-from dataclasses import dataclass
-from pathlib import Path
-
-
 @dataclass(frozen=True)
 class BuildResult:
     target: str
@@ -960,7 +757,7 @@ class BuildResult:
     sha256: str
 
 
-def _artifact_name(target: str, version: str, commit: str) -> str:
+def artifact_name(target, version, commit):
     short = commit[:7]
     if target == "multi":
         return f"chef-ai-pro-business-{version}-{short}-multi.zip"
@@ -969,29 +766,27 @@ def _artifact_name(target: str, version: str, commit: str) -> str:
     raise ValueError(f"unsupported target: {target}")
 ```
 
-- [ ] **Step 4: Implement multi as committed Git-tree materialization**
+- [ ] **Step 4: Implement `multi` as committed-tree materialization**
 
-Build `ArchiveEntry` instances from `GitSource.entries()` and `GitSource.read_bytes(entry.path)`. Validate forbidden tracked paths from canonical `release/package_policy.yaml` before writing. Do not read file contents through `Path.read_bytes()` from the worktree.
+Use `GitSource.entries()` + `read_bytes()` only. Normalize archive mode from Git mode through `deterministic_zip`. Before writing, enforce canonical forbidden patterns from `release/package_policy.yaml`; do not silently omit forbidden tracked files.
 
-- [ ] **Step 5: Run multi integration tests including dirty-worktree isolation**
+- [ ] **Step 5: Validate an extracted multi artifact with the existing validator**
 
-```bash
-python -m pytest tests/operator/test_dual_build.py -k multi -q
-```
-
-Expected: PASS.
-
-- [ ] **Step 6: Run the existing package validator against a materialized/extracted multi artifact in the test**
-
-Add a test that extracts the multi ZIP to `tmp_path / "multi"` and invokes:
+The integration test extracts the ZIP and runs:
 
 ```bash
 python scripts/validate_skill_package.py <extracted-root>
 ```
 
-Expected subprocess return code: 0 and stdout contains `Skill package validation: PASS`.
+Expected: exit 0 and `Skill package validation: PASS`.
 
-- [ ] **Step 7: Commit the multi build target**
+- [ ] **Step 6: Verify GREEN**
+
+```bash
+python -m pytest tests/operator/test_dual_build.py -k multi -q
+```
+
+- [ ] **Step 7: Commit**
 
 ```bash
 git add scripts/build_skill_package.py tests/operator/test_dual_build.py
@@ -1000,123 +795,77 @@ git commit -m "feat: add deterministic multi-skill build target"
 
 ---
 
-### Task 9: Implement operator resource closure, exact-byte module projection, index, icon and provenance
+### Task 9: Implement operator projection, closure, icon, index and provenance
 
 **Files:**
 - Modify: `scripts/build_skill_package.py`
 - Modify: `tests/operator/test_dual_build.py`
 
 **Interfaces:**
-- Consumes all primitives from Tasks 2–6.
-- Produces the complete operator artifact and `provenance/build_manifest.yaml`.
+- Consumes all previous primitives.
+- Produces one root `SKILL.md`, 11 exact-byte modules, canonical resource closure, generated index, verified icon and provenance manifest.
 
-- [ ] **Step 1: Write failing operator topology tests before operator builder code**
+- [ ] **Step 1: Write failing operator topology tests**
 
-```python
-def test_operator_build_has_one_public_skill_and_exact_domain_modules(tmp_path):
-    commit = git_head(ROOT)
-    result = build_package(ROOT, commit, "operator", tmp_path)
-    files = zip_file_map(result.artifact_path)
-    assert [p for p in files if p.endswith("/SKILL.md") or p == "SKILL.md"] == ["SKILL.md"]
-    expected_ids = canonical_domain_ids(ROOT, commit)
-    assert sorted(p for p in files if p.endswith("/MODULE.md")) == [
-        f"skills/{skill_id}/MODULE.md" for skill_id in sorted(expected_ids)
-    ]
-    for skill_id in expected_ids:
-        assert files[f"skills/{skill_id}/MODULE.md"] == git_show(ROOT, commit, f"skills/{skill_id}/SKILL.md")
-    assert "skills/chef-ai-pro-business/SKILL.md" not in files
-```
+Assert exactly one `SKILL.md` at root, exactly 11 `skills/<id>/MODULE.md`, no projected orchestrator module, every module equals `git show <commit>:skills/<id>/SKILL.md`, full canonical `references/` is present, routing remains at its canonical path and byte-identical, and icon bytes equal the pinned source asset.
 
-- [ ] **Step 2: Add failing tests for full canonical references, routing path, generated index and icon mapping**
-
-```python
-def test_operator_preserves_canonical_reference_topology(tmp_path):
-    commit = git_head(ROOT)
-    result = build_package(ROOT, commit, "operator", tmp_path)
-    files = zip_file_map(result.artifact_path)
-    source_reference_paths = git_paths_under(ROOT, commit, "references/")
-    assert set(source_reference_paths).issubset(files)
-    assert files["skills/chef-ai-pro-business/references/routing.yaml"] == git_show(
-        ROOT, commit, "skills/chef-ai-pro-business/references/routing.yaml"
-    )
-    assert "references/module_index.md" in files
-    assert files["assets/evochia-operator-icon.png"] == git_show(
-        ROOT, commit, "company/evochia/brand/assets/logo-mark-42.png"
-    )
-```
-
-- [ ] **Step 3: Verify RED because operator target is not implemented**
+- [ ] **Step 2: Verify RED**
 
 ```bash
 python -m pytest tests/operator/test_dual_build.py -k operator -q
 ```
 
-Expected: `NotImplementedError` or explicit unsupported operator path.
+Expected: explicit unsupported/not-implemented operator path.
 
-- [ ] **Step 4: Implement canonical domain derivation**
+- [ ] **Step 3: Derive domain IDs from canonical policy**
 
-Read `release/package_policy.yaml` from `GitSource`. Domain IDs are exactly `required_skills` minus `orchestrator_skill` from `release/operator/package_policy.yaml`. Assert the source policy currently yields 11 domain IDs; fail the build if it does not.
+`required_skills` minus `orchestrator_skill`; assert the real source yields 11 domains. Do not write an 11-ID list into operator policy.
 
-- [ ] **Step 5: Implement resource closure without a second hand-authored authority list**
+- [ ] **Step 4: Derive runtime resource closure**
 
-Seed artifact paths from:
-
+Seed with:
 1. `VERSION`.
-2. Entire source `references/` subtree.
-3. Every canonical domain skill-local subtree except source `SKILL.md`; project that `SKILL.md` bytes to `MODULE.md`.
-4. Canonical routing file at its unchanged path.
-5. `resource_roots` and `exact_resources` in `release/runtime_resource_ownership.yaml`.
-6. Exact backticked paths discovered from root operator template, all domain source contracts and included authoritative Markdown; if a discovered token names a directory prefix in the Git tree, include its full subtree, otherwise include the exact file.
-7. Verified icon source mapped to `assets/evochia-operator-icon.png`.
+2. Entire canonical `references/` subtree.
+3. Every domain skill-local subtree; omit source `SKILL.md` at its old path and project its bytes to `MODULE.md`.
+4. Canonical routing at unchanged path.
+5. `resource_roots` and `exact_resources` from `release/runtime_resource_ownership.yaml`.
+6. Exact paths extracted from root template, domain contracts and included authoritative Markdown; iterate newly included Markdown to a fixed point.
+7. Pinned icon source mapped to `assets/evochia-operator-icon.png`.
 
-Iterate exact-path discovery to a fixed point for newly included Markdown contracts. If a referenced exact path does not exist in the selected Git commit, fail the build; never search by basename or rewrite the reference.
+If an extracted exact path does not exist in the Git commit, fail. Do not search by basename or rewrite it.
 
-- [ ] **Step 6: Materialize generated content only at the approved paths**
+- [ ] **Step 5: Generate only the approved generated files**
 
-Generated files are exactly:
+- `SKILL.md` = template bytes.
+- `references/module_index.md` = deterministic frontmatter render.
+- `provenance/build_manifest.yaml` = deterministic manifest.
 
-- root `SKILL.md` from `release/operator/SKILL.template.md` bytes,
-- `references/module_index.md` from source frontmatter,
-- `provenance/build_manifest.yaml`.
+Everything else is Git-object copy except the domain filename projection.
 
-Every other included file is copied from Git object bytes, with the sole path projection `skills/<id>/SKILL.md` → `skills/<id>/MODULE.md` for the 11 domain contracts.
+- [ ] **Step 6: Make builder identity itself provenance-safe**
 
-- [ ] **Step 7: Generate provenance using stable ordered YAML data**
-
-Manifest structure:
+Manifest builder block records both running code hash and source-commit builder hash:
 
 ```yaml
-schema_version: 1
-target: operator
-source_commit: <40-char sha>
-source_version: <VERSION value>
-operator_name: evochia-operator
 builder:
   path: scripts/build_skill_package.py
-  source_sha256: <sha256 of committed builder bytes>
-root_template:
-  source_path: release/operator/SKILL.template.md
-  source_sha256: <sha256>
-  projected_path: SKILL.md
-files:
-  - projected_path: skills/recipe-engineering/MODULE.md
-    relation: EXACT_BYTE_COPY
-    source_path: skills/recipe-engineering/SKILL.md
-    source_sha256: <sha256>
-    projected_sha256: <same sha256>
+  runtime_sha256: <sha256(Path(__file__).read_bytes())>
+  source_commit_sha256: <sha256(GitSource.read_bytes(path))>
 ```
 
-Sort `files` by `projected_path` before `yaml.safe_dump(..., sort_keys=True, allow_unicode=True)`. The manifest does not contain the ZIP hash.
+Release-grade validation requires equality. This prevents a dirty/uncommitted builder from claiming that an artifact was produced by the committed builder at `source_commit`. Ordinary dirty input files remain irrelevant because source content still comes from Git objects.
 
-- [ ] **Step 8: Run operator build tests**
+- [ ] **Step 7: Write deterministic manifest**
+
+For every projected file include `projected_path`, `relation`, `source_path` where applicable, `source_sha256`, and `projected_sha256`. Sort entries by `projected_path`; use deterministic `yaml.safe_dump(..., sort_keys=True, allow_unicode=True)`. Do not embed ZIP hash in the ZIP.
+
+- [ ] **Step 8: Verify GREEN**
 
 ```bash
 python -m pytest tests/operator/test_dual_build.py -k operator -q
 ```
 
-Expected: PASS.
-
-- [ ] **Step 9: Commit the operator projection**
+- [ ] **Step 9: Commit**
 
 ```bash
 git add scripts/build_skill_package.py tests/operator/test_dual_build.py
@@ -1125,58 +874,58 @@ git commit -m "feat: build deterministic Evochia Operator package"
 
 ---
 
-### Task 10: Close all 19 validator assertions end-to-end against the actual builder
+### Task 10: Verify all 19 design assertions end-to-end
 
 **Files:**
 - Modify: `tests/operator/test_operator_validator.py`
 - Modify: `tests/operator/test_dual_build.py`
-- Modify: `scripts/validate_operator_package.py` only where integration reveals a concrete missing assertion.
+- Modify: `scripts/validate_operator_package.py` only for a demonstrated missing assertion.
 
-**Interfaces:**
-- Consumes real operator artifact from `build_package`.
-- Produces release-grade source-anchored validation evidence.
+- [ ] **Step 1: Name one test per design assertion**
 
-- [ ] **Step 1: Add a table-driven assertion coverage test**
-
-Create one named test per design assertion rather than one giant test. Names must map visibly to assertions, for example:
+Use visible names such as:
 
 ```python
 def test_a01_exactly_one_public_skill(...): ...
-def test_a05_modules_are_git_source_exact_byte_copy(...): ...
+def test_a05_modules_equal_git_source_bytes(...): ...
 def test_a08_index_equals_source_frontmatter_render(...): ...
 def test_a10_exact_written_paths_resolve(...): ...
-def test_a14_two_operator_builds_have_identical_zip_sha(...): ...
-def test_a16_manifest_source_hashes_match_real_git_objects(...): ...
-def test_a17_exact_copy_bytes_match_real_git_objects(...): ...
+def test_a14_two_builds_same_zip_sha(...): ...
+def test_a16_manifest_source_hashes_match_git_objects(...): ...
+def test_a17_exact_copy_bytes_match_git_objects(...): ...
 def test_a19_dirty_worktree_does_not_change_explicit_commit_build(...): ...
 ```
 
-- [ ] **Step 2: Add the critical adversarial mutation test for assertions 16/17**
+- [ ] **Step 2: Add adversarial assertion 16/17 mutation**
 
-Build a valid artifact, then create a mutated copy in which both the `MODULE.md` bytes and its manifest projected/source hashes are updated to agree with each other. Validation MUST still fail because the Git object at `source_commit:source_path` did not change.
+Mutate a `MODULE.md` and mutate both corresponding manifest hashes to agree with the tampered bytes. Validation must still fail against the Git source object.
 
-- [ ] **Step 3: Add the exact-path adversarial test for assertion 10**
+- [ ] **Step 3: Add assertion 10 regression using all three real problematic paths**
 
-Delete `skills/culinary-rnd/references/research_protocol.md` from a copy of the artifact and place identical bytes at another path. Validation MUST fail specifically on the exact written canonical path.
-
-Repeat for:
-
+For each of:
+- `skills/culinary-rnd/references/research_protocol.md`
 - `skills/kitchen-event-operations/references/event_lifecycle.md`
 - `skills/evochia-market-intelligence/references/intelligence_policy.yaml`
 
-- [ ] **Step 4: Add full integration determinism tests for assertion 14 and dirty-worktree isolation for assertion 19**
+remove the exact path from a copied artifact and put identical bytes elsewhere. Validation must fail on the missing exact path.
 
-Build operator twice from the same commit into different directories and compare both SHA-256 and bytes. Then modify a tracked working-tree file without committing it and build again from the same explicit commit; the hash MUST remain identical. Restore the worktree in a `finally` block or use a temporary clone/worktree fixture so the test cannot leave the developer checkout dirty.
+- [ ] **Step 4: Add full assertion 14 and 19 integration tests**
 
-- [ ] **Step 5: Run all operator tests**
+Build operator twice from one commit into two directories and compare bytes + hash. For dirty-worktree coverage, use a temporary clone/worktree fixture, modify a tracked non-builder file without committing it, build from the same commit, and require unchanged artifact hash.
+
+- [ ] **Step 5: Add dirty-builder negative test**
+
+Run builder from a modified `scripts/build_skill_package.py` worktree against its old source commit and require source-anchored validation to reject the runtime/source builder hash mismatch. This closes the provenance gap without weakening normal dirty-worktree isolation.
+
+- [ ] **Step 6: Run all operator tests**
 
 ```bash
 python -m pytest tests/operator -q
 ```
 
-Expected: PASS with zero xfails/skips used to conceal missing builder behavior.
+Expected: PASS; no xfail/skip used to hide an unimplemented assertion.
 
-- [ ] **Step 6: Run source-package regression tests**
+- [ ] **Step 7: Run source-package regressions**
 
 ```bash
 python -m pytest tests/release tests/routing tests/parity -q
@@ -1184,7 +933,7 @@ python -m pytest tests/release tests/routing tests/parity -q
 
 Expected: PASS.
 
-- [ ] **Step 7: Commit validator integration coverage**
+- [ ] **Step 8: Commit**
 
 ```bash
 git add scripts/validate_operator_package.py tests/operator/test_operator_validator.py tests/operator/test_dual_build.py
@@ -1193,70 +942,61 @@ git commit -m "test: verify operator provenance and determinism end to end"
 
 ---
 
-### Task 11: Preserve the open surface blocker and integrate dual-build verification into CI
+### Task 11: Preserve the open surface blocker and add CI dual-build verification
 
 **Files:**
 - Create: `tests/operator/test_release_gate_preservation.py`
 - Modify: `.github/workflows/verify.yml`
 
-**Interfaces:**
-- Produces CI evidence that both artifacts build and the operator artifact validates against the same commit.
-- Explicitly does NOT mark `openai_surface_install_scan` complete.
-
-- [ ] **Step 1: Write a release-gate preservation test before touching CI**
+- [ ] **Step 1: Write release-gate preservation test**
 
 ```python
 from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
-READINESS = ROOT / "release/release_readiness.yaml"
 
 
-def test_operator_builder_does_not_close_surface_release_blocker():
-    data = yaml.safe_load(READINESS.read_text(encoding="utf-8"))
-    blocker = next(item for item in data["blockers"] if item["id"] == "openai_surface_install_scan")
+def test_builder_does_not_close_surface_blocker():
+    data = yaml.safe_load((ROOT / "release/release_readiness.yaml").read_text())
+    blocker = next(x for x in data["blockers"] if x["id"] == "openai_surface_install_scan")
     assert blocker["status"] == "NOT_RUN"
     assert blocker["required_before_final_release"] is True
     assert data["final_release_status"] == "BLOCKED"
     assert data["may_claim_production_ready"] is False
 ```
 
-- [ ] **Step 2: Run the gate test and preserve the current blocker state**
+- [ ] **Step 2: Verify it passes without editing readiness**
 
 ```bash
 python -m pytest tests/operator/test_release_gate_preservation.py -q
 ```
 
-Expected: PASS without modifying `release/release_readiness.yaml`.
-
-- [ ] **Step 3: Add CI build/validate smoke commands after the existing validators**
-
-Add to `.github/workflows/verify.yml`:
+- [ ] **Step 3: Add CI smoke commands after existing validators**
 
 ```yaml
       - name: Build deterministic multi and operator packages
         run: |
-          mkdir -p /tmp/chef-ai-build-a /tmp/chef-ai-build-b
-          python scripts/build_skill_package.py --target multi --source-repo . --source-commit "$GITHUB_SHA" --output-dir /tmp/chef-ai-build-a
-          python scripts/build_skill_package.py --target operator --source-repo . --source-commit "$GITHUB_SHA" --output-dir /tmp/chef-ai-build-a
-          python scripts/build_skill_package.py --target operator --source-repo . --source-commit "$GITHUB_SHA" --output-dir /tmp/chef-ai-build-b
+          mkdir -p /tmp/build-a /tmp/build-b
+          python scripts/build_skill_package.py --target multi --source-repo . --source-commit "$GITHUB_SHA" --output-dir /tmp/build-a
+          python scripts/build_skill_package.py --target operator --source-repo . --source-commit "$GITHUB_SHA" --output-dir /tmp/build-a
+          python scripts/build_skill_package.py --target operator --source-repo . --source-commit "$GITHUB_SHA" --output-dir /tmp/build-b
 
       - name: Validate operator package against Git source
         run: |
-          OPERATOR_ZIP=$(find /tmp/chef-ai-build-a -maxdepth 1 -name 'evochia-operator-*-operator.zip' -print -quit)
+          test "$(find /tmp/build-a -maxdepth 1 -name 'evochia-operator-*-operator.zip' | wc -l)" -eq 1
+          OPERATOR_ZIP=$(find /tmp/build-a -maxdepth 1 -name 'evochia-operator-*-operator.zip' -print -quit)
           python scripts/validate_operator_package.py --artifact "$OPERATOR_ZIP" --source-repo . --source-commit "$GITHUB_SHA"
 
-      - name: Verify repeated operator build hash
+      - name: Verify repeat build hash
         run: |
-          A=$(sha256sum /tmp/chef-ai-build-a/evochia-operator-*-operator.zip | awk '{print $1}')
-          B=$(sha256sum /tmp/chef-ai-build-b/evochia-operator-*-operator.zip | awk '{print $1}')
+          test "$(find /tmp/build-b -maxdepth 1 -name 'evochia-operator-*-operator.zip' | wc -l)" -eq 1
+          A=$(sha256sum /tmp/build-a/evochia-operator-*-operator.zip | awk '{print $1}')
+          B=$(sha256sum /tmp/build-b/evochia-operator-*-operator.zip | awk '{print $1}')
           test "$A" = "$B"
 ```
 
-Use the shell glob only after verifying each directory contains exactly one operator ZIP; add `test "$(find ... | wc -l)" -eq 1` before computing hashes so ambiguous output cannot pass accidentally.
-
-- [ ] **Step 4: Run the full local CI-equivalent command set**
+- [ ] **Step 4: Run the full local CI-equivalent suite**
 
 ```bash
 python -m pytest -q
@@ -1268,9 +1008,9 @@ python scripts/validate_source_registry.py
 python scripts/validate_doctrine_integrity.py
 ```
 
-Expected: all commands exit 0.
+Expected: every command exits 0.
 
-- [ ] **Step 5: Commit CI integration**
+- [ ] **Step 5: Commit**
 
 ```bash
 git add .github/workflows/verify.yml tests/operator/test_release_gate_preservation.py
@@ -1279,26 +1019,22 @@ git commit -m "ci: verify deterministic dual skill builds"
 
 ---
 
-### Task 12: Produce the post-builder `C1` artifacts and stop at the surface-test handoff
+### Task 12: Produce `C1` artifacts and stop at surface-test handoff
 
 **Files:**
-- No source file changes required unless verification exposes a real implementation defect.
-- Output artifacts: untracked/local `dist/` or another explicit output directory.
+- No source modifications unless verification exposes a concrete implementation defect.
+- Artifacts are local/untracked output.
 
-**Interfaces:**
-- Produces the two same-commit artifacts required for the surface experiment.
-- Hands off to the mandatory complete `MULTI(C1)` A→H run before operator acceptance.
-
-- [ ] **Step 1: Verify the implementation worktree is clean and capture the exact post-builder commit**
+- [ ] **Step 1: Verify clean implementation state and record `C1`**
 
 ```bash
 git status --short
 git rev-parse HEAD
 ```
 
-Expected: no tracked/untracked implementation residue other than an intentionally ignored output directory; record the full 40-character commit as `C1`.
+Expected: no unintended source changes; record full SHA as `C1`.
 
-- [ ] **Step 2: Build both targets from exactly `C1`**
+- [ ] **Step 2: Build both artifacts from exactly `C1`**
 
 ```bash
 mkdir -p dist
@@ -1306,14 +1042,14 @@ python scripts/build_skill_package.py --target multi --source-repo . --source-co
 python scripts/build_skill_package.py --target operator --source-repo . --source-commit "$(git rev-parse HEAD)" --output-dir dist
 ```
 
-Expected filenames:
+Expected names:
 
 ```text
-chef-ai-pro-business-4.0.0-alpha.0-<C1-short>-multi.zip
-evochia-operator-4.0.0-alpha.0-<C1-short>-operator.zip
+chef-ai-pro-business-4.0.0-alpha.0-<short-C1>-multi.zip
+evochia-operator-4.0.0-alpha.0-<short-C1>-operator.zip
 ```
 
-- [ ] **Step 3: Validate the operator artifact against the same Git commit**
+- [ ] **Step 3: Validate the operator artifact against `C1`**
 
 ```bash
 python scripts/validate_operator_package.py \
@@ -1324,23 +1060,23 @@ python scripts/validate_operator_package.py \
 
 Expected: `Operator package validation: PASS`.
 
-- [ ] **Step 4: Record artifact hashes without changing release readiness**
+- [ ] **Step 4: Record both SHA-256 values**
 
 ```bash
 sha256sum dist/*-multi.zip dist/*-operator.zip
 ```
 
-Record both SHA-256 values in the execution report/PR description. Do not edit `release/release_readiness.yaml` based on build success.
+Do not edit `release/release_readiness.yaml` from build success.
 
-- [ ] **Step 5: Perform the mandatory surface order exactly as specified**
+- [ ] **Step 5: Perform surface testing in the mandatory order**
 
-1. Install `MULTI(C1)` and confirm 12 visible Skills / no blocking scan warning.
-2. Run the **complete A→H suite** through `@chef-ai-pro-business` for the primary multi baseline. This is mandatory and closes the still-open surface blocker only if the evidence passes the release criteria.
-3. Install `OPERATOR(C1)` and require exactly one visible `evochia-operator`, no exposed module names, and record icon binding/scan behavior.
-4. Run the same complete A→H user tasks through `@evochia-operator`.
+1. Install `MULTI(C1)`; confirm 12 visible Skills and record scan/install evidence.
+2. Run complete A→H through `@chef-ai-pro-business`. This is mandatory; sampling does not close the blocker.
+3. Install `OPERATOR(C1)`; require exactly one visible `evochia-operator`, zero exposed module names, and record icon/scan behavior.
+4. Run the same complete A→H tasks through `@evochia-operator`.
 5. Compare router-to-router transcripts. Optional direct-domain runs are labeled `DIRECT` and excluded from gating thresholds.
 
-Pre-committed operator differential thresholds remain:
+Thresholds:
 
 ```text
 BLOCKING failures:              0
@@ -1351,17 +1087,17 @@ new NEAR_MISS in D2:            0
 new NEAR_MISS in Block F:       0
 ```
 
-If `MULTI(C1)` fails Block F, classify it first as a multi-skill baseline failure and do not remediate the operator builder without differential evidence.
+If `MULTI(C1)` fails Block F, classify it first as multi-skill baseline failure; do not attribute it to the operator without differential evidence.
 
-- [ ] **Step 6: Stop before release-readiness mutation**
+- [ ] **Step 6: Stop before any release-readiness mutation**
 
-Do not mark `openai_surface_install_scan` complete, do not claim production readiness, and do not merge any release-status change until the surface transcripts and install evidence have been reviewed separately.
+No production-ready claim and no blocker-status change until install evidence and transcripts are separately reviewed.
 
 ---
 
 ## Final Verification Checklist
 
-Before presenting the implementation as ready for surface testing, execute and retain output for all of the following:
+Before claiming implementation readiness for surface testing, retain fresh output for:
 
 ```bash
 python -m pytest tests/operator -q
@@ -1374,6 +1110,11 @@ python scripts/validate_source_registry.py
 python scripts/validate_doctrine_integrity.py
 ```
 
-Then build the two artifacts twice from the same explicit commit and verify repeated operator ZIP hashes are identical. Run the release-grade operator validator with `--source-repo` and `--source-commit`. Confirm via `git diff <implementation-base>..HEAD -- skills references/source_registry.yaml` that no existing source Skill contract or canonical source registry changed; separately verify the routing file hash against the implementation base.
+Then:
 
-No completion claim is valid from test summaries alone; the actual command outputs and artifact hashes are the evidence.
+```bash
+git diff <implementation-base>..HEAD -- skills references/source_registry.yaml
+git diff <implementation-base>..HEAD -- skills/chef-ai-pro-business/references/routing.yaml
+```
+
+Expected: no changes to existing Skill contracts, source registry or routing. Build both targets twice from the same explicit commit, confirm repeated hashes, and run the release-grade operator validator with source anchoring. Command output and artifact hashes—not agent summaries—are the completion evidence.
