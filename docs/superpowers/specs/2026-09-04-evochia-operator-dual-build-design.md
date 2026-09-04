@@ -1,6 +1,6 @@
 # Evochia Operator Dual-Build Design
 
-**Status:** APPROVED DESIGN — pending implementation plan  
+**Status:** WRITTEN SPEC — awaiting owner review  
 **Date:** 2026-09-04  
 **Canonical starting commit:** `9cab252e8757b35f6501b178c06943b0e82b398a`  
 **Public operator name:** `evochia-operator`  
@@ -96,12 +96,14 @@ evochia-operator/
 ├── schemas/...
 ├── templates/...
 ├── integrations/...
-├── runtime scripts/resources as required
+├── <other runtime resources selected by the existing package/ownership contracts>
 └── provenance/
     └── build_manifest.yaml
 ```
 
 `module_index.md` is added to the existing canonical `references/` subtree; it does not replace or reduce that subtree.
+
+The operator builder MUST derive the runtime resource closure from existing canonical package/ownership/reference contracts. It MUST NOT maintain a second hand-authored runtime resource list. Files selected into the artifact retain canonical repo-root paths and are copied from Git objects for the selected source commit unless this spec explicitly defines them as generated content.
 
 ## 6. Projection rules
 
@@ -169,7 +171,7 @@ The index is therefore a deterministic projection of source truth, not a second 
 
 The operator root `SKILL.md` is the only new behavioral instruction surface.
 
-It MUST exist as a source-controlled, human-reviewable template, not as a large string embedded in builder code. Suggested source location:
+It MUST exist as a source-controlled, human-reviewable template, not as a large string embedded in builder code. Canonical source location:
 
 `release/operator/SKILL.template.md`
 
@@ -191,7 +193,7 @@ It MUST NOT duplicate current rates, commercial policy, safety doctrine or domai
 
 No new precedence list is introduced. `references/source_registry.yaml` remains the canonical source-authority precedence contract.
 
-## 9. Builder input and determinism
+## 9. Builder input, targets and determinism
 
 The builder operates on an explicit full Git commit SHA and reads committed Git objects, not mutable working-tree bytes.
 
@@ -199,6 +201,20 @@ Conceptually:
 
 ```text
 Build(source_commit, target) -> artifact + provenance
+```
+
+Supported targets are exactly:
+
+- `multi`
+- `operator`
+
+The build target definition is source-controlled under `release/` and may reference existing package/ownership contracts, but must not duplicate the canonical list of domain authorities by hand when that list can be derived deterministically.
+
+The output filename convention is:
+
+```text
+chef-ai-pro-business-<version>-<shortsha>-multi.zip
+evochia-operator-<version>-<shortsha>-operator.zip
 ```
 
 This prevents CRLF conversion, OneDrive state, uncommitted edits or other dirty-worktree effects from contaminating the artifact.
